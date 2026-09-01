@@ -1,0 +1,673 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistema de Monitoramento de Cisternas</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                💧
+            </div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="/" class="menu-item active">
+                <span>⌂</span>
+                <p>Tela Inicial</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>♙</span>
+                <p>Usuários</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>💧</span>
+                <p>Cisternas</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>◴</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⚠</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⌖</span>
+                <p>Mapa</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>▤</span>
+                <p>Relatórios</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⚙</span>
+                <p>Configurações</p>
+            </a>
+
+        </nav>
+
+
+        <!-- USUÁRIO -->
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                A
+            </div>
+
+            <div class="user-info">
+                <strong>Administrador</strong>
+                <small>admin@sistema.com</small>
+            </div>
+
+            <span>⌄</span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= CONTEÚDO ================= -->
+
+    <main class="content">
+
+
+        <!-- CABEÇALHO -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Olá, Administrador! 👋
+                </h1>
+
+                <p>
+                    Bem-vindo ao Sistema de Monitoramento de Cisternas
+                </p>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <div class="notification">
+
+                    🔔
+
+                    <span>3</span>
+
+                </div>
+
+
+                <div class="date">
+
+                    <strong>01/09/2026</strong>
+
+                    <small>
+                        Terça-feira • 14:30
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================= CARDS ================= -->
+
+        <section class="cards">
+
+
+            <!-- CISTERNAS -->
+
+            <div class="card blue">
+
+                <div class="card-icon">
+                    💧
+                </div>
+
+                <div>
+
+                    <span>
+                        Cisternas
+                    </span>
+
+                    <h2>
+                        {{ total_cisternas }}
+                    </h2>
+
+                    <small>
+                        Cadastradas
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PARTICIPANTES -->
+
+            <div class="card green">
+
+                <div class="card-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <span>
+                        Participantes
+                    </span>
+
+                    <h2>
+                        {{ total_participantes }}
+                    </h2>
+
+                    <small>
+                        Cadastrados
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ALERTAS -->
+
+            <div class="card yellow">
+
+                <div class="card-icon">
+                    ⚠
+                </div>
+
+                <div>
+
+                    <span>
+                        Alertas
+                    </span>
+
+                    <h2>
+                        {{ total_alertas }}
+                    </h2>
+
+                    <small>
+                        Registrados
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LEITURAS -->
+
+            <div class="card purple">
+
+                <div class="card-icon">
+                    📊
+                </div>
+
+                <div>
+
+                    <span>
+                        Leituras
+                    </span>
+
+                    <h2>
+                        {{ total_leituras }}
+                    </h2>
+
+                    <small>
+                        Registradas
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PRIMEIRA LINHA ================= -->
+
+        <section class="grid">
+
+
+            <!-- NÍVEIS DAS CISTERNAS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Níveis das Cisternas
+                    </h2>
+
+                </div>
+
+
+                <div class="levels">
+
+
+                    <div class="donut">
+
+                        <div>
+
+                            <strong>
+                                {{ total_cisternas }}
+                            </strong>
+
+                            <span>
+                                Total
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="legend">
+
+
+                        <div>
+
+                            <i class="full"></i>
+
+                            <span>
+                                Cheia
+                            </span>
+
+                            <strong>
+                                Cisternas
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="medium"></i>
+
+                            <span>
+                                Média
+                            </span>
+
+                            <strong>
+                                Em monitoramento
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="low"></i>
+
+                            <span>
+                                Baixa
+                            </span>
+
+                            <strong>
+                                Atenção
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="critical"></i>
+
+                            <span>
+                                Crítica
+                            </span>
+
+                            <strong>
+                                Necessita atenção
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ÚLTIMAS LEITURAS -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Últimas Leituras
+                    </h2>
+
+                    <button>
+                        Ver todas
+                    </button>
+
+                </div>
+
+
+                <div class="table">
+
+
+                    <div class="table-head">
+
+                        <span>
+                            Cisterna
+                        </span>
+
+                        <span>
+                            Localidade
+                        </span>
+
+                        <span>
+                            Nível
+                        </span>
+
+                        <span>
+                            Data/Hora
+                        </span>
+
+                    </div>
+
+
+                    {% for leitura in ultimas_leituras %}
+
+                    <div class="table-row">
+
+                        <span>
+                            {{ leitura.cisterna }}
+                        </span>
+
+                        <span>
+                            {{ leitura.cisterna.localidade }}
+                        </span>
+
+                        <b class="level-blue">
+                            {{ leitura.nivel }}%
+                        </b>
+
+                        <span>
+                            {{ leitura.data_hora|date:"d/m/Y H:i" }}
+                        </span>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="empty">
+
+                        Nenhuma leitura cadastrada.
+
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= SEGUNDA LINHA ================= -->
+
+        <section class="grid">
+
+
+            <!-- ALERTAS RECENTES -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Alertas Recentes
+                    </h2>
+
+                    <button>
+                        Ver todos
+                    </button>
+
+                </div>
+
+
+                {% for alerta in alertas_recentes %}
+
+                <div class="alert">
+
+                    <div class="alert-icon red">
+                        ⚠
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ alerta.mensagem }}
+                        </strong>
+
+                        <p>
+                            {{ alerta.cisterna }}
+                        </p>
+
+                    </div>
+
+
+                    <time>
+
+                        {{ alerta.data_hora|date:"H:i" }}
+
+                    </time>
+
+                </div>
+
+                {% empty %}
+
+                <div class="empty">
+
+                    Nenhum alerta registrado.
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+
+
+            <!-- LOCALIDADES -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Localidades
+                    </h2>
+
+                    <button>
+                        Ver todas
+                    </button>
+
+                </div>
+
+
+                <div class="location-box">
+
+                    <div class="location-icon">
+                        📍
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ total_localidades }}
+                        </strong>
+
+                        <span>
+                            localidades cadastradas
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="location-info">
+
+                    <p>
+                        As cisternas cadastradas estão distribuídas
+                        pelas localidades monitoradas pelo sistema.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= RESUMO ================= -->
+
+        <section class="summary-panel">
+
+            <div>
+
+                <span>
+                    Resumo do sistema
+                </span>
+
+                <h2>
+                    {{ total_cisternas }} cisternas cadastradas
+                </h2>
+
+            </div>
+
+
+            <div class="summary-items">
+
+                <div>
+
+                    <strong>
+                        {{ total_participantes }}
+                    </strong>
+
+                    <span>
+                        Participantes
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ total_localidades }}
+                    </strong>
+
+                    <span>
+                        Localidades
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ total_leituras }}
+                    </strong>
+
+                    <span>
+                        Leituras
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ total_alertas }}
+                    </strong>
+
+                    <span>
+                        Alertas
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            © 2026 Sistema de Monitoramento de Cisternas
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
