@@ -1,10 +1,9 @@
-from django.contrib import admin
 from django.urls import path
 
-from monitoramento.views import index
+from .views import landing, painel
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('', landing, name='landing'),
+    path('painel/', painel, name='painel'),
 ]

@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SMC — Sistema de Monitoramento de Cisternas.">
+    <title>SMC | Monitoramento de Cisternas</title>
+    <link rel="stylesheet" href="{% static 'monitoramento/landing/Style.css' %}">
+</head>
+
+<body>
+    <div class="progresso" aria-hidden="true"></div>
+    <header class="cabecalho">
+        <a class="marca marca-logo" href="#inicio" aria-label="SMC, voltar ao início">
+            <img src="{% static 'monitoramento/landing/imgs/Logo para fundo escuro sem fundo.svg' %}"
+                alt="SMC - Monitoramento de cisternas">
+        </a>
+        <nav class="menu" aria-label="Navegação principal"><a class="ativo" href="#inicio">Início</a><a href="#sobre">O
+                sistema</a><a href="#como-funciona">Como funciona</a></nav>
+        <a class="chamada-topo" href="#acesso">Acessar sistema <span>↗</span></a>
+    </header>
+    <main>
+        <section class="destaque secao" id="inicio">
+            <div class="texto-destaque revelar">
+                <p class="rotulo"><span></span> Gestão inteligente da água</p>
+                <h1>Água monitorada.<br><em>Tranquilidade</em> para todos.</h1>
+                <p class="texto-principal">O SMC acompanha o nível das cisternas e transforma dados em decisões simples para
+                    garantir segurança hídrica onde ela mais importa.</p>
+                <div class="acoes-destaque"><a class="botao botao-principal" href="#acesso">Conhecer o sistema
+                        <span>→</span></a><a class="link-texto" href="#sobre">Descubra como funciona <span>↓</span></a>
+                </div>
+            </div>
+            <div class="visual-destaque revelar atraso-1">
+                <div class="moldura-foto"><img src="{% static 'monitoramento/landing/imgs/image.png' %}"
+                        alt="Cisterna instalada em uma residência rural">
+                    <div class="degrade-foto"></div>
+                    <div class="cartao-agua"><span class="pulso"></span>
+                        <div><small>Nível atual</small><strong class="nivel-agua" data-start="53"
+                                data-target="97">97<sup>%</sup></strong></div>
+                        <div class="barras-agua" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                    </div>
+                </div>
+                <div class="orbita-destaque orbita-um"></div>
+                <div class="orbita-destaque orbita-dois"></div>
+                <p class="legenda-imagem">Tecnologia a serviço do cuidado com a água</p>
+            </div>
+            <a class="dica-rolagem" href="#sobre"><span></span> Role para explorar</a>
+        </section>
+        <section class="sobre secao" id="sobre">
+            <div class="numero-secao revelar">01</div>
+            <div class="titulo-sobre revelar">
+                <p class="rotulo"><span></span> Sobre o SMC</p>
+                <h2>Cada gota conta.<br>Por isso, <em>cada dado</em> também.</h2>
+            </div>
+            <div class="conteudo-sobre revelar atraso-1">
+                <p>O Sistema de Monitoramento de Cisternas torna visível o que antes só era percebido quando faltava: o
+                    nível da água disponível para cada família.</p><a class="link-seta" href="#como-funciona">Entenda a
+                    solução <span>→</span></a>
+            </div>
+        </section>
+        <section class="recursos secao" id="como-funciona">
+            <div class="topo-recursos revelar">
+                <div>
+                    <p class="rotulo"><span></span> Simples por natureza</p>
+                    <h2>Informação clara,<br><em>cuidado contínuo.</em></h2>
+                </div>
+            </div>
+            <div class="grade-recursos">
+                <article class="cartao-recurso revelar"><span class="indice-cartao">01</span>
+                    <div class="icone-recurso icone-sensor">⌁</div>
+                    <h3>Monitora</h3>
+                    <p>Acompanhe o volume de água das cisternas com uma visualização direta e atualizada.</p>
+                </article>
+                <article class="cartao-recurso revelar atraso-1"><span class="indice-cartao">02</span>
+                    <div class="icone-recurso icone-alerta">!</div>
+                    <h3>Alerta</h3>
+                    <p>Receba avisos quando o nível exige atenção e antecipe decisões importantes.</p>
+                </article>
+                <article class="cartao-recurso revelar atraso-2"><span class="indice-cartao">03</span>
+                    <div class="icone-recurso icone-relatorio">↗</div>
+                    <h3>Organiza</h3>
+                    <p>Tenha dados reunidos para cuidar melhor das pessoas, das cisternas e do território.</p>
+                </article>
+            </div>
+        </section>
+        <section class="mensagem secao">
+            <div class="agua-mensagem" aria-hidden="true"></div>
+            <p class="rotulo revelar"><span></span> Uma ferramenta, um impacto real</p>
+            <h2 class="revelar">Cuidar da água é<br>cuidar do <em>futuro.</em></h2>
+            <p class="texto-mensagem revelar">Tecnologia próxima, dados que fazem sentido e mais segurança para quem
+                depende da água todos os dias.</p>
+        </section>
+        <section class="acesso secao" id="acesso">
+            <div class="texto-acesso revelar">
+                <p class="rotulo"><span></span> Pronto para começar?</p>
+                <h2>Seu território.<br>Sua água. <em>Seu controle.</em></h2>
+            </div>
+            <div class="acao-acesso revelar atraso-1">
+                <p>Acesse a plataforma e acompanhe suas cisternas com clareza.</p><a class="botao botao-claro"
+                    href="{% url 'painel' %}">Entrar no SMC <span>→</span></a>
+            </div>
+        </section>
+    </main>
+    <footer><a class="marca marca-logo" href="#inicio" aria-label="SMC, voltar ao início">
+            <img src="{% static 'monitoramento/landing/imgs/Logo para fundo escuro sem fundo.svg' %}"
+                alt="SMC - Monitoramento de cisternas">
+        </a>
+        <p>Sistema de Monitoramento de Cisternas</p><a href="#inicio" class="voltar-topo">Voltar ao topo ↑</a>
+    </footer>
+    <script src="{% static 'monitoramento/landing/Script.js' %}"></script>
+</body>
+
+</html>

@@ -9,7 +9,11 @@ from .models import (
 )
 
 
-def index(request):
+def landing(request):
+    return render(request, 'monitoramento/landing.html')
+
+
+def painel(request):
 
     contexto = {
         'total_cisternas': Cisterna.objects.count(),
