@@ -1,0 +1,36 @@
+name: Funcionalidade
+description: Solicitar uma nova funcionalidade para o projeto
+title: "[FUNCIONALIDADE] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: O que precisa ser desenvolvido?
+      placeholder: Descreva o objetivo da funcionalidade.
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceitação
+      description: Como saberemos que a funcionalidade está concluída?
+      placeholder: Liste os critérios que devem ser atendidos.
+    validations:
+      required: true
+
+  - type: textarea
+    id: telas
+    attributes:
+      label: Telas
+      description: Quais telas serão criadas ou alteradas?
+      placeholder: Informe as telas relacionadas à funcionalidade.
+
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: Observações
+      description: Informações adicionais.
