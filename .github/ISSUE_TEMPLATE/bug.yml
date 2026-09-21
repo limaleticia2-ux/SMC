@@ -1,0 +1,51 @@
+name: Bug
+description: Relatar um problema ou erro no projeto
+title: "[BUG] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema
+      description: O que está acontecendo?
+      placeholder: Descreva o problema encontrado.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Quais passos fazem o problema acontecer?
+      placeholder: Liste os passos para reproduzir o problema.
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Comportamento esperado
+      description: O que deveria acontecer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: observado
+    attributes:
+      label: Comportamento observado
+      description: O que realmente aconteceu?
+    validations:
+      required: true
+
+  - type: input
+    id: ambiente
+    attributes:
+      label: Ambiente
+      description: Informe sistema operacional, navegador ou outras informações relevantes.
+
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Evidências
+      description: Adicione prints, vídeos, logs ou outras evidências.

@@ -1,0 +1,44 @@
+name: Task
+description: Registrar uma tarefa técnica do projeto
+title: "[TASK] "
+labels:
+  - task
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: O que precisa ser feito?
+      placeholder: Descreva o objetivo da tarefa.
+    validations:
+      required: true
+
+  - type: textarea
+    id: justificativa
+    attributes:
+      label: Justificativa
+      description: Por que essa tarefa é necessária?
+    validations:
+      required: true
+
+  - type: textarea
+    id: escopo
+    attributes:
+      label: Escopo
+      description: O que será incluído nesta tarefa?
+      placeholder: Descreva o que será feito.
+
+  - type: textarea
+    id: conclusao
+    attributes:
+      label: Critérios de conclusão
+      description: Como saberemos que a tarefa foi concluída?
+      placeholder: Liste os critérios para considerar a tarefa concluída.
+    validations:
+      required: true
+
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: Observações
+      description: Informações adicionais.
