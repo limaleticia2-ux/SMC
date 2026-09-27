@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Cisterna, Municipio
-
+from .models import Cisterna, Dispositivo, Municipio
 
 class CisternaForm(forms.ModelForm):
 
@@ -232,3 +231,44 @@ class UsuarioForm(forms.ModelForm):
             )
 
         return dados
+
+class DispositivoForm(forms.ModelForm):
+
+    class Meta:
+        model = Dispositivo
+
+        fields = [
+            'identificacao',
+            'tipo_sensor',
+            'cisterna',
+            'data_instalacao',
+            'situacao',
+        ]
+
+        labels = {
+            'identificacao': 'Identificação do dispositivo',
+            'tipo_sensor': 'Tipo de sensor',
+            'cisterna': 'Cisterna associada',
+            'data_instalacao': 'Data de instalação',
+            'situacao': 'Situação',
+        }
+
+        widgets = {
+            'identificacao': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: SENSOR-001'
+                }
+            ),
+
+            'tipo_sensor': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: Sensor ultrassônico'
+                }
+            ),
+
+            'data_instalacao': forms.DateInput(
+                attrs={
+                    'type': 'date'
+                }
+            ),
+        }

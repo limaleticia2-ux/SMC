@@ -1,0 +1,261 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dispositivos - SMC</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &#128167;
+            </div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="{% url 'index' %}" class="menu-item">
+                <span>&#127968;</span>
+                <p>Tela Inicial</p>
+            </a>
+
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>&#128100;</span>
+                <p>Usuários</p>
+            </a>
+
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>&#128688;</span>
+                <p>Cisternas</p>
+            </a>
+
+            <a href="{% url 'lista_dispositivos' %}" class="menu-item active">
+                <span>&#128225;</span>
+                <p>Dispositivos</p>
+            </a>
+
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>&#9687;</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>&#9888;</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128506;</span>
+                <p>Mapa</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128202;</span>
+                <p>Relatórios</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#9881;</span>
+                <p>Configurações</p>
+            </a>
+
+        </nav>
+
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.username }}</strong>
+                <small>Usuário do sistema</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="content">
+
+        <div class="page-top">
+
+            <div>
+
+                <span class="page-label">
+                    Gerenciamento
+                </span>
+
+                <h1>
+                    Dispositivos
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <div class="cisterna-toolbar">
+
+            <div></div>
+
+            <a
+                href="{% url 'criar_dispositivo' %}"
+                class="btn-cadastrar"
+            >
+                + Cadastrar dispositivo
+            </a>
+
+        </div>
+
+
+        <section class="cisterna-box">
+
+            <div class="box-title">
+
+                <span class="box-icon">
+                    &#128225;
+                </span>
+
+                <strong>
+                    Dispositivos cadastrados
+                </strong>
+
+            </div>
+
+
+            <div class="cisterna-table">
+
+                <div class="cisterna-table-head">
+
+                    <span>
+                        Identificação
+                    </span>
+
+                    <span>
+                        Tipo de sensor
+                    </span>
+
+                    <span>
+                        Cisterna
+                    </span>
+
+                    <span>
+                        Situação
+                    </span>
+
+                </div>
+
+
+                {% for dispositivo in dispositivos %}
+
+                <div class="cisterna-table-row">
+
+                    <strong>
+                        {{ dispositivo.identificacao }}
+                    </strong>
+
+                    <span>
+                        {{ dispositivo.tipo_sensor }}
+                    </span>
+
+                    <span>
+                        {{ dispositivo.cisterna.identificacao }}
+                    </span>
+
+                    <span>
+
+                        {% if dispositivo.situacao == 'ativo' %}
+
+                            <span style="
+                                display:inline-block;
+                                padding:5px 9px;
+                                border-radius:10px;
+                                background:#dcfce7;
+                                color:#15803d;
+                                font-size:11px;
+                                font-weight:600;
+                            ">
+                                Ativo
+                            </span>
+
+                        {% elif dispositivo.situacao == 'inativo' %}
+
+                            <span style="
+                                display:inline-block;
+                                padding:5px 9px;
+                                border-radius:10px;
+                                background:#fee2e2;
+                                color:#dc2626;
+                                font-size:11px;
+                                font-weight:600;
+                            ">
+                                Inativo
+                            </span>
+
+                        {% else %}
+
+                            <span style="
+                                display:inline-block;
+                                padding:5px 9px;
+                                border-radius:10px;
+                                background:#fef3c7;
+                                color:#a16207;
+                                font-size:11px;
+                                font-weight:600;
+                            ">
+                                Em manutenção
+                            </span>
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+                {% empty %}
+
+                <div class="no-cisternas">
+                    Nenhum dispositivo cadastrado.
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -2,6 +2,7 @@ from django.urls import path
 
 from monitoramento.views import (
     criar_cisterna,
+    criar_dispositivo,
     criar_municipio,
     criar_usuario,
     editar_cisterna,
@@ -10,9 +11,11 @@ from monitoramento.views import (
     historico_leituras,
     lista_alertas,
     lista_cisternas,
+    lista_dispositivos,
     lista_municipios,
     lista_usuarios,
     monitoramento,
+    receber_leitura,
 )
 
 
@@ -92,4 +95,22 @@ urlpatterns = [
         lista_alertas,
         name='lista_alertas'
     ),
+
+    path(
+    'dispositivos/',
+    lista_dispositivos,
+    name='lista_dispositivos'
+    ),
+
+    path(
+    'dispositivos/cadastrar/',
+    criar_dispositivo,
+    name='criar_dispositivo'
+    ),
+    path(
+    'api/leituras/',
+    receber_leitura,
+    name='receber_leitura'
+    ),
 ]
+

@@ -3,18 +3,26 @@ from functools import wraps
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
-from .forms import CisternaForm, MunicipioForm, UsuarioForm
+from .forms import (
+    CisternaForm,
+    DispositivoForm,
+    MunicipioForm,
+    UsuarioForm,
+)
 from .models import (
     Alerta,
     Cisterna,
+    Dispositivo,
     LeituraTelemetria,
     Localidade,
     Municipio,
     Participante,
 )
-
 
 def somente_perfis(*perfis):
     def decorator(view_func):
@@ -393,3 +401,108 @@ def historico_leituras(request, id):
             'leituras': leituras,
         }
     )
+
+@somente_perfis('Administrador do sistema')
+def lista_dispositivos(request):
+
+    dispositivos = Dispositivo.objects.select_related(
+        'cisterna'
+    ).all().order_by('identificacao')
+
+    return render(
+        request,
+        'monitoramento/dispositivos/lista.html',
+        {
+            'dispositivos': dispositivos
+        }
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def criar_dispositivo(request):
+
+    if request.method == 'POST':
+
+        form = DispositivoForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('lista_dispositivos')
+
+    else:
+        form = DispositivoForm()
+
+    return render(
+        request,
+        'monitoramento/dispositivos/form.html',
+        {
+            'form': form,
+            'titulo': 'Cadastrar dispositivo'
+        }
+    )
+
+@csrf_exempt
+def receber_leitura(request):
+
+    if request.method != 'POST':
+        return JsonResponse(
+            {
+                'erro': 'Método não permitido.'
+            },
+            status=405
+        )
+
+    try:
+        dados = request.POST
+
+        identificacao = dados.get('identificacao')
+        nivel = float(dados.get('nivel'))
+
+        if not identificacao:
+            return JsonResponse(
+                {
+                    'erro': 'Identificação do dispositivo não informada.'
+                },
+                status=400
+            )
+
+        dispositivo = Dispositivo.objects.select_related(
+            'cisterna'
+        ).filter(
+            identificacao=identificacao,
+            situacao='ativo'
+        ).first()
+
+        if not dispositivo:
+            return JsonResponse(
+                {
+                    'erro': 'Dispositivo não encontrado ou está inativo.'
+                },
+                status=404
+            )
+
+        leitura = LeituraTelemetria.objects.create(
+            cisterna=dispositivo.cisterna,
+            dispositivo=dispositivo,
+            nivel=nivel,
+            data_hora=timezone.now()
+        )
+
+        return JsonResponse(
+            {
+                'sucesso': True,
+                'mensagem': 'Leitura recebida com sucesso.',
+                'dispositivo': dispositivo.identificacao,
+                'cisterna': dispositivo.cisterna.identificacao,
+                'nivel': leitura.nivel
+            },
+            status=201
+        )
+
+    except (TypeError, ValueError):
+        return JsonResponse(
+            {
+                'erro': 'O nível informado é inválido.'
+            },
+            status=400
+        )

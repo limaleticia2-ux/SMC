@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ titulo }} - SMC</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &#128167;
+            </div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="{% url 'index' %}" class="menu-item">
+                <span>&#127968;</span>
+                <p>Tela Inicial</p>
+            </a>
+
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>&#128100;</span>
+                <p>Usuários</p>
+            </a>
+
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>&#128688;</span>
+                <p>Cisternas</p>
+            </a>
+
+            <a href="{% url 'lista_dispositivos' %}" class="menu-item active">
+                <span>&#128225;</span>
+                <p>Dispositivos</p>
+            </a>
+
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>&#9687;</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>&#9888;</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128506;</span>
+                <p>Mapa</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128202;</span>
+                <p>Relatórios</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#9881;</span>
+                <p>Configurações</p>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="content">
+
+        <div class="page-top">
+
+            <div>
+
+                <span class="page-label">
+                    Dispositivos
+                </span>
+
+                <h1>
+                    {{ titulo }}
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <section class="panel">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                {% for field in form %}
+
+                    <div class="form-group">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+
+                            <small style="color:#dc2626;">
+                                {{ field.errors }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+
+                <div style="
+                    display:flex;
+                    justify-content:flex-end;
+                    gap:10px;
+                    margin-top:20px;
+                ">
+
+                    <a
+                        href="{% url 'lista_dispositivos' %}"
+                        class="btn-cancel"
+                        style="text-decoration:none;"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn-cadastrar"
+                    >
+                        Salvar dispositivo
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <footer>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
