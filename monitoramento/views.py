@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group, User
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import CisternaForm, UsuarioForm
+from .forms import CisternaForm, MunicipioForm, UsuarioForm
 from .models import (
     Alerta,
     Cisterna,
@@ -273,5 +273,89 @@ def lista_alertas(request):
         {
             'alertas': alertas,
             'busca': busca,
+        }
+    )
+
+@login_required
+def lista_municipios(request):
+    municipios = Municipio.objects.all().order_by(
+        'nome'
+    )
+
+    return render(
+        request,
+        'monitoramento/municipios/lista.html',
+        {
+            'municipios': municipios
+        }
+    )
+
+
+@login_required
+def criar_municipio(request):
+
+    if request.method == 'POST':
+
+        form = MunicipioForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect(
+                'lista_municipios'
+            )
+
+    else:
+
+        form = MunicipioForm()
+
+    return render(
+        request,
+        'monitoramento/municipios/form.html',
+        {
+            'form': form,
+            'titulo': 'Cadastrar município'
+        }
+    )
+
+
+@login_required
+def editar_municipio(request, id):
+
+    municipio = get_object_or_404(
+        Municipio,
+        id=id
+    )
+
+    if request.method == 'POST':
+
+        form = MunicipioForm(
+            request.POST,
+            instance=municipio
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect(
+                'lista_municipios'
+            )
+
+    else:
+
+        form = MunicipioForm(
+            instance=municipio
+        )
+
+    return render(
+        request,
+        'monitoramento/municipios/form.html',
+        {
+            'form': form,
+            'titulo': 'Editar município'
         }
     )

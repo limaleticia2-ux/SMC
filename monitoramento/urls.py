@@ -10,6 +10,9 @@ from monitoramento.views import (
     lista_cisternas,
     lista_usuarios,
     monitoramento,
+    lista_municipios,
+    criar_municipio,
+    editar_municipio,
 )
 
 
@@ -69,4 +72,22 @@ urlpatterns = [
         'alertas/', 
         lista_alertas,
         name='lista_alertas'),
+
+    path(
+    'municipios/',
+    lista_municipios,
+    name='lista_municipios'
+    ),
+
+    path(
+    'municipios/cadastrar/',
+    criar_municipio,
+    name='criar_municipio'
+    ),
+
+    path(
+    'municipios/<int:id>/editar/',
+    editar_municipio,
+    name='editar_municipio'
+    ),
 ]

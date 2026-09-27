@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Cisterna
+from .models import Cisterna, Municipio
 
 
 class CisternaForm(forms.ModelForm):
@@ -78,6 +78,41 @@ class CisternaForm(forms.ModelForm):
         self.fields['situacao'].required = True
 
 
+class MunicipioForm(forms.ModelForm):
+
+    class Meta:
+        model = Municipio
+
+        fields = [
+            'nome',
+            'estado',
+        ]
+
+        labels = {
+            'nome': 'Nome do município',
+            'estado': 'Estado',
+        }
+
+        widgets = {
+            'nome': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: São Paulo do Potengi'
+                }
+            ),
+
+            'estado': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: RN',
+                    'maxlength': '2'
+                }
+            ),
+        }
+
+    def clean_estado(self):
+        estado = self.cleaned_data['estado']
+        return estado.upper()
+
+
 class UsuarioForm(forms.ModelForm):
 
     senha = forms.CharField(
@@ -100,6 +135,7 @@ class UsuarioForm(forms.ModelForm):
 
     perfil = forms.ChoiceField(
         label='Perfil',
+
         choices=[
             (
                 'Administrador do sistema',
@@ -121,7 +157,6 @@ class UsuarioForm(forms.ModelForm):
     )
 
     class Meta:
-
         model = User
 
         fields = [
