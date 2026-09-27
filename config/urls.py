@@ -6,11 +6,14 @@ from monitoramento.views import index
 
 
 urlpatterns = [
-    path('', index, name='index'),
+
+    # Tela de apresentação
+    path('', include('monitoramento.urls')),
 
     path('admin/', admin.site.urls),
 
-    path('', include('monitoramento.urls')),
+    # Página antiga do sistema, preservada
+    path('sistema/', index, name='index'),
 
     path(
         'login/',
