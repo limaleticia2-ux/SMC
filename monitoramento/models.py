@@ -24,7 +24,6 @@ class Localidade(models.Model):
 
 
 class Cisterna(models.Model):
-
     SITUACAO_CHOICES = [
         ('normal', 'Normal'),
         ('atencao', 'Atenção'),
@@ -39,13 +38,13 @@ class Cisterna(models.Model):
     )
 
     municipio = models.ForeignKey(
-    Municipio,
-    on_delete=models.CASCADE,
-    related_name="cisternas",
-    null=True,
-    blank=True
+        Municipio,
+        on_delete=models.CASCADE,
+        related_name="cisternas",
+        null=True,
+        blank=True
     )
-    
+
     localidade = models.ForeignKey(
         Localidade,
         on_delete=models.CASCADE,
@@ -88,7 +87,6 @@ class Cisterna(models.Model):
     def __str__(self):
         return self.identificacao
 
-
 class LeituraTelemetria(models.Model):
     cisterna = models.ForeignKey(
         Cisterna,
@@ -103,7 +101,44 @@ class LeituraTelemetria(models.Model):
     def __str__(self):
         return f"{self.cisterna} - {self.data_hora}"
 
+    def save(self, *args, **kwargs):
 
+        nova_leitura = self.pk is None
+
+        super().save(*args, **kwargs)
+
+        if self.nivel >= 70:
+            nova_situacao = 'normal'
+
+        elif self.nivel >= 30:
+            nova_situacao = 'atencao'
+
+        else:
+            nova_situacao = 'critico'
+
+        self.cisterna.situacao = nova_situacao
+        self.cisterna.save(update_fields=['situacao'])
+
+        if nova_leitura and self.nivel < 30:
+
+            leitura_anterior = (
+                LeituraTelemetria.objects
+                .filter(cisterna=self.cisterna)
+                .exclude(pk=self.pk)
+                .order_by('-data_hora')
+                .first()
+            )
+
+            if (
+                leitura_anterior is None
+                or leitura_anterior.nivel >= 30
+            ):
+                Alerta.objects.create(
+                    cisterna=self.cisterna,
+                    mensagem=f"Nível crítico de água: {self.nivel:.1f}%.",
+                    data_hora=self.data_hora
+                )
+                
 class Alerta(models.Model):
     cisterna = models.ForeignKey(
         Cisterna,
