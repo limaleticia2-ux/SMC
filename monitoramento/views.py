@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.db.models import Q
@@ -14,6 +16,30 @@ from .models import (
 )
 
 
+def somente_perfis(*perfis):
+    def decorator(view_func):
+        @wraps(view_func)
+        @login_required
+        def wrapper(request, *args, **kwargs):
+
+            if (
+                request.user.is_superuser
+                or request.user.groups.filter(name__in=perfis).exists()
+            ):
+                return view_func(request, *args, **kwargs)
+
+            return render(
+                request,
+                'monitoramento/acesso_negado.html',
+                status=403
+            )
+
+        return wrapper
+
+    return decorator
+
+
+@login_required
 def index(request):
     contexto = {
         'total_cisternas': Cisterna.objects.count(),
@@ -54,7 +80,7 @@ def lista_cisternas(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def criar_cisterna(request):
     if request.method == 'POST':
         form = CisternaForm(
@@ -79,7 +105,7 @@ def criar_cisterna(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def editar_cisterna(request, id):
     cisterna = get_object_or_404(
         Cisterna,
@@ -112,7 +138,7 @@ def editar_cisterna(request, id):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def excluir_cisterna(request, id):
     cisterna = get_object_or_404(
         Cisterna,
@@ -132,7 +158,7 @@ def excluir_cisterna(request, id):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def lista_usuarios(request):
     usuarios = User.objects.all().order_by('username')
 
@@ -145,7 +171,7 @@ def lista_usuarios(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def criar_usuario(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
@@ -277,7 +303,7 @@ def lista_alertas(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def lista_municipios(request):
     municipios = Municipio.objects.all().order_by(
         'nome'
@@ -292,7 +318,7 @@ def lista_municipios(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def criar_municipio(request):
     if request.method == 'POST':
         form = MunicipioForm(
@@ -316,7 +342,7 @@ def criar_municipio(request):
     )
 
 
-@login_required
+@somente_perfis('Administrador do sistema')
 def editar_municipio(request, id):
     municipio = get_object_or_404(
         Municipio,
