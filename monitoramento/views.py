@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CisternaForm, UsuarioForm
@@ -14,19 +15,16 @@ from .models import (
 
 
 def index(request):
-
     contexto = {
         'total_cisternas': Cisterna.objects.count(),
         'total_participantes': Participante.objects.count(),
         'total_leituras': LeituraTelemetria.objects.count(),
         'total_alertas': Alerta.objects.count(),
         'total_localidades': Localidade.objects.count(),
-
         'ultimas_leituras': LeituraTelemetria.objects.select_related(
             'cisterna',
             'cisterna__localidade'
         ).order_by('-data_hora')[:5],
-
         'alertas_recentes': Alerta.objects.select_related(
             'cisterna'
         ).order_by('-data_hora')[:5],
@@ -41,7 +39,6 @@ def index(request):
 
 @login_required
 def lista_cisternas(request):
-
     cisternas = Cisterna.objects.select_related(
         'participante',
         'localidade',
@@ -59,9 +56,7 @@ def lista_cisternas(request):
 
 @login_required
 def criar_cisterna(request):
-
     if request.method == 'POST':
-
         form = CisternaForm(
             request.POST,
             request.FILES
@@ -86,14 +81,12 @@ def criar_cisterna(request):
 
 @login_required
 def editar_cisterna(request, id):
-
     cisterna = get_object_or_404(
         Cisterna,
         id=id
     )
 
     if request.method == 'POST':
-
         form = CisternaForm(
             request.POST,
             request.FILES,
@@ -105,7 +98,6 @@ def editar_cisterna(request, id):
             return redirect('lista_cisternas')
 
     else:
-
         form = CisternaForm(
             instance=cisterna
         )
@@ -122,16 +114,13 @@ def editar_cisterna(request, id):
 
 @login_required
 def excluir_cisterna(request, id):
-
     cisterna = get_object_or_404(
         Cisterna,
         id=id
     )
 
     if request.method == 'POST':
-
         cisterna.delete()
-
         return redirect('lista_cisternas')
 
     return render(
@@ -145,7 +134,6 @@ def excluir_cisterna(request, id):
 
 @login_required
 def lista_usuarios(request):
-
     usuarios = User.objects.all().order_by('username')
 
     return render(
@@ -159,13 +147,10 @@ def lista_usuarios(request):
 
 @login_required
 def criar_usuario(request):
-
     if request.method == 'POST':
-
         form = UsuarioForm(request.POST)
 
         if form.is_valid():
-
             usuario = form.save(commit=False)
 
             usuario.first_name = form.cleaned_data['first_name']
@@ -190,7 +175,6 @@ def criar_usuario(request):
             return redirect('lista_usuarios')
 
     else:
-
         form = UsuarioForm()
 
     return render(
@@ -205,7 +189,6 @@ def criar_usuario(request):
 
 @login_required
 def monitoramento(request):
-
     cisternas = Cisterna.objects.select_related(
         'participante',
         'localidade',
@@ -224,37 +207,30 @@ def monitoramento(request):
     leituras_por_cisterna = {}
 
     for leitura in ultimas_leituras:
-
         if leitura.cisterna_id not in leituras_por_cisterna:
             leituras_por_cisterna[leitura.cisterna_id] = leitura
 
     for cisterna in cisternas:
-
-        cisterna.ultima_leitura = (
-            leituras_por_cisterna.get(cisterna.id)
+        cisterna.ultima_leitura = leituras_por_cisterna.get(
+            cisterna.id
         )
 
         if cisterna.ultima_leitura:
-
             nivel = cisterna.ultima_leitura.nivel
 
             if nivel >= 70:
-
                 cisterna.status_monitoramento = 'Normal'
                 cisterna.status_classe = 'normal'
 
             elif nivel >= 30:
-
                 cisterna.status_monitoramento = 'Atenção'
                 cisterna.status_classe = 'atencao'
 
             else:
-
                 cisterna.status_monitoramento = 'Crítico'
                 cisterna.status_classe = 'critico'
 
         else:
-
             cisterna.status_monitoramento = 'Sem dados'
             cisterna.status_classe = 'sem-dados'
 
@@ -265,5 +241,37 @@ def monitoramento(request):
             'cisternas': cisternas,
             'total_monitoradas': cisternas.count(),
             'total_leituras': ultimas_leituras.count(),
+        }
+    )
+
+
+@login_required
+def lista_alertas(request):
+    busca = request.GET.get('q', '').strip()
+
+    alertas = (
+        Alerta.objects
+        .select_related(
+            'cisterna',
+            'cisterna__municipio',
+            'cisterna__localidade'
+        )
+        .order_by('-data_hora')
+    )
+
+    if busca:
+        alertas = alertas.filter(
+            Q(mensagem__icontains=busca)
+            | Q(cisterna__identificacao__icontains=busca)
+            | Q(cisterna__municipio__nome__icontains=busca)
+            | Q(cisterna__localidade__nome__icontains=busca)
+        )
+
+    return render(
+        request,
+        'monitoramento/alertas/lista.html',
+        {
+            'alertas': alertas,
+            'busca': busca,
         }
     )

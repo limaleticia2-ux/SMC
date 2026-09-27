@@ -6,6 +6,7 @@ from monitoramento.views import (
     criar_usuario,
     editar_cisterna,
     excluir_cisterna,
+    lista_alertas,
     lista_cisternas,
     lista_usuarios,
     monitoramento,
@@ -63,4 +64,9 @@ urlpatterns = [
         monitoramento,
         name='monitoramento'
     ),
+
+    path(
+        'alertas/', 
+        lista_alertas,
+        name='lista_alertas'),
 ]

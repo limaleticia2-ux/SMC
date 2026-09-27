@@ -3229,3 +3229,51 @@ footer {
 .menu-item p {
     pointer-events: none;
 }
+
+/* CORREÇÃO DA SIDEBAR E DO MENU */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    padding: 30px 18px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+    gap: 12px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.menu-item span {
+    width: 24px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.menu-item p {
+    margin: 0;
+}
+
+.user-box {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 20px;
+}
