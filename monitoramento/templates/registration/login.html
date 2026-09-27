@@ -1,20 +1,265 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="pt-br">
+
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Login - SMC</title>
+
+<link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+
+<style>
+    .login-page {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f4f6f8;
+        padding: 20px;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 430px;
+        background: #ffffff;
+        border: 1px solid #e1e7ed;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px rgba(24, 50, 71, 0.08);
+        overflow: hidden;
+    }
+
+    .login-header {
+        background: #183247;
+        padding: 28px 30px;
+        text-align: center;
+    }
+
+    .login-logo {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        border-radius: 50%;
+        font-size: 28px;
+    }
+
+    .login-header h1 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .login-header p {
+        margin: 7px 0 0;
+        color: #cbd5df;
+        font-size: 11px;
+    }
+
+    .login-form {
+        padding: 30px;
+    }
+
+    .form-title {
+        margin-bottom: 22px;
+    }
+
+    .form-title span {
+        display: block;
+        color: #94a3b8;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-title strong {
+        display: block;
+        margin-top: 5px;
+        color: #183247;
+        font-size: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #475569;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .form-group input {
+        width: 100%;
+        box-sizing: border-box;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #d8e0e7;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #334155;
+        font-size: 12px;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: #183247;
+    }
+
+    .login-error {
+        margin-bottom: 18px;
+        padding: 11px 12px;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        background: #fef2f2;
+        color: #dc2626;
+        font-size: 11px;
+    }
+
+    .login-button {
+        width: 100%;
+        height: 43px;
+        border: none;
+        border-radius: 6px;
+        background: #183247;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .login-button:hover {
+        background: #24455f;
+    }
+
+    .login-footer {
+        padding: 14px 30px;
+        border-top: 1px solid #edf2f7;
+        background: #fafbfc;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 10px;
+    }
+</style>
+```
+
 </head>
+
 <body>
 
-    <h1>Entrar</h1>
+<div class="login-page">
 
-    <form method="post">
-        {% csrf_token %}
+```
+<div class="login-box">
 
-        {{ form.as_p }}
+    <div class="login-header">
 
-        <button type="submit">Entrar</button>
-    </form>
+        <div class="login-logo">
+            &#128167;
+        </div>
+
+        <h1>
+            Sistema de Monitoramento
+        </h1>
+
+        <p>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </p>
+
+    </div>
+
+
+    <div class="login-form">
+
+        <div class="form-title">
+            <span>Acesso ao sistema</span>
+            <strong>Entrar</strong>
+        </div>
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            {% if form.errors %}
+
+                <div class="login-error">
+                    Usuário ou senha incorretos.
+                </div>
+
+            {% endif %}
+
+
+            <div class="form-group">
+
+                <label for="id_username">
+                    Usuário
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Digite seu usuário"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="id_password">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+
+            <button type="submit" class="login-button">
+                Entrar no sistema
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="login-footer">
+        Sistema de Monitoramento do Nível de Água em Cisternas
+    </div>
+
+</div>
+```
+
+</div>
 
 </body>
+
 </html>
