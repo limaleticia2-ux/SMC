@@ -541,6 +541,55 @@ body {
    CARDS DE SERVIÇOS
 ================================================== */
 
+/* ==================================================
+   ACESSO RÁPIDO
+================================================== */
+
+.services {
+    padding: 90px 7%;
+
+    background: #f7f9fb;
+}
+
+.section-title {
+    max-width: 700px;
+
+    margin: 0 auto 45px;
+
+    text-align: center;
+}
+
+.section-title span,
+.section-label {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    color: #0b6b96;
+}
+
+.section-title h2 {
+    margin-bottom: 12px;
+
+    font-size: 34px;
+
+    color: #17324d;
+}
+
+.section-title p {
+    font-size: 15px;
+
+    color: #64748b;
+}
+
+
+/* CARDS */
+
 .service-cards {
     max-width: 1400px;
 
@@ -553,12 +602,14 @@ body {
     gap: 24px;
 }
 
+
 .service-card {
-    min-height: 240px;
+    min-height: 270px;
 
-    padding: 30px;
+    padding: 28px;
 
-    display: block;
+    display: flex;
+    flex-direction: column;
 
     text-decoration: none;
 
@@ -573,19 +624,31 @@ body {
     transition: 0.25s ease;
 }
 
+
 .service-card:hover {
     transform: translateY(-5px);
 
-    border-color: #cbdce5;
+    border-color: #b9d3df;
 
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
 }
 
-.service-icon {
-    width: 55px;
-    height: 55px;
 
-    margin-bottom: 22px;
+/* PARTE SUPERIOR */
+
+.service-card-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.service-icon {
+    width: 52px;
+    height: 52px;
 
     display: flex;
     align-items: center;
@@ -595,18 +658,38 @@ body {
 
     border-radius: 8px;
 
-    font-size: 25px;
+    font-size: 24px;
 }
+
+
+.service-arrow {
+    font-size: 22px;
+
+    color: #0b6b96;
+
+    transition: transform 0.2s ease;
+}
+
+
+.service-card:hover .service-arrow {
+    transform: translateX(5px);
+}
+
+
+/* TEXTO */
 
 .service-card h3 {
     margin-bottom: 10px;
 
-    font-size: 19px;
+    font-size: 20px;
 
     color: #17324d;
 }
 
+
 .service-card p {
+    margin-bottom: 20px;
+
     font-size: 14px;
 
     line-height: 1.7;
@@ -614,6 +697,21 @@ body {
     color: #64748b;
 }
 
+
+/* LINK VISUAL */
+
+.service-link {
+    margin-top: auto;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #0b6b96;
+}
+
+/* ==================================================
+   SOBRE O SMC
+================================================== */
 
 /* ==================================================
    SOBRE O SMC
@@ -625,20 +723,28 @@ body {
     background: #ffffff;
 }
 
-.about-content {
-    max-width: 900px;
+.about-container {
+    max-width: 1200px;
 
     margin: 0 auto;
 
-    text-align: center;
+    display: grid;
+
+    grid-template-columns: 1.2fr 0.8fr;
+
+    gap: 80px;
+
+    align-items: center;
+}
+
+.about-content {
+    max-width: 680px;
 }
 
 .about-content h2 {
-    max-width: 750px;
+    margin-bottom: 25px;
 
-    margin: 0 auto 25px;
-
-    font-size: 38px;
+    font-size: 40px;
 
     line-height: 1.2;
 
@@ -646,9 +752,7 @@ body {
 }
 
 .about-content p {
-    max-width: 800px;
-
-    margin: 0 auto 16px;
+    margin-bottom: 16px;
 
     font-size: 16px;
 
@@ -657,6 +761,60 @@ body {
     color: #64748b;
 }
 
+
+/* DESTAQUES */
+
+.about-highlight {
+    padding: 10px 0;
+}
+
+.highlight-item {
+    display: flex;
+
+    gap: 20px;
+
+    padding: 24px 0;
+
+    border-bottom: 1px solid #e5e9ed;
+}
+
+.highlight-item:first-child {
+    padding-top: 0;
+}
+
+.highlight-item:last-child {
+    border-bottom: none;
+}
+
+.highlight-number {
+    flex-shrink: 0;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #0b6b96;
+}
+
+.highlight-item strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 18px;
+
+    color: #17324d;
+}
+
+.highlight-item p {
+    margin: 0;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    color: #64748b;
+}
 
 /* ==================================================
    CHAMADA FINAL
