@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Excluir cisterna - SMC</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &#128167;
+            </div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+    <a href="{% url 'index' %}" class="menu-item">
+        <span>&#8962;</span>
+        <p>Tela Inicial</p>
+    </a>
+
+    <a href="{% url 'lista_usuarios' %}" class="menu-item">
+        <span>&#9817;</span>
+        <p>Usu&#225;rios</p>
+    </a>
+
+    <a href="{% url 'lista_cisternas' %}" class="menu-item active">
+        <span>&#9831;</span>
+        <p>Cisternas</p>
+    </a>
+
+    <a href="{% url 'monitoramento' %}" class="menu-item">
+        <span>&#9719;</span>
+        <p>Monitoramento</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9888;</span>
+        <p>Alertas</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8982;</span>
+        <p>Mapa</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8801;</span>
+        <p>Relat&#243;rios</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9881;</span>
+        <p>Configura&#231;&#245;es</p>
+    </a>
+
+</nav>
+
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.username }}</strong>
+                <small>Usuário do sistema</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="content">
+
+        <header class="topbar">
+
+            <div>
+
+                <div class="breadcrumb">
+                    Cisternas / Excluir cisterna
+                </div>
+
+                <h1>Excluir cisterna</h1>
+
+                <p>
+                    Confirme a exclusão da cisterna selecionada.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <section class="delete-card">
+
+            <div class="delete-icon">
+                &#9888;
+            </div>
+
+
+            <h2>Excluir esta cisterna?</h2>
+
+
+            <p class="delete-message">
+                Você está prestes a excluir a cisterna:
+            </p>
+
+
+            <div class="cisterna-name">
+                {{ cisterna.identificacao }}
+            </div>
+
+
+            <p class="delete-warning">
+                Essa ação não poderá ser desfeita.
+            </p>
+
+
+            <form method="post" class="delete-actions">
+
+                {% csrf_token %}
+
+                <a
+                    href="{% url 'lista_cisternas' %}"
+                    class="btn-cancel"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn-delete-confirm"
+                >
+                    Excluir cisterna
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <footer>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

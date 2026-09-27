@@ -1,0 +1,435 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Usuários - SMC</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &#128167;
+            </div>
+
+            <div class="logo-text">
+
+                <span>
+                    SISTEMA DE MONITORAMENTO
+                </span>
+
+                <strong>
+                    DE CISTERNAS
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+    <a href="{% url 'index' %}" class="menu-item">
+        <span>&#8962;</span>
+        <p>Tela Inicial</p>
+    </a>
+
+    <a href="{% url 'lista_usuarios' %}" class="menu-item active">
+        <span>&#9817;</span>
+        <p>Usu&#225;rios</p>
+    </a>
+
+    <a href="{% url 'lista_cisternas' %}" class="menu-item">
+        <span>&#9831;</span>
+        <p>Cisternas</p>
+    </a>
+
+    <a href="{% url 'monitoramento' %}" class="menu-item">
+        <span>&#9719;</span>
+        <p>Monitoramento</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9888;</span>
+        <p>Alertas</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8982;</span>
+        <p>Mapa</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8801;</span>
+        <p>Relat&#243;rios</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9881;</span>
+        <p>Configura&#231;&#245;es</p>
+    </a>
+
+</nav>
+
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+
+                <strong>
+                    {{ request.user.username }}
+                </strong>
+
+                <small>
+                    Usuário do sistema
+                </small>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- CONTE�sDO -->
+
+    <main class="content usuarios-page">
+
+
+        <div class="page-top">
+
+            <div>
+
+                <span class="page-label">
+                    Administração
+                </span>
+
+                <h1>
+                    Usuários
+                </h1>
+
+                <p>
+                    Gerencie os usuários que possuem acesso ao sistema.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BARRA -->
+
+        <div class="usuarios-toolbar">
+
+            <div class="usuarios-search">
+
+                <span>
+                    &#8981;
+                </span>
+
+                <input
+                    type="text"
+                    id="buscarUsuario"
+                    placeholder="Buscar usuário..."
+                >
+
+            </div>
+
+
+            <a
+                href="{% url 'criar_usuario' %}"
+                class="btn-usuario-cadastrar"
+            >
+                + Cadastrar Usuário
+            </a>
+
+        </div>
+
+
+
+        <!-- TABELA -->
+
+        <section class="usuarios-card">
+
+
+            <div class="usuarios-card-header">
+
+                <div>
+
+                    <strong>
+                        Usuários cadastrados
+                    </strong>
+
+                    <span>
+                        Lista de usuários com acesso ao sistema
+                    </span>
+
+                </div>
+
+
+                <div class="usuarios-total">
+
+                    {{ usuarios|length }}
+
+                </div>
+
+            </div>
+
+
+
+            <div class="usuarios-table">
+
+
+                <div class="usuarios-table-head">
+
+                    <span>
+                        Usuário
+                    </span>
+
+                    <span>
+                        E-mail
+                    </span>
+
+                    <span>
+                        Perfil
+                    </span>
+
+                    <span>
+                        Status
+                    </span>
+
+                </div>
+
+
+
+                {% for usuario in usuarios %}
+
+                <div
+                    class="usuario-row"
+                    data-search="
+                        {{ usuario.username }}
+                        {{ usuario.first_name }}
+                        {{ usuario.last_name }}
+                        {{ usuario.email }}
+                    "
+                >
+
+
+                    <div class="usuario-identidade">
+
+                        <div class="usuario-avatar">
+
+                            {{ usuario.username|first|upper }}
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+
+                                {% if usuario.get_full_name %}
+
+                                    {{ usuario.get_full_name }}
+
+                                {% else %}
+
+                                    {{ usuario.username }}
+
+                                {% endif %}
+
+                            </strong>
+
+
+                            <small>
+                                @{{ usuario.username }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <span class="usuario-email">
+
+                        {{ usuario.email|default:"Não informado" }}
+
+                    </span>
+
+
+
+                    <span>
+
+                        {% if usuario.is_superuser %}
+
+                            <span class="perfil-badge admin">
+                                Administrador do sistema
+                            </span>
+
+                        {% else %}
+
+                            {% with grupo=usuario.groups.first %}
+
+                                {% if grupo %}
+
+                                    <span class="perfil-badge">
+                                        {{ grupo.name }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="perfil-badge vazio">
+                                        Sem perfil
+                                    </span>
+
+                                {% endif %}
+
+                            {% endwith %}
+
+                        {% endif %}
+
+                    </span>
+
+
+
+                    <span>
+
+                        {% if usuario.is_active %}
+
+                            <span class="status-badge ativo">
+                                Ativo
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge inativo">
+                                Inativo
+                            </span>
+
+                        {% endif %}
+
+                    </span>
+
+
+                </div>
+
+                {% empty %}
+
+                <div class="usuarios-empty">
+
+                    <span>
+                        &#9817;
+                    </span>
+
+                    <strong>
+                        Nenhum usuário cadastrado
+                    </strong>
+
+                    <p>
+                        Cadastre o primeiro usuário do sistema.
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            Sistema de Monitoramento do Nível de Água em Cisternas
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+    const campoBusca =
+        document.getElementById("buscarUsuario");
+
+    const usuarios =
+        document.querySelectorAll(".usuario-row");
+
+
+    campoBusca.addEventListener(
+        "input",
+        function () {
+
+            const texto =
+                this.value.toLowerCase();
+
+
+            usuarios.forEach(
+                function (usuario) {
+
+                    const dados =
+                        usuario
+                        .getAttribute("data-search")
+                        .toLowerCase();
+
+
+                    if (dados.includes(texto)) {
+
+                        usuario.style.display = "grid";
+
+                    } else {
+
+                        usuario.style.display = "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

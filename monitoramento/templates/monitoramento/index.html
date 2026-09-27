@@ -4,497 +4,390 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sistema de Monitoramento do Nível de Água em Cisternas</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+    <title>
+        Cisternas | SMC
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/style.css' %}"
+    >
+
 </head>
+
 
 <body>
 
 <div class="layout">
 
+
     <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar">
 
+
         <div class="logo">
 
             <div class="logo-icon">
-                
+                💧
             </div>
 
+
             <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DO NÍVEL DE ÁGUA EM CISTERNAS</strong>
+
+                <span>
+                    SISTEMA DE MONITORAMENTO
+                </span>
+
+                <strong>
+                    DE CISTERNAS
+                </strong>
+
             </div>
 
         </div>
 
+
+        <!-- ================= MENU ================= -->
 
         <nav class="menu">
 
-            <a href="/" class="menu-item active">
-                <span></span>
-                <p>Tela Inicial</p>
-            </a>
+    <a href="{% url 'index' %}" class="menu-item active">
+        <span>&#8962;</span>
+        <p>Tela Inicial</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Usuários</p>
-            </a>
+    <a href="{% url 'lista_usuarios' %}" class="menu-item">
+        <span>&#9817;</span>
+        <p>Usu&#225;rios</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Cisternas</p>
-            </a>
+    <a href="{% url 'lista_cisternas' %}" class="menu-item">
+        <span>&#9831;</span>
+        <p>Cisternas</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Monitoramento</p>
-            </a>
+    <a href="{% url 'monitoramento' %}" class="menu-item">
+        <span>&#9719;</span>
+        <p>Monitoramento</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Alertas</p>
-            </a>
+    <a href="#" class="menu-item">
+        <span>&#9888;</span>
+        <p>Alertas</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Mapa</p>
-            </a>
+    <a href="#" class="menu-item">
+        <span>&#8982;</span>
+        <p>Mapa</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Relatórios</p>
-            </a>
+    <a href="#" class="menu-item">
+        <span>&#8801;</span>
+        <p>Relat&#243;rios</p>
+    </a>
 
-            <a href="#" class="menu-item">
-                <span></span>
-                <p>Configurações</p>
-            </a>
+    <a href="#" class="menu-item">
+        <span>&#9881;</span>
+        <p>Configura&#231;&#245;es</p>
+    </a>
 
-        </nav>
+</nav>
 
 
-<!-- Usuários -->
+        <!-- ================= USUÁRIO ================= -->
 
         <div class="user-box">
 
+
             <div class="user-avatar">
-                A
+
+                {{ request.user.username|first|upper }}
+
             </div>
+
 
             <div class="user-info">
-                <strong>Administrador</strong>
-                <small>admin@sistema</small>
+
+                <strong>
+
+                    {{ request.user.username }}
+
+                </strong>
+
+
+                <small>
+
+                    Usuário do sistema
+
+                </small>
+
             </div>
 
-            <span>⌄</span>
 
         </div>
+
 
     </aside>
 
 
+    <!-- ================= CONTEÚDO ================= -->
 
-    <main class="content">
+    <main class="content cisternas-page">
 
+
+        <!-- ================= CABEÇALHO ================= -->
 
         <header class="topbar">
 
+
             <div>
 
+                <span class="page-label">
+
+                    Tela de Cisternas
+
+                </span>
+
+
                 <h1>
-                    Olá, Administrador! 
+
+                    Cisternas
+
                 </h1>
 
-                <p>
-                    Bem-vindo ao Sistema de Monitoramento do Nível de Água em Cisternas
-                </p>
-
             </div>
 
-
-            <div class="top-actions">
-
-                <div class="notification">
-
-                    
-
-                    <span>3</span>
-
-                </div>
-
-
-                <div class="date">
-
-                    <strong>01/09/202</strong>
-
-                    <small>
-                        Terça-feira • 14:30
-                    </small>
-
-                </div>
-
-            </div>
 
         </header>
 
 
-        <section class="cards">
+        <!-- ================= BARRA ================= -->
+
+        <div class="cisterna-toolbar">
 
 
+            <div class="cisterna-search">
 
-            <div class="card blue">
+                <span>
+                    🔎
+                </span>
 
-                <div class="card-icon">
-                    
+
+                <input
+                    type="text"
+                    id="buscarCisterna"
+                    placeholder="Buscar cisternas..."
+                >
+
+            </div>
+
+
+            <a
+                href="{% url 'criar_cisterna' %}"
+                class="figma-toolbar-button"
+            >
+
+                + Cadastrar Cisterna
+
+            </a>
+
+
+        </div>
+
+
+        <!-- ================= LISTA ================= -->
+
+        <section class="figma-form-card">
+
+
+            <div class="figma-form-title">
+
+
+                <div class="figma-form-title-icon">
+
+                    ▣
+
                 </div>
+
 
                 <div>
 
-                    <span>
-                        Cisternas
-                    </span>
-
                     <h2>
-                        {{ total_cisternas }}
+
+                        Cisternas cadastradas
+
                     </h2>
 
-                    <small>
-                        Cadastradas
-                    </small>
+
+                    <p>
+
+                        Consulte e gerencie as cisternas do sistema.
+
+                    </p>
 
                 </div>
 
-            </div>
-
-            <div class="card green">
-
-                <div class="card-icon">
-                    
-                </div>
-
-                <div>
-
-                    <span>
-                        Participantes
-                    </span>
-
-                    <h2>
-                        {{ total_participantes }}
-                    </h2>
-
-                    <small>
-                        Cadastrados
-                    </small>
-
-                </div>
 
             </div>
 
 
+            {% if cisternas %}
 
 
-            <div class="card yellow">
-
-                <div class="card-icon">
-                    
-                </div>
-
-                <div>
-
-                    <span>
-                        Alertas
-                    </span>
-
-                    <h2>
-                        {{ total_alertas }}
-                    </h2>
-
-                    <small>
-                        Registrados
-                    </small>
-
-                </div>
-
-            </div>
+            <div class="cisternas-lista">
 
 
+                {% for cisterna in cisternas %}
 
 
-            <div class="card purple">
-
-                <div class="card-icon">
-                    
-                </div>
-
-                <div>
-
-                    <span>
-                        Leituras
-                    </span>
-
-                    <h2>
-                        {{ total_leituras }}
-                    </h2>
-
-                    <small>
-                        Registradas
-                    </small>
-
-                </div>
-
-            </div>
-
-        </section>
+                <div
+                    class="cisterna-list-item"
+                    data-search="{{ cisterna.identificacao }} {{ cisterna.localidade }} {{ cisterna.municipio }}"
+                >
 
 
-        <section class="grid">
+                    <div class="cisterna-list-main">
 
 
+                        <div class="cisterna-list-icon">
 
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Níveis das Cisternas
-                    </h2>
-
-                </div>
-
-
-                <div class="levels">
-
-
-                    <div class="donut">
-
-                        <div>
-
-                            <strong>
-                                {{ total_cisternas }}
-                            </strong>
-
-                            <span>
-                                Total
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="legend">
-
-
-                        <div>
-
-                            <i class="full"></i>
-
-                            <span>
-                                Cheia
-                            </span>
-
-                            <strong>
-                                Cisternas
-                            </strong>
+                            💧
 
                         </div>
 
 
-                        <div>
+                        <div class="cisterna-list-info">
 
-                            <i class="medium"></i>
 
-                            <span>
-                                Média
+                            <span class="cisterna-list-label">
+
+                                IDENTIFICAÇÃO
+
                             </span>
 
-                            <strong>
-                                Em monitoramento
-                            </strong>
 
-                        </div>
+                            <h3>
 
+                                {{ cisterna.identificacao }}
 
-                        <div>
-
-                            <i class="low"></i>
-
-                            <span>
-                                Baixa
-                            </span>
-
-                            <strong>
-                                Atenção
-                            </strong>
-
-                        </div>
+                            </h3>
 
 
-                        <div>
+                            <p>
 
-                            <i class="critical"></i>
+                                Localização:
+                                {{ cisterna.localidade }}
 
-                            <span>
-                                Crítica
-                            </span>
+                            </p>
 
-                            <strong>
-                                Necessita atenção
-                            </strong>
+
+                            {% if cisterna.municipio %}
+
+                            <small>
+
+                                Município:
+                                {{ cisterna.municipio.nome }} -
+                                {{ cisterna.municipio.estado }}
+
+                            </small>
+
+                            {% else %}
+
+                            <small>
+
+                                Município não informado
+
+                            </small>
+
+                            {% endif %}
+
 
                         </div>
 
 
                     </div>
 
-                </div>
 
-            </div>
-
+                    <div class="cisterna-list-status">
 
 
-            <div class="panel">
+                        <span class="cisterna-status
+                            {{ cisterna.situacao }}"
+                        >
 
-                <div class="panel-header">
+                            {{ cisterna.get_situacao_display }}
 
-                    <h2>
-                        Últimas Leituras
-                    </h2>
-
-                    <button>
-                        Ver todas
-                    </button>
-
-                </div>
-
-
-                <div class="table">
-
-
-                    <div class="table-head">
-
-                        <span>
-                            Cisterna
                         </span>
 
-                        <span>
-                            Localidade
-                        </span>
-
-                        <span>
-                            Nível
-                        </span>
-
-                        <span>
-                            Data/Hora
-                        </span>
 
                     </div>
 
 
-                    {% for leitura in ultimas_leituras %}
+                    <div class="cisterna-list-capacidade">
 
-                    <div class="table-row">
 
                         <span>
-                            {{ leitura.cisterna }}
+
+                            Capacidade
+
                         </span>
 
-                        <span>
-                            {{ leitura.cisterna.localidade }}
-                        </span>
-
-                        <b class="level-blue">
-                            {{ leitura.nivel }}%
-                        </b>
-
-                        <span>
-                            {{ leitura.data_hora|date:"d/m/Y H:i" }}
-                        </span>
-
-                    </div>
-
-                    {% empty %}
-
-                    <div class="empty">
-
-                        Nenhuma leitura cadastrada.
-
-                    </div>
-
-                    {% endfor %}
-
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <section class="grid">
-
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Alertas Recentes
-                    </h2>
-
-                    <button>
-                        Ver todos
-                    </button>
-
-                </div>
-
-
-                {% for alerta in alertas_recentes %}
-
-                <div class="alert">
-
-                    <div class="alert-icon red">
-                        
-                    </div>
-
-
-                    <div>
 
                         <strong>
-                            {{ alerta.mensagem }}
+
+                            {% if cisterna.capacidade_total %}
+
+                                {{ cisterna.capacidade_total }} L
+
+                            {% else %}
+
+                                Não informado
+
+                            {% endif %}
+
                         </strong>
 
-                        <p>
-                            {{ alerta.cisterna }}
-                        </p>
 
                     </div>
 
 
-                    <time>
+                    <div class="cisterna-list-actions">
 
-                        {{ alerta.data_hora|date:"H:i" }}
 
-                    </time>
+                        <a
+                            href="{% url 'editar_cisterna' cisterna.id %}"
+                            class="btn-list-edit"
+                        >
+
+                            Editar
+
+                        </a>
+
+
+                        <a
+                            href="{% url 'excluir_cisterna' cisterna.id %}"
+                            class="btn-list-delete"
+                        >
+
+                            Excluir
+
+                        </a>
+
+
+                    </div>
+
 
                 </div>
 
-                {% empty %}
-
-                <div class="empty">
-
-                    Nenhum alerta registrado.
-
-                </div>
 
                 {% endfor %}
 
@@ -502,134 +395,57 @@
             </div>
 
 
+            <div
+                id="semCisternaBusca"
+                class="empty"
+                style="display: none;"
+            >
 
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Localidades
-                    </h2>
-
-                    <button>
-                        Ver todas
-                    </button>
-
-                </div>
-
-
-                <div class="location-box">
-
-                    <div class="location-icon">
-                        
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            {{ total_localidades }}
-                        </strong>
-
-                        <span>
-                            localidades cadastradas
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="location-info">
-
-                    <p>
-                        As cisternas cadastradas estão distribuídas
-                        pelas localidades monitoradas pelo sistema.
-                    </p>
-
-                </div>
+                Nenhuma cisterna encontrada.
 
             </div>
+
+
+            {% else %}
+
+
+            <div class="empty">
+
+
+                <strong>
+
+                    Nenhuma cisterna cadastrada.
+
+                </strong>
+
+
+                <p>
+
+                    Cadastre uma cisterna para começar.
+
+                </p>
+
+
+                <a
+                    href="{% url 'criar_cisterna' %}"
+                    class="monitor-empty-button"
+                >
+
+                    Cadastrar cisterna
+
+                </a>
+
+
+            </div>
+
+
+            {% endif %}
 
 
         </section>
 
 
-
-        <section class="summary-panel">
-
-            <div>
-
-                <span>
-                    Resumo do sistema
-                </span>
-
-                <h2>
-                    {{ total_cisternas }} cisternas cadastradas
-                </h2>
-
-            </div>
-
-
-            <div class="summary-items">
-
-                <div>
-
-                    <strong>
-                        {{ total_participantes }}
-                    </strong>
-
-                    <span>
-                        Participantes
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        {{ total_localidades }}
-                    </strong>
-
-                    <span>
-                        Localidades
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        {{ total_leituras }}
-                    </strong>
-
-                    <span>
-                        Leituras
-                    </span>
-
-                </div>
-
-
-                <div>
-
-                    <strong>
-                        {{ total_alertas }}
-                    </strong>
-
-                    <span>
-                        Alertas
-                    </span>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
+        <!-- ================= RODAPÉ ================= -->
 
         <footer>
 
@@ -640,7 +456,107 @@
 
     </main>
 
+
 </div>
+
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const campoBusca =
+                document.getElementById(
+                    "buscarCisterna"
+                );
+
+            const cisternas =
+                document.querySelectorAll(
+                    ".cisterna-list-item"
+                );
+
+            const semResultado =
+                document.getElementById(
+                    "semCisternaBusca"
+                );
+
+
+            if (!campoBusca) {
+                return;
+            }
+
+
+            campoBusca.addEventListener(
+                "input",
+                function () {
+
+                    const texto =
+                        campoBusca.value
+                            .toLowerCase()
+                            .trim();
+
+                    let encontrou = false;
+
+
+                    cisternas.forEach(
+                        function (cisterna) {
+
+                            const dados =
+                                cisterna
+                                    .getAttribute(
+                                        "data-search"
+                                    )
+                                    .toLowerCase();
+
+
+                            if (
+                                dados.includes(texto)
+                            ) {
+
+                                cisterna.style.display =
+                                    "grid";
+
+                                encontrou = true;
+
+                            } else {
+
+                                cisterna.style.display =
+                                    "none";
+
+                            }
+
+                        }
+                    );
+
+
+                    if (semResultado) {
+
+                        if (
+                            texto === "" ||
+                            encontrou
+                        ) {
+
+                            semResultado.style.display =
+                                "none";
+
+                        } else {
+
+                            semResultado.style.display =
+                                "block";
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
 
 </body>
 

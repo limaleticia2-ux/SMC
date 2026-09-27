@@ -1,0 +1,726 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ titulo }} - SMC</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                &#128167;
+            </div>
+
+            <div class="logo-text">
+
+                <span>
+                    SISTEMA DE MONITORAMENTO
+                </span>
+
+                <strong>
+                    DE CISTERNAS
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+    <a href="{% url 'index' %}" class="menu-item">
+        <span>&#8962;</span>
+        <p>Tela Inicial</p>
+    </a>
+
+    <a href="{% url 'lista_usuarios' %}" class="menu-item">
+        <span>&#9817;</span>
+        <p>Usu&#225;rios</p>
+    </a>
+
+    <a href="{% url 'lista_cisternas' %}" class="menu-item active">
+        <span>&#9831;</span>
+        <p>Cisternas</p>
+    </a>
+
+    <a href="{% url 'monitoramento' %}" class="menu-item">
+        <span>&#9719;</span>
+        <p>Monitoramento</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9888;</span>
+        <p>Alertas</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8982;</span>
+        <p>Mapa</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8801;</span>
+        <p>Relat&#243;rios</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9881;</span>
+        <p>Configura&#231;&#245;es</p>
+    </a>
+
+</nav>
+
+
+        <!-- USUÁRIO -->
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+
+                {{ request.user.username|first|upper }}
+
+            </div>
+
+
+            <div class="user-info">
+
+                <strong>
+                    {{ request.user.username }}
+                </strong>
+
+                <small>
+                    Usuário do sistema
+                </small>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- CONTE�sDO -->
+
+    <main class="content cisternas-form-page">
+
+
+        <!-- CABE�?ALHO -->
+
+        <div class="page-top">
+
+            <div>
+
+                <span class="page-label">
+                    Tela de Cisternas
+                </span>
+
+                <h1>
+                    {{ titulo }}
+                </h1>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MENSAGEM DE ERRO -->
+
+        {% if form.errors %}
+
+            <div class="js-form-error">
+
+                <strong>
+                    Verifique os dados informados.
+                </strong>
+
+                <span>
+                    Alguns campos precisam ser corrigidos.
+                </span>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- FORMULÁRIO -->
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+            id="cisternaForm"
+        >
+
+            {% csrf_token %}
+
+
+
+            <!-- DADOS DA CISTERNA -->
+
+            <section class="figma-cisterna-card">
+
+
+                <div class="figma-section-title">
+
+                    <div class="figma-section-icon">
+                        &#128167;
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Dados da Cisterna
+                        </strong>
+
+                        <p>
+                            Informe as informações da cisterna.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="figma-form-grid">
+
+
+                    <!-- IDENTIFICA�?�fO -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.identificacao.id_for_label }}"
+                        >
+                            Identificação
+                            <span>*</span>
+                        </label>
+
+
+                        {{ form.identificacao }}
+
+
+                        {% for error in form.identificacao.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- MUNICÍPIO -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.municipio.id_for_label }}"
+                        >
+                            Município
+                            <span>*</span>
+                        </label>
+
+
+                        {{ form.municipio }}
+
+
+                        {% for error in form.municipio.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- LOCALIZA�?�fO -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.localidade.id_for_label }}"
+                        >
+                            Localização
+                            <span>*</span>
+                        </label>
+
+
+                        {{ form.localidade }}
+
+
+                        {% for error in form.localidade.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- PARTICIPANTE -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.participante.id_for_label }}"
+                        >
+                            Participante
+                            <span>*</span>
+                        </label>
+
+
+                        {{ form.participante }}
+
+
+                        {% for error in form.participante.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- LATITUDE -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.latitude.id_for_label }}"
+                        >
+                            Latitude
+                        </label>
+
+
+                        {{ form.latitude }}
+
+
+                        {% for error in form.latitude.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- LONGITUDE -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.longitude.id_for_label }}"
+                        >
+                            Longitude
+                        </label>
+
+
+                        {{ form.longitude }}
+
+
+                        {% for error in form.longitude.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- CAPACIDADE -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.capacidade_total.id_for_label }}"
+                        >
+                            Capacidade Total (L)
+                        </label>
+
+
+                        {{ form.capacidade_total }}
+
+
+                        {% for error in form.capacidade_total.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- SITUA�?�fO -->
+
+                    <div class="figma-field">
+
+                        <label
+                            for="{{ form.situacao.id_for_label }}"
+                        >
+                            Situação
+                            <span>*</span>
+                        </label>
+
+
+                        {{ form.situacao }}
+
+
+                        <div
+                            id="situacaoPreview"
+                            class="situacao-preview"
+                        >
+
+                            <span></span>
+
+                            <strong>
+                                Sem dados
+                            </strong>
+
+                        </div>
+
+
+                        {% for error in form.situacao.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- IMAGEM -->
+
+                    <div class="figma-field imagem-field">
+
+                        <label
+                            for="{{ form.imagem.id_for_label }}"
+                        >
+                            Imagem da cisterna
+                        </label>
+
+
+                        {{ form.imagem }}
+
+
+                        {% for error in form.imagem.errors %}
+
+                            <small>
+                                {{ error }}
+                            </small>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- IMAGEM -->
+
+            <section class="visual-card">
+
+
+                <div class="visual-card-title">
+
+                    <span>
+                        Imagem
+                    </span>
+
+                    <small>
+                        Pré-visualização
+                    </small>
+
+                </div>
+
+
+                <div class="image-preview-area">
+
+
+                    {% if form.instance.imagem %}
+
+                        <img
+                            id="imagePreview"
+                            src="{{ form.instance.imagem.url }}"
+                            alt="Imagem da cisterna"
+                        >
+
+                        <div
+                            id="imageEmpty"
+                            class="image-empty"
+                            style="display: none;"
+                        >
+
+                            <span>
+                                &#128444;
+                            </span>
+
+                            <p>
+                                Nenhuma imagem selecionada
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <img
+                            id="imagePreview"
+                            src=""
+                            alt="Pré-visualização da cisterna"
+                            style="display: none;"
+                        >
+
+                        <div
+                            id="imageEmpty"
+                            class="image-empty"
+                        >
+
+                            <span>
+                                &#128444;
+                            </span>
+
+                            <p>
+                                Nenhuma imagem selecionada
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="removeImage"
+                    class="remove-image"
+                >
+                    Remover imagem
+                </button>
+
+            </section>
+
+
+
+            <!-- VISUALIZA�?�fO / MAPA -->
+
+            <section class="map-card">
+
+
+                <div class="map-title">
+
+                    <span>
+                        Visualização
+                    </span>
+
+                    <small>
+                        Localização da cisterna
+                    </small>
+
+                </div>
+
+
+                <div class="map-content">
+
+
+                    <!-- MAPA -->
+
+                    <div
+                        class="fake-map"
+                        id="fakeMap"
+                    >
+
+                        <div class="map-road road-one"></div>
+
+                        <div class="map-road road-two"></div>
+
+                        <div class="map-road road-three"></div>
+
+                        <div class="map-road road-four"></div>
+
+
+                        <div class="map-water"></div>
+
+
+                        <div
+                            id="mapMarker"
+                            class="map-marker"
+                        >
+                            &#128205;
+                        </div>
+
+
+                        <div
+                            id="mapMessage"
+                            class="map-message"
+                        >
+                            Informe latitude e longitude
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- LEGENDA -->
+
+                    <div class="map-legend">
+
+
+                        <h3>
+                            Legenda
+                        </h3>
+
+
+                        <div class="legend-item">
+
+                            <i class="normal"></i>
+
+                            <span>
+                                Normal
+                            </span>
+
+                        </div>
+
+
+                        <div class="legend-item">
+
+                            <i class="atencao"></i>
+
+                            <span>
+                                Atenção
+                            </span>
+
+                        </div>
+
+
+                        <div class="legend-item">
+
+                            <i class="critico"></i>
+
+                            <span>
+                                Crítico
+                            </span>
+
+                        </div>
+
+
+                        <div class="legend-item">
+
+                            <i class="sem-dados"></i>
+
+                            <span>
+                                Sem dados
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- BOT�.ES -->
+
+            <div class="form-final-actions">
+
+
+                <a
+                    href="{% url 'lista_cisternas' %}"
+                    class="btn-cancel"
+                >
+                    Cancelar
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn-figma-save"
+                >
+                    Salvar Cisterna
+                </button>
+
+
+            </div>
+
+        </form>
+
+
+
+        <!-- RODAP�? -->
+
+        <footer>
+
+            Sistema de Monitoramento do Nível de Água em Cisternas
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- JAVASCRIPT EXTERNO -->
+
+<script src="{% static 'monitoramento/js/cisterna.js' %}"></script>
+
+
+</body>
+
+</html>

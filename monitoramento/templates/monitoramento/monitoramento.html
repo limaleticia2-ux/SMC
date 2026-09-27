@@ -1,0 +1,589 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Monitoramento | SMC
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/style.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/monitoramento.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                💧
+            </div>
+
+            <div class="logo-text">
+
+                <span>
+                    SISTEMA DE MONITORAMENTO
+                </span>
+
+                <strong>
+                    DE CISTERNAS
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+    <a href="{% url 'index' %}" class="menu-item">
+        <span>&#8962;</span>
+        <p>Tela Inicial</p>
+    </a>
+
+    <a href="{% url 'lista_usuarios' %}" class="menu-item">
+        <span>&#9817;</span>
+        <p>Usu&#225;rios</p>
+    </a>
+
+    <a href="{% url 'lista_cisternas' %}" class="menu-item">
+        <span>&#9831;</span>
+        <p>Cisternas</p>
+    </a>
+
+    <a href="{% url 'monitoramento' %}" class="menu-item active">
+        <span>&#9719;</span>
+        <p>Monitoramento</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9888;</span>
+        <p>Alertas</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8982;</span>
+        <p>Mapa</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#8801;</span>
+        <p>Relat&#243;rios</p>
+    </a>
+
+    <a href="#" class="menu-item">
+        <span>&#9881;</span>
+        <p>Configura&#231;&#245;es</p>
+    </a>
+
+</nav>
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+
+                <strong>
+                    {{ request.user.username }}
+                </strong>
+
+                <small>
+                    Usuário do sistema
+                </small>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="content monitoramento-page">
+
+
+        <header class="monitoramento-header">
+
+            <div>
+
+                <span class="monitoramento-breadcrumb">
+                    Sistema / Monitoramento
+                </span>
+
+                <h1>
+                    Monitoramento
+                </h1>
+
+                <p>
+                    Acompanhe em tempo real os níveis das cisternas cadastradas.
+                </p>
+
+            </div>
+
+
+            <div class="monitoramento-clock-box">
+
+                <span>
+                    Horário atual
+                </span>
+
+                <strong id="horaAtual">
+                    --:--:--
+                </strong>
+
+            </div>
+
+        </header>
+
+
+        <section class="monitoramento-resumo">
+
+
+            <div class="monitor-resumo-card">
+
+                <div class="monitor-resumo-icon blue">
+                    💧
+                </div>
+
+                <div>
+
+                    <span>
+                        Cisternas monitoradas
+                    </span>
+
+                    <strong>
+                        {{ total_monitoradas }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="monitor-resumo-card">
+
+                <div class="monitor-resumo-icon green">
+                    ◷
+                </div>
+
+                <div>
+
+                    <span>
+                        Leituras registradas
+                    </span>
+
+                    <strong>
+                        {{ total_leituras }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="monitor-resumo-card">
+
+                <div class="monitor-resumo-icon purple">
+                    ◉
+                </div>
+
+                <div>
+
+                    <span>
+                        Atualização
+                    </span>
+
+                    <strong>
+                        Em tempo real
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="monitoramento-toolbar">
+
+            <div class="monitoramento-search">
+
+                <span>
+                    🔎
+                </span>
+
+                <input
+                    type="text"
+                    id="buscarMonitoramento"
+                    placeholder="Buscar cisterna, localidade ou município..."
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="monitoramento-filter-button"
+                id="mostrarTodas"
+            >
+                Mostrar todas
+            </button>
+
+        </div>
+
+
+        <section class="monitoramento-section">
+
+
+            <div class="monitoramento-section-header">
+
+                <div>
+
+                    <h2>
+                        Cisternas em monitoramento
+                    </h2>
+
+                    <p>
+                        Situação atual das cisternas cadastradas
+                    </p>
+
+                </div>
+
+
+                <div class="monitoramento-count">
+                    {{ total_monitoradas }}
+                </div>
+
+            </div>
+
+
+            <div class="monitoramento-grid">
+
+
+                {% for cisterna in cisternas %}
+
+                <article
+                    class="monitor-card"
+                    data-search="{{ cisterna.identificacao }} {{ cisterna.localidade }} {{ cisterna.municipio }}"
+                >
+
+
+                    <div class="monitor-card-top">
+
+                        <div class="monitor-cisterna-name">
+
+                            <span>
+                                CISTERNA
+                            </span>
+
+                            <h3>
+                                {{ cisterna.identificacao }}
+                            </h3>
+
+                        </div>
+
+
+                        <span class="monitor-status {{ cisterna.status_classe }}">
+
+                            {{ cisterna.status_monitoramento }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="monitor-location">
+
+                        <span>
+                            ⌖
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                {{ cisterna.localidade }}
+                            </strong>
+
+                            <small>
+
+                                {% if cisterna.municipio %}
+
+                                    {{ cisterna.municipio.nome }} -
+                                    {{ cisterna.municipio.estado }}
+
+                                {% else %}
+
+                                    Município não informado
+
+                                {% endif %}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if cisterna.ultima_leitura %}
+
+                    <div class="monitor-level">
+
+
+                        <div class="monitor-level-header">
+
+                            <span>
+                                Nível atual
+                            </span>
+
+                            <strong>
+                                {{ cisterna.ultima_leitura.nivel }}%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="monitor-level-bar">
+
+                            <div
+                                class="monitor-level-fill {{ cisterna.status_classe }}"
+                                data-nivel="{{ cisterna.ultima_leitura.nivel }}"
+                            >
+                            </div>
+
+                        </div>
+
+
+                        <div class="monitor-level-footer">
+
+                            <span>
+                                Última leitura
+                            </span>
+
+                            <span>
+                                {{ cisterna.ultima_leitura.data_hora|date:"d/m/Y H:i" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {% else %}
+
+                    <div class="monitor-no-reading">
+
+                        <span>
+                            ◷
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Nenhuma leitura disponível
+                            </strong>
+
+                            <small>
+                                A cisterna ainda não possui dados de telemetria.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <div class="monitor-details">
+
+                        <div>
+
+                            <span>
+                                Participante
+                            </span>
+
+                            <strong>
+                                {{ cisterna.participante }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Capacidade
+                            </span>
+
+                            <strong>
+
+                                {% if cisterna.capacidade_total %}
+
+                                    {{ cisterna.capacidade_total }} L
+
+                                {% else %}
+
+                                    Não informado
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                </article>
+
+                {% empty %}
+
+
+                <div class="monitor-empty">
+
+                    <div class="monitor-empty-icon">
+                        💧
+                    </div>
+
+                    <strong>
+                        Nenhuma cisterna cadastrada
+                    </strong>
+
+                    <p>
+                        Cadastre uma cisterna para começar o monitoramento.
+                    </p>
+
+                    <a
+                        href="{% url 'criar_cisterna' %}"
+                        class="monitor-empty-button"
+                    >
+                        Cadastrar cisterna
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+
+                <div
+                    class="monitor-search-empty"
+                    id="semResultado"
+                >
+
+                    <span>
+                        🔎
+                    </span>
+
+                    <strong>
+                        Nenhuma cisterna encontrada
+                    </strong>
+
+                    <p>
+                        Tente pesquisar por outro nome ou localidade.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <section class="monitoramento-legend">
+
+            <div>
+
+                <strong>
+                    Legenda do monitoramento
+                </strong>
+
+                <span>
+                    A situação é definida conforme o nível da última leitura.
+                </span>
+
+            </div>
+
+
+            <div class="legend-options">
+
+                <div>
+
+                    <i class="legend-normal"></i>
+
+                    Normal
+
+                </div>
+
+
+                <div>
+
+                    <i class="legend-atencao"></i>
+
+                    Atenção
+
+                </div>
+
+
+                <div>
+
+                    <i class="legend-critico"></i>
+
+                    Crítico
+
+                </div>
+
+
+                <div>
+
+                    <i class="legend-sem-dados"></i>
+
+                    Sem dados
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+
+            © 2026 Sistema de Monitoramento do Nível de Água em Cisternas
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<script src="{% static 'monitoramento/js/monitoramento.js' %}"></script>
+
+</body>
+</html>
