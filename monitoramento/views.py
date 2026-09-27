@@ -276,6 +276,7 @@ def lista_alertas(request):
         }
     )
 
+
 @login_required
 def lista_municipios(request):
     municipios = Municipio.objects.all().order_by(
@@ -293,23 +294,16 @@ def lista_municipios(request):
 
 @login_required
 def criar_municipio(request):
-
     if request.method == 'POST':
-
         form = MunicipioForm(
             request.POST
         )
 
         if form.is_valid():
-
             form.save()
-
-            return redirect(
-                'lista_municipios'
-            )
+            return redirect('lista_municipios')
 
     else:
-
         form = MunicipioForm()
 
     return render(
@@ -324,29 +318,22 @@ def criar_municipio(request):
 
 @login_required
 def editar_municipio(request, id):
-
     municipio = get_object_or_404(
         Municipio,
         id=id
     )
 
     if request.method == 'POST':
-
         form = MunicipioForm(
             request.POST,
             instance=municipio
         )
 
         if form.is_valid():
-
             form.save()
-
-            return redirect(
-                'lista_municipios'
-            )
+            return redirect('lista_municipios')
 
     else:
-
         form = MunicipioForm(
             instance=municipio
         )
@@ -357,5 +344,26 @@ def editar_municipio(request, id):
         {
             'form': form,
             'titulo': 'Editar município'
+        }
+    )
+
+
+@login_required
+def historico_leituras(request, id):
+    cisterna = get_object_or_404(
+        Cisterna,
+        id=id
+    )
+
+    leituras = LeituraTelemetria.objects.filter(
+        cisterna=cisterna
+    ).order_by('-data_hora')
+
+    return render(
+        request,
+        'monitoramento/historico/lista.html',
+        {
+            'cisterna': cisterna,
+            'leituras': leituras,
         }
     )

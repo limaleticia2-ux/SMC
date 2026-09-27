@@ -1,130 +1,157 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cisternas - SMC</title>
+```
+<title>Cisternas - SMC</title>
 
-    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+```
+
 </head>
 
 <body>
 
 <div class="layout">
 
-    <aside class="sidebar">
+```
+<aside class="sidebar">
 
-        <div class="logo">
+    <div class="logo">
 
-            <div class="logo-icon">
-                &#128167;
-            </div>
+        <div class="logo-icon">
+            &#128167;
+        </div>
 
-            <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DE CISTERNAS</strong>
-            </div>
+        <div class="logo-text">
+            <span>SISTEMA DE MONITORAMENTO</span>
+            <strong>DE CISTERNAS</strong>
+        </div>
+
+    </div>
+
+
+    <nav class="menu">
+
+        <a href="{% url 'index' %}" class="menu-item">
+            <span>&#127968;</span>
+            <p>Tela Inicial</p>
+        </a>
+
+        <a href="{% url 'lista_usuarios' %}" class="menu-item">
+            <span>&#128100;</span>
+            <p>Usuários</p>
+        </a>
+
+        <a href="{% url 'lista_cisternas' %}" class="menu-item active">
+            <span>&#128688;</span>
+            <p>Cisternas</p>
+        </a>
+
+        <a href="{% url 'monitoramento' %}" class="menu-item">
+            <span>&#9687;</span>
+            <p>Monitoramento</p>
+        </a>
+
+        <a href="{% url 'lista_alertas' %}" class="menu-item">
+            <span>&#9888;</span>
+            <p>Alertas</p>
+        </a>
+
+        <a href="#" class="menu-item">
+            <span>&#128506;</span>
+            <p>Mapa</p>
+        </a>
+
+        <a href="#" class="menu-item">
+            <span>&#128202;</span>
+            <p>Relatórios</p>
+        </a>
+
+        <a href="#" class="menu-item">
+            <span>&#9881;</span>
+            <p>Configurações</p>
+        </a>
+
+    </nav>
+
+
+    <div class="user-box">
+
+        <div class="user-avatar">
+            {{ request.user.username|first|upper }}
+        </div>
+
+        <div class="user-info">
+            <strong>{{ request.user.username }}</strong>
+            <small>Usuário do sistema</small>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<main class="content cisternas-page">
+
+    <div class="page-top">
+
+        <div>
+
+            <span class="page-label">
+                Tela de Cisternas
+            </span>
+
+            <h1>
+                Cisternas
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <div class="cisterna-toolbar">
+
+        <div class="cisterna-search">
+
+            <span>&#128269;</span>
+
+            <input
+                type="text"
+                id="buscarCisterna"
+                placeholder="Buscar cisternas"
+            >
 
         </div>
 
 
-        <nav class="menu">
+        <div
+            style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            "
+        >
 
-    <a href="{% url 'index' %}" class="menu-item">
-        <span>&#127968;</span>
-        <p>Tela Inicial</p>
-    </a>
-
-    <a href="{% url 'lista_usuarios' %}" class="menu-item">
-        <span>&#128100;</span>
-        <p>Usuários</p>
-    </a>
-
-    <a href="{% url 'lista_cisternas' %}" class="menu-item active">
-        <span>&#128688;</span>
-        <p>Cisternas</p>
-    </a>
-
-    <a href="{% url 'monitoramento' %}" class="menu-item">
-        <span>&#9687;</span>
-        <p>Monitoramento</p>
-    </a>
-
-    <a href="{% url 'lista_alertas' %}" class="menu-item">
-        <span>&#9888;</span>
-        <p>Alertas</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#128506;</span>
-        <p>Mapa</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#128202;</span>
-        <p>Relatórios</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#9881;</span>
-        <p>Configurações</p>
-    </a>
-
-</nav>
-
-
-        <div class="user-box">
-
-            <div class="user-avatar">
-                {{ request.user.username|first|upper }}
-            </div>
-
-            <div class="user-info">
-                <strong>{{ request.user.username }}</strong>
-                <small>Usuário do sistema</small>
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <main class="content cisternas-page">
-
-        <div class="page-top">
-
-            <div>
-
-                <span class="page-label">
-                    Tela de Cisternas
-                </span>
-
-                <h1>
-                    Cisternas
-                </h1>
-
-            </div>
-
-        </div>
-
-
-        <div class="cisterna-toolbar">
-
-            <div class="cisterna-search">
-
-                <span>&#128269;</span>
-
-                <input
-                    type="text"
-                    id="buscarCisterna"
-                    placeholder="Buscar cisternas"
-                >
-
-            </div>
+            <a
+                href="{% url 'lista_municipios' %}"
+                class="btn-cancel"
+                style="
+                    text-decoration: none;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                "
+            >
+                Gerenciar Municípios
+            </a>
 
 
             <a
@@ -136,105 +163,114 @@
 
         </div>
 
+    </div>
 
-        <section class="cisterna-box">
 
-            <div class="box-title">
+    <section class="cisterna-box">
 
-                <span class="box-icon">
-                    &#128167;
+        <div class="box-title">
+
+            <span class="box-icon">
+                &#128167;
+            </span>
+
+            <strong>
+                Cisternas cadastradas
+            </strong>
+
+        </div>
+
+
+        <div class="cisterna-table">
+
+            <div class="cisterna-table-head">
+
+                <span>
+                    Identificação
                 </span>
 
+                <span>
+                    Participante
+                </span>
+
+                <span>
+                    Localidade
+                </span>
+
+                <span>
+                    Ações
+                </span>
+
+            </div>
+
+
+            {% for cisterna in cisternas %}
+
+            <div
+                class="cisterna-table-row"
+                data-search="{{ cisterna.identificacao }} {{ cisterna.participante }} {{ cisterna.localidade }}"
+            >
+
                 <strong>
-                    Cisternas cadastradas
+                    {{ cisterna.identificacao }}
                 </strong>
 
-            </div>
+                <span>
+                    {{ cisterna.participante }}
+                </span>
 
+                <span>
+                    {{ cisterna.localidade }}
+                </span>
 
-            <div class="cisterna-table">
+                <div class="row-actions">
 
-                <div class="cisterna-table-head">
+                    <a
+                        href="{% url 'historico_leituras' cisterna.id %}"
+                        class="action-edit"
+                    >
+                        Histórico
+                    </a>
 
-                    <span>
-                        Identificação
-                    </span>
+                    <a
+                        href="{% url 'editar_cisterna' cisterna.id %}"
+                        class="action-edit"
+                    >
+                        Editar
+                    </a>
 
-                    <span>
-                        Participante
-                    </span>
-
-                    <span>
-                        Localidade
-                    </span>
-
-                    <span>
-                        Ações
-                    </span>
-
-                </div>
-
-
-                {% for cisterna in cisternas %}
-
-                <div
-                    class="cisterna-table-row"
-                    data-search="{{ cisterna.identificacao }} {{ cisterna.participante }} {{ cisterna.localidade }}"
-                >
-
-                    <strong>
-                        {{ cisterna.identificacao }}
-                    </strong>
-
-                    <span>
-                        {{ cisterna.participante }}
-                    </span>
-
-                    <span>
-                        {{ cisterna.localidade }}
-                    </span>
-
-                    <div class="row-actions">
-
-                        <a
-                            href="{% url 'editar_cisterna' cisterna.id %}"
-                            class="action-edit"
-                        >
-                            Editar
-                        </a>
-
-                        <a
-                            href="{% url 'excluir_cisterna' cisterna.id %}"
-                            class="action-delete"
-                        >
-                            Excluir
-                        </a>
-
-                    </div>
+                    <a
+                        href="{% url 'excluir_cisterna' cisterna.id %}"
+                        class="action-delete"
+                    >
+                        Excluir
+                    </a>
 
                 </div>
-
-                {% empty %}
-
-                <div class="no-cisternas">
-                    Nenhuma cisterna cadastrada.
-                </div>
-
-                {% endfor %}
 
             </div>
 
-        </section>
+            {% empty %}
+
+            <div class="no-cisternas">
+                Nenhuma cisterna cadastrada.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
 
 
-        <footer>
-            Sistema de Monitoramento do Nível de Água em Cisternas
-        </footer>
+    <footer>
+        Sistema de Monitoramento do Nível de Água em Cisternas
+    </footer>
 
-    </main>
+</main>
+```
 
 </div>
-
 
 <script>
 

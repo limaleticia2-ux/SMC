@@ -1,30 +1,22 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
 from monitoramento.views import (
     criar_cisterna,
+    criar_municipio,
     criar_usuario,
     editar_cisterna,
+    editar_municipio,
     excluir_cisterna,
+    historico_leituras,
     lista_alertas,
     lista_cisternas,
+    lista_municipios,
     lista_usuarios,
     monitoramento,
-    lista_municipios,
-    criar_municipio,
-    editar_municipio,
 )
 
 
 urlpatterns = [
-
-    path(
-    '',
-    TemplateView.as_view(
-        template_name='monitoramento/apresentacao.html'
-    ),
-    name='apresentacao'
-),
 
     path(
         'cisternas/',
@@ -51,6 +43,13 @@ urlpatterns = [
     ),
 
     path(
+        'cisternas/<int:id>/historico/',
+        historico_leituras,
+        name='historico_leituras'
+    ),
+
+
+    path(
         'usuarios/',
         lista_usuarios,
         name='lista_usuarios'
@@ -62,6 +61,26 @@ urlpatterns = [
         name='criar_usuario'
     ),
 
+
+    path(
+        'municipios/',
+        lista_municipios,
+        name='lista_municipios'
+    ),
+
+    path(
+        'municipios/cadastrar/',
+        criar_municipio,
+        name='criar_municipio'
+    ),
+
+    path(
+        'municipios/<int:id>/editar/',
+        editar_municipio,
+        name='editar_municipio'
+    ),
+
+
     path(
         'monitoramento/',
         monitoramento,
@@ -69,25 +88,8 @@ urlpatterns = [
     ),
 
     path(
-        'alertas/', 
+        'alertas/',
         lista_alertas,
-        name='lista_alertas'),
-
-    path(
-    'municipios/',
-    lista_municipios,
-    name='lista_municipios'
-    ),
-
-    path(
-    'municipios/cadastrar/',
-    criar_municipio,
-    name='criar_municipio'
-    ),
-
-    path(
-    'municipios/<int:id>/editar/',
-    editar_municipio,
-    name='editar_municipio'
+        name='lista_alertas'
     ),
 ]
