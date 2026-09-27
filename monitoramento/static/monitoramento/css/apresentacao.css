@@ -304,32 +304,119 @@ body {
     position: relative;
 }
 
-.water-circle {
-    width: 240px;
-    height: 240px;
+/* ==================================================
+   ILUSTRAÇÃO DA CISTERNA
+================================================== */
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.cistern-illustration {
+    position: relative;
+
+    width: 300px;
+    height: 330px;
+}
+
+
+.cistern-top {
+    position: absolute;
+
+    top: 35px;
+
+    width: 180px;
+    height: 45px;
+
+    background: #d8edf4;
 
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.08);
+    border: 4px solid rgba(255, 255, 255, 0.75);
 
-    border: 1px solid rgba(255, 255, 255, 0.18);
-
-    font-size: 90px;
-
-    box-shadow:
-        0 0 0 35px rgba(255, 255, 255, 0.04),
-        0 0 0 70px rgba(255, 255, 255, 0.02);
+    z-index: 3;
 }
+
+
+.cistern-body {
+    position: absolute;
+
+    top: 55px;
+
+    width: 175px;
+    height: 190px;
+
+    overflow: hidden;
+
+    background: #c9e6ef;
+
+    border: 4px solid rgba(255, 255, 255, 0.75);
+
+    border-top: none;
+
+    border-radius: 0 0 25px 25px;
+
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Água dentro da cisterna */
+
+.water-level {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 58%;
+
+    background: #2b9bc0;
+
+    border-top: 4px solid #8bd4e7;
+}
+
+
+/* Gota */
+
+.water-drop {
+    position: absolute;
+
+    width: 34px;
+    height: 34px;
+
+    left: 50%;
+    top: 65px;
+
+    background: #ffffff;
+
+    border-radius: 50% 50% 50% 0;
+
+    transform: translateX(-50%) rotate(-45deg);
+
+    opacity: 0.9;
+}
+
+
+.cistern-base {
+    position: absolute;
+
+    bottom: 48px;
+
+    width: 210px;
+    height: 25px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    border-radius: 50%;
+}
+
+
+/* ==================================================
+   CARD DO MONITORAMENTO
+================================================== */
 
 .hero-card {
     position: absolute;
 
-    right: 5%;
-    bottom: 40px;
+    right: 0;
+    bottom: 20px;
 
     width: 220px;
 
@@ -340,8 +427,41 @@ body {
     border-radius: 8px;
 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+
+    z-index: 5;
 }
 
+
+.hero-card span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    color: #64748b;
+}
+
+
+.hero-card strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 18px;
+
+    color: #075985;
+}
+
+
+.hero-card small {
+    color: #64748b;
+
+    font-size: 12px;
+}
 .hero-card span {
     display: block;
 
