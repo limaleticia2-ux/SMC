@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from monitoramento.views import (
     criar_cisterna,
@@ -12,6 +13,14 @@ from monitoramento.views import (
 
 
 urlpatterns = [
+
+    path(
+    '',
+    TemplateView.as_view(
+        template_name='monitoramento/apresentacao.html'
+    ),
+    name='apresentacao'
+),
 
     path(
         'cisternas/',
