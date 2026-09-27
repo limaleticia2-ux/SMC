@@ -142,6 +142,19 @@
         background: #24455f;
     }
 
+    .forgot-password {
+        display: block;
+        margin-top: 15px;
+        text-align: center;
+        color: #183247;
+        font-size: 11px;
+        text-decoration: none;
+    }
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+
     .login-footer {
         padding: 14px 30px;
         border-top: 1px solid #edf2f7;
@@ -182,8 +195,15 @@
     <div class="login-form">
 
         <div class="form-title">
-            <span>Acesso ao sistema</span>
-            <strong>Entrar</strong>
+
+            <span>
+                Acesso ao sistema
+            </span>
+
+            <strong>
+                Entrar
+            </strong>
+
         </div>
 
 
@@ -238,13 +258,30 @@
 
 
             {% if next %}
-                <input type="hidden" name="next" value="{{ next }}">
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ next }}"
+                >
+
             {% endif %}
 
 
-            <button type="submit" class="login-button">
+            <button
+                type="submit"
+                class="login-button"
+            >
                 Entrar no sistema
             </button>
+
+
+            <a
+                href="{% url 'recuperar_senha' %}"
+                class="forgot-password"
+            >
+                Esqueci minha senha
+            </a>
 
         </form>
 
