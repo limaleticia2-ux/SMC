@@ -4,325 +4,50 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Nova senha - SMC</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+    <title>
+        Nova senha | SMC
+    </title>
 
-    <style>
-        .login-page {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f4f6f8;
-            padding: 20px;
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 430px;
-            background: #ffffff;
-            border: 1px solid #e1e7ed;
-            border-radius: 10px;
-            box-shadow: 0 4px 18px rgba(24, 50, 71, 0.08);
-            overflow: hidden;
-        }
-
-        .login-header {
-            background: #183247;
-            padding: 28px 30px;
-            text-align: center;
-        }
-
-        .login-logo {
-            width: 58px;
-            height: 58px;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            border-radius: 50%;
-            font-size: 28px;
-        }
-
-        .login-header h1 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .login-header p {
-            margin: 7px 0 0;
-            color: #cbd5df;
-            font-size: 11px;
-        }
-
-        .login-form {
-            padding: 30px;
-        }
-
-        .form-title {
-            margin-bottom: 20px;
-        }
-
-        .form-title span {
-            display: block;
-            color: #94a3b8;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-title strong {
-            display: block;
-            margin-top: 5px;
-            color: #183247;
-            font-size: 18px;
-        }
-
-        .form-description {
-            margin-bottom: 20px;
-            color: #64748b;
-            font-size: 11px;
-            line-height: 1.6;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 7px;
-            color: #475569;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            box-sizing: border-box;
-            height: 42px;
-            padding: 0 12px;
-            border: 1px solid #d8e0e7;
-            border-radius: 6px;
-            background: #ffffff;
-            color: #334155;
-            font-size: 12px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #183247;
-        }
-
-        .form-error {
-            margin-bottom: 18px;
-            padding: 11px 12px;
-            border: 1px solid #fecaca;
-            border-radius: 6px;
-            background: #fef2f2;
-            color: #dc2626;
-            font-size: 11px;
-            line-height: 1.5;
-        }
-
-        .login-button {
-            width: 100%;
-            height: 43px;
-            border: none;
-            border-radius: 6px;
-            background: #183247;
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .login-button:hover {
-            background: #24455f;
-        }
-
-        .back-login {
-            display: block;
-            margin-top: 15px;
-            text-align: center;
-            color: #183247;
-            font-size: 11px;
-            text-decoration: none;
-        }
-
-        .back-login:hover {
-            text-decoration: underline;
-        }
-
-        .login-footer {
-            padding: 14px 30px;
-            border-top: 1px solid #edf2f7;
-            background: #fafbfc;
-            text-align: center;
-            color: #94a3b8;
-            font-size: 10px;
-        }
-    </style>
+    <link
+        rel="stylesheet"
+        href="{% static 'monitoramento/css/style.css' %}"
+    >
 
 </head>
 
 <body>
 
-<div class="login-page">
+    <div class="layout">
 
-    <div class="login-box">
-
-        <div class="login-header">
-
-            <div class="login-logo">
-                &#128273;
-            </div>
+        <main class="content">
 
             <h1>
-                Sistema de Monitoramento
+                Criar nova senha
             </h1>
 
-            <p>
-                Sistema de Monitoramento do Nível de Água em Cisternas
-            </p>
+            <form method="post">
 
-        </div>
+                {% csrf_token %}
 
+                {{ form.as_p }}
 
-        <div class="login-form">
+                <button type="submit">
+                    Alterar senha
+                </button>
 
-            {% if validlink %}
+            </form>
 
-                <div class="form-title">
-
-                    <span>
-                        Recuperação de acesso
-                    </span>
-
-                    <strong>
-                        Criar nova senha
-                    </strong>
-
-                </div>
-
-
-                <p class="form-description">
-                    Digite sua nova senha abaixo para recuperar o acesso ao sistema.
-                </p>
-
-
-                {% if form.errors %}
-
-                    <div class="form-error">
-                        Verifique os campos abaixo. As senhas precisam coincidir.
-                    </div>
-
-                {% endif %}
-
-
-                <form method="post">
-
-                    {% csrf_token %}
-
-
-                    <div class="form-group">
-
-                        <label for="id_new_password1">
-                            Nova senha
-                        </label>
-
-                        <input
-                            type="password"
-                            name="new_password1"
-                            id="id_new_password1"
-                            placeholder="Digite a nova senha"
-                            autocomplete="new-password"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="id_new_password2">
-                            Confirmar nova senha
-                        </label>
-
-                        <input
-                            type="password"
-                            name="new_password2"
-                            id="id_new_password2"
-                            placeholder="Digite a senha novamente"
-                            autocomplete="new-password"
-                            required
-                        >
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="login-button"
-                    >
-                        Alterar senha
-                    </button>
-
-                </form>
-
-            {% else %}
-
-                <div class="form-title">
-
-                    <span>
-                        Recuperação de acesso
-                    </span>
-
-                    <strong>
-                        Link inválido
-                    </strong>
-
-                </div>
-
-
-                <p class="form-description">
-                    Este link de recuperação de senha é inválido ou já foi utilizado.
-                    Solicite uma nova recuperação de senha.
-                </p>
-
-
-                <a
-                    href="{% url 'recuperar_senha' %}"
-                    class="login-button"
-                    style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        text-decoration: none;
-                    "
-                >
-                    Solicitar nova recuperação
-                </a>
-
-            {% endif %}
-
-        </div>
-
-
-        <div class="login-footer">
-            Sistema de Monitoramento do Nível de Água em Cisternas
-        </div>
+        </main>
 
     </div>
-
-</div>
 
 </body>
 

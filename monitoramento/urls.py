@@ -14,6 +14,7 @@ from monitoramento.views import (
     lista_dispositivos,
     lista_municipios,
     lista_usuarios,
+    mapa,
     monitoramento,
     receber_leitura,
 )
@@ -88,6 +89,12 @@ urlpatterns = [
         'monitoramento/',
         monitoramento,
         name='monitoramento'
+    ),
+
+    path(
+        'mapa/',
+        mapa,
+        name='mapa'
     ),
 
     path(

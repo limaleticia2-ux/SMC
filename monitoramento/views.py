@@ -506,3 +506,31 @@ def receber_leitura(request):
             },
             status=400
         )
+
+def mapa(request):
+    cisternas = Cisterna.objects.filter(
+        latitude__isnull=False,
+        longitude__isnull=False
+    )
+
+    dados_cisternas = []
+
+    for cisterna in cisternas:
+        dados_cisternas.append({
+            'latitude': float(cisterna.latitude),
+            'longitude': float(cisterna.longitude),
+            'identificacao': cisterna.identificacao,
+            'participante': str(cisterna.participante),
+            'municipio': str(cisterna.municipio),
+            'localidade': str(cisterna.localidade),
+            'capacidade': cisterna.capacidade_total,
+            'situacao': cisterna.get_situacao_display(),
+        })
+
+    return render(
+        request,
+        'monitoramento/mapa.html',
+        {
+            'cisternas': dados_cisternas
+        }
+    )
