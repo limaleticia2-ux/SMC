@@ -506,7 +506,7 @@ def receber_leitura(request):
             },
             status=400
         )
-
+@login_required
 def mapa(request):
     cisternas = Cisterna.objects.filter(
         latitude__isnull=False,
@@ -533,4 +533,11 @@ def mapa(request):
         {
             'cisternas': dados_cisternas
         }
+    )
+
+@login_required
+def apresentacao(request):
+    return render(
+        request,
+        'monitoramento/apresentacao.html'
     )

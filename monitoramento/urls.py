@@ -1,6 +1,7 @@
 from django.urls import path
 
 from monitoramento.views import (
+    apresentacao,
     criar_cisterna,
     criar_dispositivo,
     criar_municipio,
@@ -21,6 +22,12 @@ from monitoramento.views import (
 
 
 urlpatterns = [
+
+    path(
+        'apresentacao/',
+        apresentacao,
+        name='apresentacao'
+    ),
 
     path(
         'cisternas/',
