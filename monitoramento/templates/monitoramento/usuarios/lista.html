@@ -117,7 +117,13 @@
 
         </div>
 
-    </aside>
+    
+        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+            {% csrf_token %}
+            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
+        </form>
+
+</aside>
 
 
 
@@ -228,6 +234,7 @@
                     <span>
                         Status
                     </span>
+                    <span>Ações</span>
 
                 </div>
 
@@ -342,6 +349,12 @@
 
                     </span>
 
+                    <span style="display:flex;gap:8px;align-items:center;">
+                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn-cancel" style="text-decoration:none;">Editar</a>
+                        {% if not usuario.is_superuser and usuario.id != request.user.id %}
+                        <a href="{% url 'excluir_usuario' usuario.id %}" class="btn-cancel" style="text-decoration:none;color:#b91c1c;">Excluir</a>
+                        {% endif %}
+                    </span>
 
                 </div>
 
