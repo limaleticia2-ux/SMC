@@ -39,6 +39,12 @@
 <a href="#" class="menu-item"><span>&#9881;</span><p>Configurações</p></a>
 </nav>
 <div class="user-box"><div class="user-avatar">{{ request.user.username|first|upper }}</div><div class="user-info"><strong>{{ request.user.username }}</strong><small>Usuário do sistema</small></div></div>
+
+        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+            {% csrf_token %}
+            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
+        </form>
+
 </aside>
 
 <main class="content">

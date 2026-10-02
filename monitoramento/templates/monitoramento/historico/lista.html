@@ -157,7 +157,13 @@
         </div>
 
 
-    </aside>
+    
+        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+            {% csrf_token %}
+            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
+        </form>
+
+</aside>
 
 
     <!-- CONTEÚDO -->
