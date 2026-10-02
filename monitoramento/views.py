@@ -1,5 +1,7 @@
+
 from functools import wraps
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from django.db.models import Q
@@ -13,6 +15,7 @@ from .forms import (
     DispositivoForm,
     MunicipioForm,
     UsuarioForm,
+    UsuarioEdicaoForm,
 )
 from .models import (
     Alerta,
@@ -22,14 +25,15 @@ from .models import (
     Localidade,
     Municipio,
     Participante,
+    PerfilUsuario,
 )
+
 
 def somente_perfis(*perfis):
     def decorator(view_func):
         @wraps(view_func)
         @login_required
         def wrapper(request, *args, **kwargs):
-
             if (
                 request.user.is_superuser
                 or request.user.groups.filter(name__in=perfis).exists()
@@ -39,7 +43,7 @@ def somente_perfis(*perfis):
             return render(
                 request,
                 'monitoramento/acesso_negado.html',
-                status=403
+                status=403,
             )
 
         return wrapper
@@ -57,17 +61,17 @@ def index(request):
         'total_localidades': Localidade.objects.count(),
         'ultimas_leituras': LeituraTelemetria.objects.select_related(
             'cisterna',
-            'cisterna__localidade'
+            'cisterna__localidade',
         ).order_by('-data_hora')[:5],
         'alertas_recentes': Alerta.objects.select_related(
-            'cisterna'
+            'cisterna',
         ).order_by('-data_hora')[:5],
     }
 
     return render(
         request,
         'monitoramento/index.html',
-        contexto
+        contexto,
     )
 
 
@@ -76,30 +80,24 @@ def lista_cisternas(request):
     cisternas = Cisterna.objects.select_related(
         'participante',
         'localidade',
-        'municipio'
+        'municipio',
     ).all()
 
     return render(
         request,
         'monitoramento/cisternas/lista.html',
-        {
-            'cisternas': cisternas
-        }
+        {'cisternas': cisternas},
     )
 
 
 @somente_perfis('Administrador do sistema')
 def criar_cisterna(request):
     if request.method == 'POST':
-        form = CisternaForm(
-            request.POST,
-            request.FILES
-        )
+        form = CisternaForm(request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
             return redirect('lista_cisternas')
-
     else:
         form = CisternaForm()
 
@@ -108,50 +106,41 @@ def criar_cisterna(request):
         'monitoramento/cisternas/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar cisterna'
-        }
+            'titulo': 'Cadastrar cisterna',
+        },
     )
 
 
 @somente_perfis('Administrador do sistema')
 def editar_cisterna(request, id):
-    cisterna = get_object_or_404(
-        Cisterna,
-        id=id
-    )
+    cisterna = get_object_or_404(Cisterna, id=id)
 
     if request.method == 'POST':
         form = CisternaForm(
             request.POST,
             request.FILES,
-            instance=cisterna
+            instance=cisterna,
         )
 
         if form.is_valid():
             form.save()
             return redirect('lista_cisternas')
-
     else:
-        form = CisternaForm(
-            instance=cisterna
-        )
+        form = CisternaForm(instance=cisterna)
 
     return render(
         request,
         'monitoramento/cisternas/form.html',
         {
             'form': form,
-            'titulo': 'Editar cisterna'
-        }
+            'titulo': 'Editar cisterna',
+        },
     )
 
 
 @somente_perfis('Administrador do sistema')
 def excluir_cisterna(request, id):
-    cisterna = get_object_or_404(
-        Cisterna,
-        id=id
-    )
+    cisterna = get_object_or_404(Cisterna, id=id)
 
     if request.method == 'POST':
         cisterna.delete()
@@ -160,9 +149,7 @@ def excluir_cisterna(request, id):
     return render(
         request,
         'monitoramento/cisternas/confirmar_exclusao.html',
-        {
-            'cisterna': cisterna
-        }
+        {'cisterna': cisterna},
     )
 
 
@@ -173,9 +160,7 @@ def lista_usuarios(request):
     return render(
         request,
         'monitoramento/usuarios/lista.html',
-        {
-            'usuarios': usuarios
-        }
+        {'usuarios': usuarios},
     )
 
 
@@ -186,28 +171,24 @@ def criar_usuario(request):
 
         if form.is_valid():
             usuario = form.save(commit=False)
-
-            usuario.first_name = form.cleaned_data['first_name']
-            usuario.last_name = form.cleaned_data['last_name']
-            usuario.email = form.cleaned_data['email']
-
-            usuario.set_password(
-                form.cleaned_data['senha']
-            )
-
+            usuario.set_password(form.cleaned_data['senha'])
             usuario.save()
 
-            perfil = form.cleaned_data['perfil']
-
             grupo, _ = Group.objects.get_or_create(
-                name=perfil
+                name=form.cleaned_data['perfil'],
             )
 
             usuario.groups.clear()
             usuario.groups.add(grupo)
 
-            return redirect('lista_usuarios')
+            PerfilUsuario.objects.update_or_create(
+                usuario=usuario,
+                defaults={
+                    'municipio': form.cleaned_data.get('municipio'),
+                },
+            )
 
+            return redirect('lista_usuarios')
     else:
         form = UsuarioForm()
 
@@ -216,8 +197,113 @@ def criar_usuario(request):
         'monitoramento/usuarios/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar usuário'
-        }
+            'titulo': 'Cadastrar usuário',
+        },
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def editar_usuario(request, id):
+    usuario = get_object_or_404(User, pk=id)
+
+    if usuario.is_superuser and not request.user.is_superuser:
+        return render(
+            request,
+            'monitoramento/acesso_negado.html',
+            status=403,
+        )
+
+    if request.method == 'POST':
+        form = UsuarioEdicaoForm(
+            request.POST,
+            instance=usuario,
+        )
+
+        # Permite editar o usuário sem informar um município.
+        if 'municipio' in form.fields:
+            form.fields['municipio'].required = False
+
+        if form.is_valid():
+            usuario = form.save(commit=False)
+
+            senha = form.cleaned_data.get('nova_senha')
+            if senha:
+                usuario.set_password(senha)
+
+            usuario.save()
+
+            grupo, _ = Group.objects.get_or_create(
+                name=form.cleaned_data['perfil'],
+            )
+            usuario.groups.set([grupo])
+
+            municipio = form.cleaned_data.get('municipio')
+
+            # Mantém o município anterior se nenhum novo for informado.
+            if municipio is None:
+                perfil_atual = PerfilUsuario.objects.filter(
+                    usuario=usuario,
+                ).first()
+
+                if perfil_atual:
+                    municipio = perfil_atual.municipio
+
+            PerfilUsuario.objects.update_or_create(
+                usuario=usuario,
+                defaults={
+                    'municipio': municipio,
+                },
+            )
+
+            return redirect('lista_usuarios')
+
+        print('ERROS DO FORMULÁRIO DE EDIÇÃO:', form.errors)
+        print('DADOS RECEBIDOS:', request.POST)
+
+    else:
+        form = UsuarioEdicaoForm(instance=usuario)
+
+    return render(
+        request,
+        'monitoramento/usuarios/editar.html',
+        {
+            'form': form,
+            'titulo': 'Editar usuário',
+        },
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def excluir_usuario(request, id):
+    usuario = get_object_or_404(User, pk=id)
+
+    if usuario.pk == request.user.pk:
+        return render(
+            request,
+            'monitoramento/acesso_negado.html',
+            status=403,
+        )
+
+    if usuario.is_superuser and not request.user.is_superuser:
+        return render(
+            request,
+            'monitoramento/acesso_negado.html',
+            status=403,
+        )
+
+    if request.method == 'POST':
+        usuario.delete()
+        return redirect('lista_usuarios')
+
+    return render(
+        request,
+        'monitoramento/confirmar_exclusao_generica.html',
+        {
+            'objeto': usuario,
+            'titulo': 'Excluir usuário',
+            'voltar_url': 'lista_usuarios',
+            'tipo': 'usuário',
+        },
     )
 
 
@@ -226,15 +312,12 @@ def monitoramento(request):
     cisternas = Cisterna.objects.select_related(
         'participante',
         'localidade',
-        'municipio'
+        'municipio',
     ).all()
 
     ultimas_leituras = (
         LeituraTelemetria.objects
-        .select_related(
-            'cisterna',
-            'cisterna__localidade'
-        )
+        .select_related('cisterna', 'cisterna__localidade')
         .order_by('-data_hora')
     )
 
@@ -245,9 +328,7 @@ def monitoramento(request):
             leituras_por_cisterna[leitura.cisterna_id] = leitura
 
     for cisterna in cisternas:
-        cisterna.ultima_leitura = leituras_por_cisterna.get(
-            cisterna.id
-        )
+        cisterna.ultima_leitura = leituras_por_cisterna.get(cisterna.id)
 
         if cisterna.ultima_leitura:
             nivel = cisterna.ultima_leitura.nivel
@@ -255,15 +336,12 @@ def monitoramento(request):
             if nivel >= 70:
                 cisterna.status_monitoramento = 'Normal'
                 cisterna.status_classe = 'normal'
-
             elif nivel >= 30:
                 cisterna.status_monitoramento = 'Atenção'
                 cisterna.status_classe = 'atencao'
-
             else:
                 cisterna.status_monitoramento = 'Crítico'
                 cisterna.status_classe = 'critico'
-
         else:
             cisterna.status_monitoramento = 'Sem dados'
             cisterna.status_classe = 'sem-dados'
@@ -275,7 +353,7 @@ def monitoramento(request):
             'cisternas': cisternas,
             'total_monitoradas': cisternas.count(),
             'total_leituras': ultimas_leituras.count(),
-        }
+        },
     )
 
 
@@ -288,7 +366,7 @@ def lista_alertas(request):
         .select_related(
             'cisterna',
             'cisterna__municipio',
-            'cisterna__localidade'
+            'cisterna__localidade',
         )
         .order_by('-data_hora')
     )
@@ -307,36 +385,29 @@ def lista_alertas(request):
         {
             'alertas': alertas,
             'busca': busca,
-        }
+        },
     )
 
 
 @somente_perfis('Administrador do sistema')
 def lista_municipios(request):
-    municipios = Municipio.objects.all().order_by(
-        'nome'
-    )
+    municipios = Municipio.objects.all().order_by('nome')
 
     return render(
         request,
         'monitoramento/municipios/lista.html',
-        {
-            'municipios': municipios
-        }
+        {'municipios': municipios},
     )
 
 
 @somente_perfis('Administrador do sistema')
 def criar_municipio(request):
     if request.method == 'POST':
-        form = MunicipioForm(
-            request.POST
-        )
+        form = MunicipioForm(request.POST)
 
         if form.is_valid():
             form.save()
             return redirect('lista_municipios')
-
     else:
         form = MunicipioForm()
 
@@ -345,52 +416,66 @@ def criar_municipio(request):
         'monitoramento/municipios/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar município'
-        }
+            'titulo': 'Cadastrar município',
+        },
     )
 
 
 @somente_perfis('Administrador do sistema')
 def editar_municipio(request, id):
-    municipio = get_object_or_404(
-        Municipio,
-        id=id
-    )
+    municipio = get_object_or_404(Municipio, id=id)
 
     if request.method == 'POST':
         form = MunicipioForm(
             request.POST,
-            instance=municipio
+            instance=municipio,
         )
 
         if form.is_valid():
             form.save()
             return redirect('lista_municipios')
-
     else:
-        form = MunicipioForm(
-            instance=municipio
-        )
+        form = MunicipioForm(instance=municipio)
 
     return render(
         request,
         'monitoramento/municipios/form.html',
         {
             'form': form,
-            'titulo': 'Editar município'
-        }
+            'titulo': 'Editar município',
+        },
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def excluir_municipio(request, id):
+    municipio = get_object_or_404(Municipio, pk=id)
+    bloqueada = municipio.cisternas.exists()
+
+    if request.method == 'POST' and not bloqueada:
+        municipio.delete()
+        return redirect('lista_municipios')
+
+    return render(
+        request,
+        'monitoramento/confirmar_exclusao_generica.html',
+        {
+            'objeto': municipio,
+            'titulo': 'Excluir município',
+            'voltar_url': 'lista_municipios',
+            'tipo': 'município',
+            'bloqueada': bloqueada,
+        },
+        status=400 if bloqueada else 200,
     )
 
 
 @login_required
 def historico_leituras(request, id):
-    cisterna = get_object_or_404(
-        Cisterna,
-        id=id
-    )
+    cisterna = get_object_or_404(Cisterna, id=id)
 
     leituras = LeituraTelemetria.objects.filter(
-        cisterna=cisterna
+        cisterna=cisterna,
     ).order_by('-data_hora')
 
     return render(
@@ -399,36 +484,31 @@ def historico_leituras(request, id):
         {
             'cisterna': cisterna,
             'leituras': leituras,
-        }
+        },
     )
+
 
 @somente_perfis('Administrador do sistema')
 def lista_dispositivos(request):
-
     dispositivos = Dispositivo.objects.select_related(
-        'cisterna'
+        'cisterna',
     ).all().order_by('identificacao')
 
     return render(
         request,
         'monitoramento/dispositivos/lista.html',
-        {
-            'dispositivos': dispositivos
-        }
+        {'dispositivos': dispositivos},
     )
 
 
 @somente_perfis('Administrador do sistema')
 def criar_dispositivo(request):
-
     if request.method == 'POST':
-
         form = DispositivoForm(request.POST)
 
         if form.is_valid():
             form.save()
             return redirect('lista_dispositivos')
-
     else:
         form = DispositivoForm()
 
@@ -437,55 +517,112 @@ def criar_dispositivo(request):
         'monitoramento/dispositivos/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar dispositivo'
-        }
+            'titulo': 'Cadastrar dispositivo',
+        },
     )
+
+
+@somente_perfis('Administrador do sistema')
+def editar_dispositivo(request, id):
+    dispositivo = get_object_or_404(Dispositivo, pk=id)
+
+    if request.method == 'POST':
+        form = DispositivoForm(
+            request.POST,
+            instance=dispositivo,
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect('lista_dispositivos')
+    else:
+        form = DispositivoForm(instance=dispositivo)
+
+    return render(
+        request,
+        'monitoramento/dispositivos/form.html',
+        {
+            'form': form,
+            'titulo': 'Editar dispositivo',
+        },
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def excluir_dispositivo(request, id):
+    dispositivo = get_object_or_404(Dispositivo, pk=id)
+
+    if request.method == 'POST':
+        dispositivo.delete()
+        return redirect('lista_dispositivos')
+
+    return render(
+        request,
+        'monitoramento/confirmar_exclusao_generica.html',
+        {
+            'objeto': dispositivo,
+            'titulo': 'Excluir dispositivo',
+            'voltar_url': 'lista_dispositivos',
+            'tipo': 'dispositivo',
+        },
+    )
+
 
 @csrf_exempt
 def receber_leitura(request):
+    token_configurado = getattr(settings, 'DEVICE_API_TOKEN', '')
+    token_recebido = request.headers.get('X-Device-Token', '')
+
+    if not token_configurado or token_recebido != token_configurado:
+        return JsonResponse(
+            {'erro': 'Dispositivo não autenticado.'},
+            status=403,
+        )
 
     if request.method != 'POST':
         return JsonResponse(
-            {
-                'erro': 'Método não permitido.'
-            },
-            status=405
+            {'erro': 'Método não permitido.'},
+            status=405,
         )
 
     try:
         dados = request.POST
-
         identificacao = dados.get('identificacao')
         nivel = float(dados.get('nivel'))
 
-        if not identificacao:
+        if not 0 <= nivel <= 100:
             return JsonResponse(
-                {
-                    'erro': 'Identificação do dispositivo não informada.'
-                },
-                status=400
+                {'erro': 'O nível deve estar entre 0 e 100.'},
+                status=400,
             )
 
-        dispositivo = Dispositivo.objects.select_related(
-            'cisterna'
-        ).filter(
-            identificacao=identificacao,
-            situacao='ativo'
-        ).first()
+        if not identificacao:
+            return JsonResponse(
+                {'erro': 'Identificação do dispositivo não informada.'},
+                status=400,
+            )
+
+        dispositivo = (
+            Dispositivo.objects
+            .select_related('cisterna')
+            .filter(
+                identificacao=identificacao,
+                situacao='ativo',
+            )
+            .first()
+        )
 
         if not dispositivo:
             return JsonResponse(
-                {
-                    'erro': 'Dispositivo não encontrado ou está inativo.'
-                },
-                status=404
+                {'erro': 'Dispositivo não encontrado ou está inativo.'},
+                status=404,
             )
 
         leitura = LeituraTelemetria.objects.create(
             cisterna=dispositivo.cisterna,
             dispositivo=dispositivo,
             nivel=nivel,
-            data_hora=timezone.now()
+            data_hora=timezone.now(),
         )
 
         return JsonResponse(
@@ -494,23 +631,23 @@ def receber_leitura(request):
                 'mensagem': 'Leitura recebida com sucesso.',
                 'dispositivo': dispositivo.identificacao,
                 'cisterna': dispositivo.cisterna.identificacao,
-                'nivel': leitura.nivel
+                'nivel': leitura.nivel,
             },
-            status=201
+            status=201,
         )
 
     except (TypeError, ValueError):
         return JsonResponse(
-            {
-                'erro': 'O nível informado é inválido.'
-            },
-            status=400
+            {'erro': 'O nível informado é inválido.'},
+            status=400,
         )
+
+
 @login_required
 def mapa(request):
     cisternas = Cisterna.objects.filter(
         latitude__isnull=False,
-        longitude__isnull=False
+        longitude__isnull=False,
     )
 
     dados_cisternas = []
@@ -530,14 +667,13 @@ def mapa(request):
     return render(
         request,
         'monitoramento/mapa.html',
-        {
-            'cisternas': dados_cisternas
-        }
+        {'cisternas': dados_cisternas},
     )
+
 
 @login_required
 def apresentacao(request):
     return render(
         request,
-        'monitoramento/apresentacao.html'
+        'monitoramento/apresentacao.html',
     )

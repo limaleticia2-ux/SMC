@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 
@@ -108,9 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Fortaleza'
 
 USE_I18N = True
 
@@ -124,11 +125,9 @@ STATIC_URL = 'static/'
 
 # Email
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'smc@localhost'
+
 
 
 # Authentication
@@ -136,3 +135,7 @@ MAILERS = {
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+PASSWORD_RESET_TIMEOUT = 3600
+
+# Token de desenvolvimento para autenticar dispositivos; configure a variável de ambiente em produção.
+DEVICE_API_TOKEN = os.environ.get('DEVICE_API_TOKEN', 'smc-dev-token')
