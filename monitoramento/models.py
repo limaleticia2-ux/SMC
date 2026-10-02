@@ -1,3 +1,4 @@
+
 from django.db import models
 
 
@@ -19,7 +20,24 @@ class Municipio(models.Model):
 class Localidade(models.Model):
     nome = models.CharField(max_length=150)
 
+    municipio = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    endereco = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    descricao = models.TextField(
+        blank=True
+    )
+
     def __str__(self):
+        if self.municipio:
+            return f"{self.nome} - {self.municipio}"
         return self.nome
 
 
@@ -100,9 +118,7 @@ class Dispositivo(models.Model):
         unique=True
     )
 
-    tipo_sensor = models.CharField(
-        max_length=100
-    )
+    tipo_sensor = models.CharField(max_length=100)
 
     cisterna = models.ForeignKey(
         Cisterna,
@@ -138,46 +154,32 @@ class LeituraTelemetria(models.Model):
     )
 
     nivel = models.FloatField()
-
     data_hora = models.DateTimeField()
 
     def __str__(self):
         return f"{self.cisterna} - {self.data_hora}"
 
     def save(self, *args, **kwargs):
-
         nova_leitura = self.pk is None
 
         super().save(*args, **kwargs)
 
         if self.nivel >= 70:
             nova_situacao = 'normal'
-
         elif self.nivel >= 30:
             nova_situacao = 'atencao'
-
         else:
             nova_situacao = 'critico'
 
         self.cisterna.situacao = nova_situacao
-
-        self.cisterna.save(
-            update_fields=['situacao']
-        )
+        self.cisterna.save(update_fields=['situacao'])
 
         if nova_leitura and self.nivel < 30:
-
             leitura_anterior = (
                 LeituraTelemetria.objects
-                .filter(
-                    cisterna=self.cisterna
-                )
-                .exclude(
-                    pk=self.pk
-                )
-                .order_by(
-                    '-data_hora'
-                )
+                .filter(cisterna=self.cisterna)
+                .exclude(pk=self.pk)
+                .order_by('-data_hora')
                 .first()
             )
 
@@ -185,7 +187,6 @@ class LeituraTelemetria(models.Model):
                 leitura_anterior is None
                 or leitura_anterior.nivel >= 30
             ):
-
                 alerta = Alerta.objects.create(
                     cisterna=self.cisterna,
                     mensagem=(
@@ -207,11 +208,27 @@ class Alerta(models.Model):
         related_name="alertas"
     )
 
-    mensagem = models.CharField(
-        max_length=255
-    )
-
+    mensagem = models.CharField(max_length=255)
     data_hora = models.DateTimeField()
 
     def __str__(self):
         return self.mensagem
+
+
+class PerfilUsuario(models.Model):
+    usuario = models.OneToOneField(
+        'auth.User',
+        on_delete=models.CASCADE,
+        related_name='perfil_municipal'
+    )
+
+    municipio = models.ForeignKey(
+        Municipio,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='usuarios'
+    )
+
+    def __str__(self):
+        return self.usuario.username
