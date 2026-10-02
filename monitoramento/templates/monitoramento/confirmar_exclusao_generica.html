@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }} - SMC</title>
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+    <style>body{font-family:Arial,sans-serif;background:#f4f7fb;color:#183153;margin:0}.wrap{max-width:620px;margin:8vh auto;background:white;padding:32px;border-radius:14px;box-shadow:0 8px 28px #18315316}.actions{display:flex;gap:12px;margin-top:24px}.btn{padding:11px 18px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;font-weight:bold}.cancel{background:#e8eef5;color:#183153}.delete{background:#b91c1c;color:white}</style>
+</head>
+<body><main class="wrap">
+    <p>SMC / Gerenciamento</p>
+    <h1>{{ titulo }}</h1>
+    {% if bloqueada %}
+        <p style="color:#b91c1c">Este município possui cisternas associadas e não pode ser excluído. Transfira ou remova as cisternas antes.</p>
+        <p><a class="btn cancel" href="{% url voltar_url %}">Voltar</a></p>
+    {% else %}
+        <p>Tem certeza de que deseja excluir {{ tipo }} <strong>{{ objeto }}</strong>?</p>
+        <p>Esta ação não poderá ser desfeita.</p>
+        <form method="post" class="actions">{% csrf_token %}
+            <a class="btn cancel" href="{% url voltar_url %}">Cancelar</a>
+            <button class="btn delete" type="submit">Confirmar exclusão</button>
+        </form>
+    {% endif %}
+</main></body></html>
