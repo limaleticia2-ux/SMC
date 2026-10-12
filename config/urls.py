@@ -1,16 +1,24 @@
+
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+
 from monitoramento.views import index
 
 
 urlpatterns = [
+    # Página inicial
     path('', index, name='index'),
 
+    # Administração do Django
     path('admin/', admin.site.urls),
 
+    # Rotas do aplicativo de monitoramento
     path('', include('monitoramento.urls')),
 
+    # Login e logout
     path(
         'login/',
         auth_views.LoginView.as_view(
@@ -25,6 +33,7 @@ urlpatterns = [
         name='logout'
     ),
 
+    # Recuperação de senha
     path(
         'recuperar-senha/',
         auth_views.PasswordResetView.as_view(
@@ -59,3 +68,10 @@ urlpatterns = [
         name='recuperar_senha_concluido'
     ),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
