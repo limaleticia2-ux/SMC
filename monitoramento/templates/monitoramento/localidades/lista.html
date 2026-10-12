@@ -1,0 +1,187 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Localidades - SMC</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">&#128167;</div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="{% url 'index' %}" class="menu-item">
+                <span>&#127968;</span>
+                <p>Tela Inicial</p>
+            </a>
+
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>&#128100;</span>
+                <p>Usuários</p>
+            </a>
+
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>&#128688;</span>
+                <p>Cisternas</p>
+            </a>
+
+
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>&#9687;</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>&#9888;</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="{% url 'mapa' %}" class="menu-item">
+                <span>&#128506;</span>
+                <p>Mapa</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128202;</span>
+                <p>Relatórios</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#9881;</span>
+                <p>Configurações</p>
+            </a>
+
+        </nav>
+
+        <div class="user-box">
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.username }}</strong>
+                <small>Usuário do sistema</small>
+            </div>
+        </div>
+
+        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+            {% csrf_token %}
+            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">
+                Sair do sistema
+            </button>
+        </form>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="topbar">
+
+            <div>
+                <span class="page-label">Sistema / Localidades</span>
+                <h1>Localidades</h1>
+                <p>Gerencie as comunidades e localidades dos municípios cadastrados.</p>
+            </div>
+
+            <div>
+                <a href="{% url 'criar_localidade' %}"
+                   class="btn-figma-save"
+                   style="text-decoration:none;display:inline-flex;align-items:center;">
+                    + Cadastrar localidade
+                </a>
+            </div>
+
+        </header>
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <h2>Localidades cadastradas</h2>
+            </div>
+
+            {% for localidade in localidades %}
+
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px;margin-bottom:10px;border:1px solid #edf1f5;border-radius:8px;background:#ffffff;">
+
+                    <div style="min-width:0;">
+
+                        <strong>{{ localidade.nome }}</strong>
+
+                        <p style="margin-top:4px;color:#64748b;font-size:12px;">
+                            <strong>Município:</strong>
+                            {{ localidade.municipio|default:"Não informado" }}
+                        </p>
+
+                        <p style="margin-top:4px;color:#64748b;font-size:12px;">
+                            <strong>Endereço:</strong>
+                            {{ localidade.endereco|default:"Não informado" }}
+                        </p>
+
+                        {% if localidade.descricao %}
+                            <p style="margin-top:6px;color:#64748b;font-size:12px;">
+                                {{ localidade.descricao }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                    <div style="display:flex;gap:8px;flex-shrink:0;">
+
+                        <a href="{% url 'editar_localidade' localidade.id %}"
+                           class="btn-cancel"
+                           style="text-decoration:none;">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'excluir_localidade' localidade.id %}"
+                           class="btn-cancel"
+                           style="text-decoration:none;color:#b91c1c;">
+                            Excluir
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty">
+                    Nenhuma localidade cadastrada.
+                    Clique em “Cadastrar localidade” para adicionar a primeira.
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+        <footer>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+```

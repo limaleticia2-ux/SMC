@@ -1,0 +1,207 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ titulo }} - SMC</title>
+
+    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">&#128167;</div>
+
+            <div class="logo-text">
+                <span>SISTEMA DE MONITORAMENTO</span>
+                <strong>DE CISTERNAS</strong>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="{% url 'index' %}" class="menu-item">
+                <span>&#127968;</span>
+                <p>Tela Inicial</p>
+            </a>
+
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>&#128100;</span>
+                <p>Usuários</p>
+            </a>
+
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>&#128688;</span>
+                <p>Cisternas</p>
+            </a>
+
+
+
+
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>&#9687;</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>&#9888;</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="{% url 'mapa' %}" class="menu-item">
+                <span>&#128506;</span>
+                <p>Mapa</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#128202;</span>
+                <p>Relatórios</p>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>&#9881;</span>
+                <p>Configurações</p>
+            </a>
+
+        </nav>
+
+        <div class="user-box">
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.username }}</strong>
+                <small>Usuário do sistema</small>
+            </div>
+        </div>
+
+        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+            {% csrf_token %}
+            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">
+                Sair do sistema
+            </button>
+        </form>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="topbar">
+            <div>
+                <span class="page-label">Sistema / Localidades</span>
+                <h1>{{ titulo }}</h1>
+                <p>Cadastre e mantenha os dados das localidades atualizados.</p>
+            </div>
+        </header>
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Dados da localidade</h2>
+
+                    <p style="margin-top:5px;color:#64748b;font-size:12px;">
+                        Preencha as informações da comunidade ou localidade.
+                    </p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="js-form-error">
+                        Verifique os dados preenchidos e corrija os campos indicados.
+                    </div>
+                {% endif %}
+
+                <div class="figma-form-grid">
+
+                    <div class="figma-field">
+                        <label for="{{ form.nome.id_for_label }}">
+                            Nome da localidade
+                        </label>
+
+                        {{ form.nome }}
+
+                        {% for error in form.nome.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="figma-field">
+                        <label for="{{ form.municipio.id_for_label }}">
+                            Município
+                        </label>
+
+                        {{ form.municipio }}
+
+                        {% for error in form.municipio.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="figma-field">
+                        <label for="{{ form.endereco.id_for_label }}">
+                            Endereço
+                        </label>
+
+                        {{ form.endereco }}
+
+                        {% for error in form.endereco.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="figma-field">
+                        <label for="{{ form.descricao.id_for_label }}">
+                            Descrição
+                        </label>
+
+                        {{ form.descricao }}
+
+                        {% for error in form.descricao.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <div class="form-final-actions">
+
+                    <a href="{% url 'lista_localidades' %}" class="btn-cancel">
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn-figma-save">
+                        Salvar localidade
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <footer>
+            Sistema de Monitoramento do Nível de Água em Cisternas
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+```
