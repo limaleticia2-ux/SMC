@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import (
     Cisterna,
     Dispositivo,
+    Localidade,
     Municipio,
     PerfilUsuario,
 )
@@ -147,6 +148,78 @@ class MunicipioForm(forms.ModelForm):
     def clean_estado(self):
         return self.cleaned_data['estado'].upper()
 
+
+class LocalidadeForm(forms.ModelForm):
+    municipio = forms.ModelChoiceField(
+        label='Município',
+        queryset=Municipio.objects.all().order_by('nome'),
+        empty_label='Selecione um município',
+        widget=forms.Select(),
+    )
+
+    class Meta:
+        model = Localidade
+        fields = [
+            'nome',
+            'endereco',
+            'descricao',
+        ]
+        labels = {
+            'nome': 'Nome da localidade',
+            'endereco': 'Endereço',
+            'descricao': 'Descrição',
+        }
+        widgets = {
+            'nome': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: Comunidade Centro',
+                }
+            ),
+            'endereco': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ex.: Sítio localizado na zona rural',
+                }
+            ),
+            'descricao': forms.Textarea(
+                attrs={
+                    'placeholder': 'Informações adicionais sobre a localidade',
+                    'rows': 4,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.pk:
+            municipio_salvo = self.instance.municipio or ''
+
+            if ' - ' in municipio_salvo:
+                nome, estado = municipio_salvo.rsplit(' - ', 1)
+
+                municipio = Municipio.objects.filter(
+                    nome=nome,
+                    estado=estado,
+                ).first()
+            else:
+                municipio = Municipio.objects.filter(
+                    nome=municipio_salvo,
+                ).first()
+
+            if municipio:
+                self.fields['municipio'].initial = municipio
+
+    def save(self, commit=True):
+        localidade = super().save(commit=False)
+
+        municipio = self.cleaned_data['municipio']
+        localidade.municipio = str(municipio)
+
+        if commit:
+            localidade.save()
+            self.save_m2m()
+
+        return localidade
 
 class UsuarioForm(forms.ModelForm):
     senha = forms.CharField(
@@ -378,8 +451,5 @@ class UsuarioEdicaoForm(forms.ModelForm):
                     'A senha deve ter pelo menos 8 caracteres.',
                 )
 
-        # Na edição, o município é opcional.
-        # A view pode preservar o município anterior
-        # quando nenhum novo município for enviado.
 
         return dados
