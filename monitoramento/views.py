@@ -1,4 +1,4 @@
-
+﻿
 from functools import wraps
 
 from django.conf import settings
@@ -13,10 +13,12 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import (
     CisternaForm,
     DispositivoForm,
+    LocalidadeForm,
     MunicipioForm,
     UsuarioForm,
     UsuarioEdicaoForm,
 )
+
 from .models import (
     Alerta,
     Cisterna,
@@ -197,7 +199,7 @@ def criar_usuario(request):
         'monitoramento/usuarios/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar usuário',
+            'titulo': 'Cadastrar usu├írio',
         },
     )
 
@@ -219,7 +221,7 @@ def editar_usuario(request, id):
             instance=usuario,
         )
 
-        # Permite editar o usuário sem informar um município.
+        # Permite editar o usu├írio sem informar um munic├¡pio.
         if 'municipio' in form.fields:
             form.fields['municipio'].required = False
 
@@ -239,7 +241,7 @@ def editar_usuario(request, id):
 
             municipio = form.cleaned_data.get('municipio')
 
-            # Mantém o município anterior se nenhum novo for informado.
+            # Mant├®m o munic├¡pio anterior se nenhum novo for informado.
             if municipio is None:
                 perfil_atual = PerfilUsuario.objects.filter(
                     usuario=usuario,
@@ -257,7 +259,7 @@ def editar_usuario(request, id):
 
             return redirect('lista_usuarios')
 
-        print('ERROS DO FORMULÁRIO DE EDIÇÃO:', form.errors)
+        print('ERROS DO FORMUL├üRIO DE EDI├ç├âO:', form.errors)
         print('DADOS RECEBIDOS:', request.POST)
 
     else:
@@ -268,7 +270,7 @@ def editar_usuario(request, id):
         'monitoramento/usuarios/editar.html',
         {
             'form': form,
-            'titulo': 'Editar usuário',
+            'titulo': 'Editar usu├írio',
         },
     )
 
@@ -300,9 +302,9 @@ def excluir_usuario(request, id):
         'monitoramento/confirmar_exclusao_generica.html',
         {
             'objeto': usuario,
-            'titulo': 'Excluir usuário',
+            'titulo': 'Excluir usu├írio',
             'voltar_url': 'lista_usuarios',
-            'tipo': 'usuário',
+            'tipo': 'usu├írio',
         },
     )
 
@@ -337,10 +339,10 @@ def monitoramento(request):
                 cisterna.status_monitoramento = 'Normal'
                 cisterna.status_classe = 'normal'
             elif nivel >= 30:
-                cisterna.status_monitoramento = 'Atenção'
+                cisterna.status_monitoramento = 'Aten├º├úo'
                 cisterna.status_classe = 'atencao'
             else:
-                cisterna.status_monitoramento = 'Crítico'
+                cisterna.status_monitoramento = 'Cr├¡tico'
                 cisterna.status_classe = 'critico'
         else:
             cisterna.status_monitoramento = 'Sem dados'
@@ -390,6 +392,22 @@ def lista_alertas(request):
 
 
 @somente_perfis('Administrador do sistema')
+def resolver_alerta(request, id):
+    if request.method != 'POST':
+        return redirect('lista_alertas')
+
+    alerta = get_object_or_404(Alerta, id=id)
+
+    if not alerta.resolvido:
+        alerta.resolvido = True
+        alerta.resolvido_em = timezone.now()
+        alerta.save(update_fields=['resolvido', 'resolvido_em'])
+
+    return redirect('lista_alertas')
+
+
+
+@somente_perfis('Administrador do sistema')
 def lista_municipios(request):
     municipios = Municipio.objects.all().order_by('nome')
 
@@ -416,7 +434,7 @@ def criar_municipio(request):
         'monitoramento/municipios/form.html',
         {
             'form': form,
-            'titulo': 'Cadastrar município',
+            'titulo': 'Cadastrar munic├¡pio',
         },
     )
 
@@ -442,7 +460,7 @@ def editar_municipio(request, id):
         'monitoramento/municipios/form.html',
         {
             'form': form,
-            'titulo': 'Editar município',
+            'titulo': 'Editar munic├¡pio',
         },
     )
 
@@ -461,14 +479,86 @@ def excluir_municipio(request, id):
         'monitoramento/confirmar_exclusao_generica.html',
         {
             'objeto': municipio,
-            'titulo': 'Excluir município',
+            'titulo': 'Excluir munic├¡pio',
             'voltar_url': 'lista_municipios',
-            'tipo': 'município',
+            'tipo': 'munic├¡pio',
             'bloqueada': bloqueada,
         },
         status=400 if bloqueada else 200,
     )
 
+@somente_perfis('Administrador do sistema')
+def lista_localidades(request):
+    localidades = Localidade.objects.all().order_by('nome')
+
+    return render(
+        request,
+        'monitoramento/localidades/lista.html',
+        {'localidades': localidades}
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def criar_localidade(request):
+    if request.method == 'POST':
+        form = LocalidadeForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('lista_localidades')
+    else:
+        form = LocalidadeForm()
+
+    return render(
+        request,
+        'monitoramento/localidades/form.html',
+        {'form': form, 'titulo': 'Cadastrar localidade'}
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def editar_localidade(request, id):
+    localidade = get_object_or_404(Localidade, id=id)
+
+    if request.method == 'POST':
+        form = LocalidadeForm(request.POST, instance=localidade)
+
+        if form.is_valid():
+            form.save()
+            return redirect('lista_localidades')
+    else:
+        form = LocalidadeForm(instance=localidade)
+
+    return render(
+        request,
+        'monitoramento/localidades/form.html',
+        {'form': form, 'titulo': 'Editar localidade'}
+    )
+
+
+@somente_perfis('Administrador do sistema')
+def excluir_localidade(request, id):
+    localidade = get_object_or_404(Localidade, pk=id)
+
+    # Impede excluir uma localidade que tenha cisternas vinculadas.
+    bloqueada = localidade.cisternas.exists()
+
+    if request.method == 'POST' and not bloqueada:
+        localidade.delete()
+        return redirect('lista_localidades')
+
+    return render(
+        request,
+        'monitoramento/confirmar_exclusao_generica.html',
+        {
+            'objeto': localidade,
+            'titulo': 'Excluir localidade',
+            'voltar_url': 'lista_localidades',
+            'tipo': 'localidade',
+            'bloqueada': bloqueada,
+        },
+        status=400 if bloqueada else 200
+    )
 
 @login_required
 def historico_leituras(request, id):
@@ -575,13 +665,13 @@ def receber_leitura(request):
 
     if not token_configurado or token_recebido != token_configurado:
         return JsonResponse(
-            {'erro': 'Dispositivo não autenticado.'},
+            {'erro': 'Dispositivo n├úo autenticado.'},
             status=403,
         )
 
     if request.method != 'POST':
         return JsonResponse(
-            {'erro': 'Método não permitido.'},
+            {'erro': 'M├®todo n├úo permitido.'},
             status=405,
         )
 
@@ -592,13 +682,13 @@ def receber_leitura(request):
 
         if not 0 <= nivel <= 100:
             return JsonResponse(
-                {'erro': 'O nível deve estar entre 0 e 100.'},
+                {'erro': 'O n├¡vel deve estar entre 0 e 100.'},
                 status=400,
             )
 
         if not identificacao:
             return JsonResponse(
-                {'erro': 'Identificação do dispositivo não informada.'},
+                {'erro': 'Identifica├º├úo do dispositivo n├úo informada.'},
                 status=400,
             )
 
@@ -614,7 +704,7 @@ def receber_leitura(request):
 
         if not dispositivo:
             return JsonResponse(
-                {'erro': 'Dispositivo não encontrado ou está inativo.'},
+                {'erro': 'Dispositivo n├úo encontrado ou est├í inativo.'},
                 status=404,
             )
 
@@ -638,7 +728,7 @@ def receber_leitura(request):
 
     except (TypeError, ValueError):
         return JsonResponse(
-            {'erro': 'O nível informado é inválido.'},
+            {'erro': 'O n├¡vel informado ├® inv├ílido.'},
             status=400,
         )
 
@@ -677,3 +767,19 @@ def apresentacao(request):
         request,
         'monitoramento/apresentacao.html',
     )
+
+
+@login_required
+@somente_perfis('Administrador do sistema',  'Operador-técnico')
+def resolver_alerta(request, id):
+    if request.method != 'POST':
+        return redirect('lista_alertas')
+
+    alerta = get_object_or_404(Alerta, id=id)
+
+    if not alerta.resolvido:
+        alerta.resolvido = True
+        alerta.resolvido_em = timezone.now()
+        alerta.save(update_fields=['resolvido', 'resolvido_em'])
+
+    return redirect('lista_alertas')
