@@ -138,6 +138,7 @@ class Dispositivo(models.Model):
         return self.identificacao
 
 
+
 class LeituraTelemetria(models.Model):
     cisterna = models.ForeignKey(
         Cisterna,
@@ -162,6 +163,19 @@ class LeituraTelemetria(models.Model):
     def save(self, *args, **kwargs):
         nova_leitura = self.pk is None
 
+        if not 0 <= self.nivel <= 100:
+            raise ValueError("O nível deve estar entre 0 e 100.")
+
+        leitura_anterior = None
+
+        if nova_leitura:
+            leitura_anterior = (
+                LeituraTelemetria.objects
+                .filter(cisterna=self.cisterna)
+                .order_by('-data_hora', '-pk')
+                .first()
+            )
+
         super().save(*args, **kwargs)
 
         if self.nivel >= 70:
@@ -171,49 +185,86 @@ class LeituraTelemetria(models.Model):
         else:
             nova_situacao = 'critico'
 
-        self.cisterna.situacao = nova_situacao
-        self.cisterna.save(update_fields=['situacao'])
+        Cisterna.objects.filter(pk=self.cisterna_id).update(
+            situacao=nova_situacao
+        )
 
-        if nova_leitura and self.nivel < 30:
-            leitura_anterior = (
-                LeituraTelemetria.objects
-                .filter(cisterna=self.cisterna)
-                .exclude(pk=self.pk)
-                .order_by('-data_hora')
-                .first()
+        self.cisterna.situacao = nova_situacao
+
+        if not nova_leitura:
+            return
+
+        situacao_anterior = None
+
+        if leitura_anterior:
+            if leitura_anterior.nivel >= 70:
+                situacao_anterior = 'normal'
+            elif leitura_anterior.nivel >= 30:
+                situacao_anterior = 'atencao'
+            else:
+                situacao_anterior = 'critico'
+
+        entrou_em_atencao = (
+            nova_situacao == 'atencao'
+            and situacao_anterior != 'atencao'
+        )
+
+        entrou_em_critico = (
+            nova_situacao == 'critico'
+            and situacao_anterior != 'critico'
+        )
+
+        if entrou_em_atencao or entrou_em_critico:
+            tipo_alerta = (
+                'critico' if entrou_em_critico else 'atencao'
             )
 
-            if (
-                leitura_anterior is None
-                or leitura_anterior.nivel >= 30
-            ):
-                alerta = Alerta.objects.create(
-                    cisterna=self.cisterna,
-                    mensagem=(
-                        f"Nível crítico de água: "
-                        f"{self.nivel:.1f}%."
-                    ),
-                    data_hora=self.data_hora
-                )
+            alerta = Alerta.objects.create(
+                cisterna=self.cisterna,
+                tipo=tipo_alerta,
+                mensagem=(
+                    f"Nível {'crítico' if tipo_alerta == 'critico' else 'de atenção'} "
+                    f"de água: {self.nivel:.1f}%."
+                ),
+                data_hora=self.data_hora
+            )
 
+            if tipo_alerta == 'critico':
                 from .notificacoes import enviar_email_alerta
 
                 enviar_email_alerta(alerta)
 
 
+
 class Alerta(models.Model):
+    TIPO_CHOICES = [
+        ('atencao', 'Atenção'),
+        ('critico', 'Crítico'),
+    ]
+
     cisterna = models.ForeignKey(
         Cisterna,
         on_delete=models.CASCADE,
         related_name="alertas"
     )
 
+    tipo = models.CharField(
+        max_length=20,
+        choices=TIPO_CHOICES,
+        default='critico'
+    )
+
     mensagem = models.CharField(max_length=255)
     data_hora = models.DateTimeField()
 
+    resolvido = models.BooleanField(default=False)
+    resolvido_em = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return self.mensagem
-
 
 class PerfilUsuario(models.Model):
     usuario = models.OneToOneField(
