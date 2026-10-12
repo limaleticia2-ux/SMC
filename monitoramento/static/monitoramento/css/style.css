@@ -3262,3 +3262,50 @@ footer {
     right: 18px;
     bottom: 20px;
 }
+
+/* Organização inferior da barra lateral */
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+
+/* Perfil do usuário */
+.sidebar-bottom .user-box {
+    position: static;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Botão de sair */
+.sidebar-logout {
+    width: 100%;
+    margin: 0 !important;
+}
+
+.sidebar-logout button {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px;
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #183247;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.sidebar-logout button:hover {
+    background: #eaf3fb;
+}
+
+/* Evita que o menu se misture com o perfil */
+.sidebar .menu {
+    flex-shrink: 0;
+}
