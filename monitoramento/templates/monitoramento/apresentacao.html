@@ -1,434 +1,364 @@
+
 {% load static %}
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SMC | Sistema de Monitoramento do Nível de Água em Cisternas</title>
-
+    <title>SMC | Sistema de Monitoramento de Cisternas</title>
     <link rel="stylesheet" href="{% static 'monitoramento/css/apresentacao.css' %}">
-
 </head>
-
-
 <body>
 
-    <!-- CABEÇALHO -->
-    <header class="header">
+<header class="header">
+    <div class="header-container">
+        <a href="{% url 'apresentacao' %}" class="logo">
+            <span class="logo-mark">💧</span>
+            <span class="logo-name">SMC</span>
+            <span class="logo-divider"></span>
+            <span class="logo-description">
+                Sistema de Monitoramento<br>
+                do Nível de Água em Cisternas
+            </span>
+        </a>
 
-        <div class="header-container">
+        <nav class="menu">
+            <a href="#inicio">Início</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#funcionalidades">Funcionalidades</a>
+            <a href="#publico">Público-alvo</a>
+        </nav>
 
-            <a href="/" class="logo">
+        <a href="{% url 'monitoramento' %}" class="login-button">
+            Acessar o sistema <span>→</span>
+        </a>
+    </div>
+</header>
 
-                <span class="logo-name">
-                    SMC
-                </span>
+<main>
+    <!-- APRESENTAÇÃO PRINCIPAL -->
+    <section class="hero" id="inicio">
+        <img
+            class="hero-background"
+            src="{% static 'monitoramento/img/cisterna-hero.jpg' %}"
+            alt="Ilustração de cisterna em uma comunidade"
+        >
 
-                <span class="logo-description">
-                    Sistema de Monitoramento<br>
-                    do Nível de Água em Cisternas
-                </span>
+        <div class="hero-shade"></div>
 
-            </a>
-            
-            <nav class="menu">
+        <div class="hero-content">
+            <span class="eyebrow">TECNOLOGIA A SERVIÇO DA ÁGUA</span>
 
-                <a href="/" class="active">
-                    Início
+            <h1>
+                Cisternas monitoradas,<br>
+                comunidades <span>mais fortes.</span>
+            </h1>
+
+            <p>
+                Uma solução web para acompanhar os níveis de água,
+                identificar situações críticas e apoiar uma gestão
+                mais organizada do abastecimento nas comunidades.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#sobre" class="primary-button">
+                    Conheça o projeto <span>→</span>
                 </a>
-
-                <a href="#sobre">
-                    O SMC
+                <a href="#funcionalidades" class="secondary-button">
+                    Explorar funcionalidades
                 </a>
+            </div>
 
-                <a href="#servicos">
-                    Serviços
-                </a>
+            <div class="hero-note">
+                <span class="note-drop">💧</span>
+                <span>Monitoramento, organização e gestão hídrica.</span>
+            </div>
+        </div>
+    </section>
 
-                <a href="/monitoramento/">
-                    Monitoramento
-                </a>
-
-                <a href="/cisternas/">
-                    Cisternas
-                </a>
-
-            </nav>
-
-            <a href="/monitoramento/" class="login-button">
-                Acessar sistema
-            </a>
-
+    <!-- CONTEXTO -->
+    <section class="intro-section" id="sobre">
+        <div class="section-heading">
+            <span class="section-label">SOBRE O PROJETO</span>
+            <h2>Informação para cuidar melhor da água.</h2>
+            <p>
+                O Sistema de Monitoramento de Cisternas (SMC) é uma proposta
+                de aplicação web voltada ao acompanhamento dos níveis de água
+                armazenados em cisternas de municípios, comunidades rurais e sítios.
+            </p>
         </div>
 
-    </header>
-
-
-    <main>
-
-        <!-- BANNER PRINCIPAL -->
-        <section class="hero">
-
-            <div class="hero-content">
-
-                <span class="hero-label">
-                    SISTEMA DE MONITORAMENTO
-                </span>
-
-                <h1>
-                    Monitoramento do nível de água em cisternas
-                </h1>
-
+        <div class="intro-grid">
+            <article class="intro-card">
+                <div class="card-icon">01</div>
+                <h3>O desafio</h3>
                 <p>
-                    Uma solução Web para auxiliar no acompanhamento remoto
-                    dos níveis de água das cisternas e na identificação de
-                    situações que precisam de atenção.
+                    A falta de informações organizadas sobre os níveis das
+                    cisternas pode dificultar o planejamento do abastecimento,
+                    causar atrasos e tornar mais difícil identificar locais
+                    que precisam de atenção.
                 </p>
+            </article>
 
-                <div class="hero-buttons">
+            <article class="intro-card featured-card">
+                <div class="card-icon">02</div>
+                <h3>A proposta</h3>
+                <p>
+                    Reunir dados de cisternas, municípios, localidades e
+                    dispositivos em um único sistema, facilitando o
+                    acompanhamento das informações e a identificação de alertas.
+                </p>
+            </article>
 
-                    <a href="/monitoramento/" class="primary-button">
-                        Acessar monitoramento
-                    </a>
+            <article class="intro-card">
+                <div class="card-icon">03</div>
+                <h3>O impacto esperado</h3>
+                <p>
+                    Apoiar gestores e equipes técnicas na organização das
+                    informações, na priorização do atendimento e na tomada
+                    de decisões relacionadas à distribuição de água.
+                </p>
+            </article>
+        </div>
+    </section>
 
-                    <a href="#sobre" class="secondary-button">
-                        Conheça o SMC
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- IMAGEM PRINCIPAL -->
-            <div class="hero-visual">
-
-                <img
-                    src="{% static 'monitoramento/img/logo.png' %}"
-                    alt="Logo do SMC"
-                >
-
-            </div>
-
-
-            <!-- CARD DO MONITORAMENTO -->
-            <div class="hero-card">
-
-                <span>
-                    MONITORAMENTO
-                </span>
-
-                <strong>
-                    Nível de água
-                </strong>
-
-                <small>
-                    Acompanhe em tempo real a situação das cisternas.
-                </small>
-
+    <!-- FUNCIONALIDADES -->
+    <section class="features-section" id="funcionalidades">
+        <div class="section-heading">
+            <span class="section-label">O QUE O SMC PROPÕE</span>
+            <h2>Recursos para uma gestão mais eficiente.</h2>
+            <p>
+                As funcionalidades foram planejadas para reunir as principais
+                informações necessárias ao acompanhamento das cisternas.
+            </p>
         </div>
 
-        </section>
-
-
-        <!-- ACESSO RÁPIDO -->
-        <section class="services" id="servicos">
-
-            <div class="section-title">
-
-                <span>
-                    ACESSO RÁPIDO
-                </span>
-
-                <h2>
-                    Serviços do SMC
-                </h2>
-
+        <div class="features-grid">
+            <article class="feature-card">
+                <div class="feature-icon">◉</div>
+                <h3>Monitoramento dos níveis</h3>
                 <p>
-                    Acesse os principais recursos disponíveis no sistema.
+                    Acompanhar as medições recebidas dos dispositivos e
+                    consultar o nível de água registrado em cada cisterna.
                 </p>
-
-            </div>
-
-
-            <div class="service-cards">
-
-                <!-- MONITORAMENTO -->
-                <a href="/monitoramento/" class="service-card">
-
-                    <div class="service-card-top">
-
-                        <span class="service-icon">
-                            💧
-                        </span>
-
-                        <span class="service-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                    <h3>
-                        Monitoramento
-                    </h3>
-
-                    <p>
-                        Acompanhe os dados relacionados ao nível de água
-                        das cisternas monitoradas.
-                    </p>
-
-                    <span class="service-link">
-                        Acessar monitoramento
-                    </span>
-
-                </a>
-
-
-                <!-- CISTERNAS -->
-                <a href="/cisternas/" class="service-card">
-
-                    <div class="service-card-top">
-
-                        <span class="service-icon">
-                            🏠
-                        </span>
-
-                        <span class="service-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                    <h3>
-                        Cisternas
-                    </h3>
-
-                    <p>
-                        Consulte e gerencie as informações dos reservatórios
-                        cadastrados no sistema.
-                    </p>
-
-                    <span class="service-link">
-                        Consultar cisternas
-                    </span>
-
-                </a>
-
-
-                <!-- LOCALIZAÇÃO -->
-                <a href="#" class="service-card">
-
-                    <div class="service-card-top">
-
-                        <span class="service-icon">
-                            📍
-                        </span>
-
-                        <span class="service-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                    <h3>
-                        Localização
-                    </h3>
-
-                    <p>
-                        Visualize informações relacionadas à localização
-                        das cisternas monitoradas.
-                    </p>
-
-                    <span class="service-link">
-                        Visualizar mapa
-                    </span>
-
-                </a>
-
-
-                <!-- ALERTAS -->
-                <a href="#" class="service-card">
-
-                    <div class="service-card-top">
-
-                        <span class="service-icon">
-                            🔔
-                        </span>
-
-                        <span class="service-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                    <h3>
-                        Alertas
-                    </h3>
-
-                    <p>
-                        Identifique situações que precisam
-                        de atenção.
-                    </p>
-
-                    <span class="service-link">
-                        Consultar alertas
-                    </span>
-
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- SOBRE O SMC -->
-        <section class="about" id="sobre">
-
-            <div class="about-container">
-
-                <div class="about-content">
-
-                    <span class="section-label">
-                        SOBRE O SMC
-                    </span>
-
-                    <h2>
-                        Tecnologia para auxiliar
-                        na gestão da água
-                    </h2>
-
-                    <p>
-                        O Sistema de Monitoramento do Nível de Água em
-                        Cisternas foi desenvolvido com foco no acompanhamento
-                        de reservatórios relacionados ao Programa Um Milhão
-                        de Cisternas (P1MC) na Região do Potengi/RN.
-                    </p>
-
-                    <p>
-                        A proposta utiliza tecnologias de Internet das Coisas,
-                        sensores de nível e um sistema Web para possibilitar
-                        a coleta, o armazenamento e a visualização de dados
-                        relacionados ao volume de água das cisternas.
-                    </p>
-
-                </div>
-
-
-                <div class="about-highlight">
-
-                    <div class="highlight-item">
-
-                        <span class="highlight-number">
-                            01
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Monitorar
-                            </strong>
-
-                            <p>
-                                Acompanhar informações sobre o nível de água
-                                dos reservatórios.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="highlight-item">
-
-                        <span class="highlight-number">
-                            02
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Identificar
-                            </strong>
-
-                            <p>
-                                Auxiliar na identificação de situações
-                                críticas relacionadas ao abastecimento.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="highlight-item">
-
-                        <span class="highlight-number">
-                            03
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Centralizar
-                            </strong>
-
-                            <p>
-                                Reunir informações das cisternas em
-                                um único sistema Web.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- CHAMADA FINAL -->
-        <section class="call-to-action">
-
-            <div>
-
-                <span>
-                    REGIÃO DO POTENGI/RN
-                </span>
-
-                <h2>
-                    Informações das cisternas
-                    em um único sistema.
-                </h2>
-
-            </div>
-
-            <a href="/monitoramento/">
-                Acessar sistema
-            </a>
-
-        </section>
-
-    </main>
-
-
-    <!-- RODAPÉ -->
-    <footer class="footer">
-
-        <p>
-            © 2026 SMC — Sistema de Monitoramento do Nível de Água em Cisternas
-            | IFRN — Campus São Paulo do Potengi
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">⚠</div>
+                <h3>Alertas de atenção</h3>
+                <p>
+                    Identificar registros de nível baixo ou crítico e
+                    organizar os alertas para facilitar o acompanhamento.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">⌖</div>
+                <h3>Municípios e localidades</h3>
+                <p>
+                    Organizar cisternas por município e localidade,
+                    facilitando a consulta das informações cadastradas.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">▤</div>
+                <h3>Histórico de medições</h3>
+                <p>
+                    Consultar registros anteriores para acompanhar as
+                    variações do nível de água ao longo do tempo.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">♙</div>
+                <h3>Gestão de usuários</h3>
+                <p>
+                    Organizar o acesso conforme os perfis e as responsabilidades
+                    dos usuários envolvidos na gestão do sistema.
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">▥</div>
+                <h3>Relatórios para gestão</h3>
+                <p>
+                    Reunir informações que possam auxiliar a análise
+                    dos registros e o planejamento do abastecimento.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section class="process-section">
+        <div class="section-heading">
+            <span class="section-label">COMO FUNCIONA</span>
+            <h2>Da medição à tomada de decisão.</h2>
+            <p>
+                O fluxo proposto conecta a coleta das informações ao
+                acompanhamento realizado pelos responsáveis.
+            </p>
+        </div>
+
+        <div class="process-grid">
+            <article class="process-step">
+                <span class="step-number">1</span>
+                <h3>Coleta dos dados</h3>
+                <p>
+                    Dispositivos de monitoramento fornecem informações
+                    sobre o nível de água das cisternas.
+                </p>
+            </article>
+
+            <div class="process-arrow">→</div>
+
+            <article class="process-step">
+                <span class="step-number">2</span>
+                <h3>Organização das informações</h3>
+                <p>
+                    O sistema recebe e organiza os registros para
+                    consulta e acompanhamento.
+                </p>
+            </article>
+
+            <div class="process-arrow">→</div>
+
+            <article class="process-step">
+                <span class="step-number">3</span>
+                <h3>Acompanhamento e decisão</h3>
+                <p>
+                    Gestores e equipes técnicas consultam os dados e
+                    identificam situações que exigem atenção.
+                </p>
+            </article>
+        </div>
+
+        <p class="process-note">
+            A integração com sensores depende dos dispositivos e da
+            comunicação disponibilizados para o sistema. O projeto
+            contempla o processamento e o monitoramento dos dados,
+            não a fabricação física dos sensores.
         </p>
+    </section>
 
-    </footer>
+    <!-- PÚBLICO-ALVO -->
+    <section class="audience-section" id="publico">
+        <div class="audience-content">
+            <span class="section-label">PARA QUEM É O SMC?</span>
+            <h2>Uma ferramenta para quem cuida da distribuição de água.</h2>
+            <p>
+                O sistema é direcionado principalmente a órgãos públicos e
+                equipes responsáveis pela gestão dos recursos hídricos.
+                Sua proposta também considera os profissionais envolvidos
+                no abastecimento e as comunidades atendidas.
+            </p>
+        </div>
+
+        <div class="audience-list">
+            <article>
+                <span>01</span>
+                <div>
+                    <h3>Prefeituras e secretarias</h3>
+                    <p>Organização das informações e apoio ao planejamento.</p>
+                </div>
+            </article>
+
+            <article>
+                <span>02</span>
+                <div>
+                    <h3>Operadores e equipes técnicas</h3>
+                    <p>Acompanhamento das cisternas, medições e alertas.</p>
+                </div>
+            </article>
+
+            <article>
+                <span>03</span>
+                <div>
+                    <h3>Responsáveis pelo abastecimento</h3>
+                    <p>Informações para apoiar a priorização do atendimento.</p>
+                </div>
+            </article>
+
+            <article>
+                <span>04</span>
+                <div>
+                    <h3>Comunidades rurais e sítios</h3>
+                    <p>Beneficiários de uma gestão de água mais organizada.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- BENEFÍCIOS -->
+    <section class="benefits-section">
+        <div class="section-heading">
+            <span class="section-label">POR QUE É IMPORTANTE?</span>
+            <h2>Mais organização, mais informação, melhores decisões.</h2>
+        </div>
+
+        <div class="benefits-grid">
+            <article class="benefit-card">
+                <span>✓</span>
+                <h3>Identificação de situações críticas</h3>
+                <p>
+                    Facilitar a visualização de cisternas que precisam
+                    de acompanhamento.
+                </p>
+            </article>
+
+            <article class="benefit-card">
+                <span>✓</span>
+                <h3>Informações centralizadas</h3>
+                <p>
+                    Reunir cadastros e registros para reduzir a dispersão
+                    das informações.
+                </p>
+            </article>
+
+            <article class="benefit-card">
+                <span>✓</span>
+                <h3>Apoio ao planejamento</h3>
+                <p>
+                    Contribuir para que os responsáveis planejem melhor
+                    as ações de abastecimento.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <!-- CHAMADA FINAL -->
+    <section class="final-cta">
+        <span class="cta-drop">💧</span>
+        <span class="section-label">SISTEMA DE MONITORAMENTO DE CISTERNAS</span>
+        <h2>Conhecer o nível da água é um passo para cuidar melhor dela.</h2>
+        <p>
+            Acesse o sistema para consultar as áreas de monitoramento
+            e as informações disponíveis.
+        </p>
+        <a href="{% url 'monitoramento' %}" class="primary-button">
+            Acessar o sistema <span>→</span>
+        </a>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-brand">
+        <span class="footer-mark">💧</span>
+        <div>
+            <strong>SMC</strong>
+            <p>Sistema de Monitoramento de Cisternas</p>
+        </div>
+    </div>
+
+    <p class="footer-phrase">
+        Água é vida. Informação ajuda a preservá-la.
+    </p>
+
+    <p class="footer-credit">
+        IFRN · Projeto Integrador · 2026
+    </p>
+</footer>
 
 </body>
-
 </html>
