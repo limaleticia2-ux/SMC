@@ -391,7 +391,8 @@ def lista_alertas(request):
     )
 
 
-@somente_perfis('Administrador do sistema')
+
+@somente_perfis('Administrador do sistema', 'Operador-técnico')
 def resolver_alerta(request, id):
     if request.method != 'POST':
         return redirect('lista_alertas')
@@ -404,7 +405,6 @@ def resolver_alerta(request, id):
         alerta.save(update_fields=['resolvido', 'resolvido_em'])
 
     return redirect('lista_alertas')
-
 
 
 @somente_perfis('Administrador do sistema')

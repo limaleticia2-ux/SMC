@@ -1,24 +1,234 @@
-```html
+
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertas - SMC</title>
+    <title>Alertas | SMC</title>
+
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+
+    <style>
+        .alertas-page {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .alertas-header {
+            margin-bottom: 22px;
+        }
+
+        .alertas-header h1 {
+            margin: 8px 0;
+            color: #17365d;
+            font-size: 27px;
+        }
+
+        .alertas-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .alertas-search {
+            display: flex;
+            gap: 9px;
+            margin-bottom: 18px;
+        }
+
+        .alertas-search input {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 13px;
+            border: 1px solid #dbe3ec;
+            border-radius: 8px;
+            background: white;
+            font-size: 13px;
+        }
+
+        .alertas-search button,
+        .alerta-resolver button {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 7px;
+            background: #176b87;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .alertas-search button:hover,
+        .alerta-resolver button:hover {
+            background: #12556c;
+        }
+
+        .alertas-limpar {
+            align-self: center;
+            color: #176b87;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .alertas-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .alerta-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(15, 42, 67, 0.04);
+        }
+
+        .alerta-card.resolvido {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .alerta-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fef3c7;
+            color: #b45309;
+            font-size: 18px;
+        }
+
+        .alerta-icone.critico {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alerta-icone.resolvido-icone {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .alerta-conteudo {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .alerta-conteudo h2 {
+            margin: 0 0 8px;
+            color: #17365d;
+            font-size: 15px;
+            line-height: 1.3;
+        }
+
+        .alerta-detalhes {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px 14px;
+        }
+
+        .alerta-detalhe strong {
+            display: block;
+            margin-bottom: 2px;
+            color: #334155;
+            font-size: 10px;
+        }
+
+        .alerta-detalhe span {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .alerta-status {
+            font-weight: 700;
+        }
+
+        .status-pendente {
+            color: #b45309 !important;
+        }
+
+        .status-resolvido {
+            color: #15803d !important;
+        }
+
+        .alerta-resolver {
+            flex-shrink: 0;
+        }
+
+        .alertas-vazio {
+            padding: 25px 16px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            background: white;
+            color: #64748b;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .alertas-voltar {
+            display: inline-block;
+            margin-top: 18px;
+            color: #176b87;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 700px) {
+            .alertas-search {
+                flex-wrap: wrap;
+            }
+
+            .alertas-search input {
+                flex-basis: 100%;
+            }
+
+            .alerta-card {
+                flex-wrap: wrap;
+                padding: 12px;
+            }
+
+            .alerta-conteudo {
+                flex: 1;
+                min-width: 180px;
+            }
+
+            .alerta-detalhes {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .alerta-resolver {
+                width: 100%;
+                margin-left: 48px;
+            }
+
+            .alerta-resolver button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
 <div class="layout">
 
     <aside class="sidebar">
 
         <div class="logo">
             <div class="logo-icon">&#128167;</div>
+
             <div class="logo-text">
                 <span>SISTEMA DE MONITORAMENTO</span>
                 <strong>DE CISTERNAS</strong>
@@ -26,7 +236,6 @@
         </div>
 
         <nav class="menu">
-
             <a href="{% url 'index' %}" class="menu-item">
                 <span>&#127968;</span>
                 <p>Tela Inicial</p>
@@ -66,178 +275,155 @@
                 <span>&#9881;</span>
                 <p>Configurações</p>
             </a>
-
         </nav>
 
-        <div class="user-box">
-            <div class="user-avatar">
-                {{ request.user.username|first|upper }}
+        <div class="sidebar-bottom">
+            <div class="user-box">
+                <div class="user-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <div class="user-info">
+                    <strong>{{ request.user.username }}</strong>
+                    <small>Usuário do sistema</small>
+                </div>
             </div>
 
-            <div class="user-info">
-                <strong>{{ request.user.username }}</strong>
-                <small>Usuário do sistema</small>
-            </div>
+            <form action="{% url 'logout' %}" method="post" class="sidebar-logout">
+                {% csrf_token %}
+                <button type="submit">Sair do sistema</button>
+            </form>
         </div>
-
-        <form action="{% url 'logout' %}" method="post"
-              style="margin:12px 16px 16px;">
-            {% csrf_token %}
-
-            <button type="submit"
-                    style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">
-                Sair do sistema
-            </button>
-        </form>
 
     </aside>
 
     <main class="content">
+        <div class="alertas-page">
 
-        <header class="topbar">
-            <div>
-                <span class="page-label">Sistema / Alertas</span>
+            <header class="alertas-header">
                 <h1>Alertas</h1>
-                <p>Acompanhe as situações que precisam de atenção nas cisternas.</p>
-            </div>
-        </header>
+                <p>Acompanhe os alertas registrados no sistema de monitoramento.</p>
+            </header>
 
-        <section class="panel">
-
-            <div class="panel-header">
-                <h2>Alertas registrados</h2>
-            </div>
-
-            <form method="get" style="margin-bottom:20px;">
-
+            <form
+                method="get"
+                action="{% url 'lista_alertas' %}"
+                class="alertas-search"
+            >
                 <input
-                    type="text"
+                    type="search"
                     name="q"
-                    value="{{ busca }}"
-                    placeholder="Buscar por alerta, cisterna, município ou localidade..."
-                    style="width:100%;padding:11px 13px;border:1px solid #d8dee5;border-radius:6px;box-sizing:border-box;"
+                    placeholder="Buscar alerta, cisterna ou município..."
+                    value="{{ busca|default:'' }}"
                 >
 
-                <button type="submit" style="margin-top:10px;padding:10px 16px;cursor:pointer;">
-                    Buscar
-                </button>
+                <button type="submit">Buscar</button>
 
                 {% if busca %}
-                    <a href="{% url 'lista_alertas' %}"
-                       style="margin-left:10px;">
-                        Limpar busca
+                    <a class="alertas-limpar" href="{% url 'lista_alertas' %}">
+                        Limpar
                     </a>
                 {% endif %}
-
             </form>
 
-            {% for alerta in alertas %}
+            <div class="alertas-lista">
+                {% for alerta in alertas %}
 
-                <div class="alert"
-                     style="display:flex;align-items:center;gap:15px;margin-bottom:12px;padding:15px;border:1px solid #edf1f5;border-radius:8px;flex-wrap:wrap;">
+                    <article class="alerta-card {% if alerta.resolvido %}resolvido{% endif %}">
 
-                    <div
-                        class="alert-icon {% if alerta.tipo == 'critico' %}red{% else %}orange{% endif %}"
-                        style="flex-shrink:0;">
-                        &#9888;
-                    </div>
+                        <div class="alerta-icone {% if alerta.resolvido %}resolvido-icone{% elif alerta.tipo == 'critico' %}critico{% endif %}">
+                            &#9888;
+                        </div>
 
-                    <div style="flex:1;min-width:200px;">
+                        <div class="alerta-conteudo">
+                            <h2>{{ alerta.mensagem }}</h2>
 
-                        <strong>{{ alerta.mensagem }}</strong>
+                            <div class="alerta-detalhes">
+                                <div class="alerta-detalhe">
+                                    <strong>Cisterna</strong>
+                                    <span>
+                                        {% if alerta.cisterna %}
+                                            {{ alerta.cisterna.identificacao }}
+                                        {% else %}
+                                            Não informada
+                                        {% endif %}
+                                    </span>
+                                </div>
 
-                        <p>
-                            Tipo:
-                            <strong>
-                                {{ alerta.get_tipo_display }}
-                            </strong>
-                        </p>
+                                <div class="alerta-detalhe">
+                                    <strong>Município</strong>
+                                    <span>
+                                        {% if alerta.cisterna and alerta.cisterna.municipio %}
+                                            {{ alerta.cisterna.municipio.nome }}
+                                        {% else %}
+                                            Não informado
+                                        {% endif %}
+                                    </span>
+                                </div>
 
-                        <p>
-                            Cisterna: {{ alerta.cisterna }}
-                        </p>
+                                <div class="alerta-detalhe">
+                                    <strong>Localidade</strong>
+                                    <span>
+                                        {% if alerta.cisterna and alerta.cisterna.localidade %}
+                                            {{ alerta.cisterna.localidade.nome }}
+                                        {% else %}
+                                            Não informada
+                                        {% endif %}
+                                    </span>
+                                </div>
 
-                        <p>
-                            Localidade: {{ alerta.cisterna.localidade }}
-                        </p>
+                                <div class="alerta-detalhe">
+                                    <strong>Data do alerta</strong>
+                                    <span>{{ alerta.data_hora|date:"d/m/Y H:i" }}</span>
+                                </div>
 
-                        {% if alerta.cisterna.municipio %}
-                            <p>
-                                Município: {{ alerta.cisterna.municipio }}
-                            </p>
+                                <div class="alerta-detalhe">
+                                    <strong>Status</strong>
+
+                                    {% if alerta.resolvido %}
+                                        <span class="alerta-status status-resolvido">
+                                            Resolvido
+                                        </span>
+                                    {% else %}
+                                        <span class="alerta-status status-pendente">
+                                            Pendente
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if not alerta.resolvido %}
+                            <form
+                                method="post"
+                                action="{% url 'resolver_alerta' alerta.id %}"
+                                class="alerta-resolver"
+                            >
+                                {% csrf_token %}
+                                <button type="submit">Marcar como resolvido</button>
+                            </form>
                         {% endif %}
 
-                        <p>
-                            Registrado em:
-                            {{ alerta.data_hora|date:"d/m/Y H:i" }}
-                        </p>
+                    </article>
 
-                        <p>
-                            Estado:
-
-                            {% if alerta.resolvido %}
-                                <strong style="color:#218739;">
-                                    Resolvido
-                                </strong>
-
-                                {% if alerta.resolvido_em %}
-                                    <span>
-                                        em {{ alerta.resolvido_em|date:"d/m/Y H:i" }}
-                                    </span>
-                                {% endif %}
-
-                            {% else %}
-                                <strong style="color:#b42318;">
-                                    Ativo
-                                </strong>
-                            {% endif %}
-                        </p>
-
+                {% empty %}
+                    <div class="alertas-vazio">
+                        {% if busca %}
+                            Nenhum alerta encontrado para "{{ busca }}".
+                        {% else %}
+                            Nenhum alerta registrado no momento.
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
 
-                    {% if not alerta.resolvido %}
+            <a class="alertas-voltar" href="/">
+                &#8592; Voltar ao início
+            </a>
 
-                        <form
-                            method="post"
-                            action="{% url 'resolver_alerta' alerta.id %}"
-                            style="margin:0;">
-
-                            {% csrf_token %}
-
-                            <button
-                                type="submit"
-                                style="padding:10px 14px;border:0;border-radius:6px;background:#218739;color:#fff;font-weight:600;cursor:pointer;">
-                                Marcar como resolvido
-                            </button>
-
-                        </form>
-
-                    {% endif %}
-
-                </div>
-
-            {% empty %}
-
-                <div class="empty">
-                    {% if busca %}
-                        Nenhum alerta encontrado para essa busca.
-                    {% else %}
-                        Nenhum alerta registrado.
-                    {% endif %}
-                </div>
-
-            {% endfor %}
-
-        </section>
-
-        <footer>
-            © 2026 Sistema de Monitoramento do Nível de Água em Cisternas
-        </footer>
-
+        </div>
     </main>
 
 </div>
-
 </body>
 </html>
-```
