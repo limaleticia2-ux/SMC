@@ -1,261 +1,216 @@
+
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo|default:"Município" }} | SMC</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <title>{{ titulo }} - SMC</title>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
 
-    <link
-        rel="stylesheet"
-        href="{% static 'monitoramento/css/style.css' %}"
-    >
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c, #123f60);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
 
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo-icon {
+            width: 44px; height: 44px; margin: 0 auto 10px;
+            display: grid; place-items: center;
+            border-radius: 10px; background: #ffffff20; font-size: 25px;
+        }
+        .logo-text { display: flex; flex-direction: column; line-height: 1.5; }
+        .logo-text span { color: #dbeafe; font-size: 13px; }
+        .logo-text strong { font-size: 20px; }
+        .menu-title {
+            margin-bottom: 12px; color: #bfdbfe;
+            font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .menu { display: flex; flex-direction: column; gap: 7px; }
+        .menu-item {
+            display: flex; align-items: center; min-height: 48px;
+            padding: 0 15px; gap: 12px; color: #e8f2fa;
+            text-decoration: none; border-radius: 11px; font-size: 14px;
+        }
+        .menu-item span { width: 24px; font-size: 20px; text-align: center; }
+        .menu-item:hover, .menu-item.active { background: #ffffff20; color: white; }
+        .menu-item.active { font-weight: 600; }
+        .sidebar-bottom { margin-top: auto; padding-top: 25px; }
+        .user-box {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; border-radius: 14px; background: #ffffff15;
+        }
+        .user-avatar {
+            display: grid; place-items: center; flex-shrink: 0;
+            width: 42px; height: 42px; border-radius: 50%;
+            background: #dbeafe; color: #123f60; font-weight: bold;
+        }
+        .user-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .user-info strong { font-size: 13px; overflow-wrap: anywhere; }
+        .user-info small { color: #dbeafe; font-size: 11px; }
+        .logout-link {
+            display: block; margin-top: 12px; padding: 12px;
+            border: 1px solid #ffffff30; border-radius: 10px;
+            color: #e8f2fa; text-align: center; text-decoration: none;
+        }
+        .content {
+            width: calc(100% - 280px); min-height: 100vh;
+            margin-left: 280px; padding: 35px;
+        }
+        .page-header { margin-bottom: 28px; }
+        .page-header h1 { font-size: 28px; color: #123f60; }
+        .page-header p { margin-top: 7px; color: #64748b; }
+        .panel {
+            max-width: 850px; padding: 30px; background: white;
+            border: 1px solid #e2e8f0; border-radius: 16px;
+            box-shadow: 0 5px 20px #0f172a08;
+        }
+        .panel h2 { margin-bottom: 8px; font-size: 20px; }
+        .panel-description { margin-bottom: 25px; color: #64748b; font-size: 14px; }
+        .messages { margin-bottom: 18px; }
+        .message {
+            margin-bottom: 8px; padding: 12px; border-radius: 8px;
+            background: #fee2e2; color: #991b1b;
+        }
+        .field { margin-bottom: 22px; }
+        .field label {
+            display: block; margin-bottom: 8px;
+            color: #334155; font-size: 14px; font-weight: 600;
+        }
+        .field input, .field select {
+            width: 100%; padding: 13px 14px;
+            border: 1px solid #cbd5e1; border-radius: 9px;
+            background: white; color: #1e293b; font-size: 15px;
+            outline: none;
+        }
+        .field input:focus, .field select:focus {
+            border-color: #146c94;
+            box-shadow: 0 0 0 3px #146c941c;
+        }
+        .errorlist { margin-top: 7px; color: #b91c1c; font-size: 13px; }
+        .form-actions {
+            display: flex; justify-content: flex-end;
+            flex-wrap: wrap; gap: 12px; margin-top: 28px;
+        }
+        .btn {
+            display: inline-block; padding: 12px 20px;
+            border-radius: 9px; border: none; font-size: 14px;
+            font-weight: 600; text-decoration: none; cursor: pointer;
+        }
+        .btn-primary { background: #146c94; color: white; }
+        .btn-primary:hover { background: #0d526f; }
+        .btn-cancel { background: #f1f5f9; color: #475569; }
+        @media (max-width: 900px) {
+            .sidebar { width: 80px; padding: 25px 10px; }
+            .logo-text, .menu-title, .menu-item p, .user-info, .logout-text {
+                display: none;
+            }
+            .menu-item { justify-content: center; padding: 0; }
+            .user-box { justify-content: center; padding: 8px; }
+            .content { width: calc(100% - 80px); margin-left: 80px; padding: 22px 15px; }
+            .panel { padding: 20px; }
+        }
+    </style>
 </head>
 
 <body>
-
-<div class="layout">
-
     <aside class="sidebar">
-
         <div class="logo">
-
-            <div class="logo-icon">
-                &#128167;
-            </div>
-
+            <div class="logo-icon">💧</div>
             <div class="logo-text">
-
-                <span>
-                    SISTEMA DE MONITORAMENTO
-                </span>
-
-                <strong>
-                    DE CISTERNAS
-                </strong>
-
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
-
         </div>
 
+        <div class="menu-title">Menu principal</div>
 
         <nav class="menu">
-
-            <a href="{% url 'index' %}" class="menu-item">
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
-            </a>
-
-            <a href="{% url 'lista_usuarios' %}" class="menu-item">
-                <span>&#128100;</span>
-                <p>Usuários</p>
-            </a>
-
-            <a href="{% url 'lista_cisternas' %}" class="menu-item">
-                <span>&#128688;</span>
-                <p>Cisternas</p>
-            </a>
-
-            <a href="{% url 'monitoramento' %}" class="menu-item">
-                <span>&#9687;</span>
-                <p>Monitoramento</p>
-            </a>
-
-            <a href="{% url 'lista_alertas' %}" class="menu-item">
-                <span>&#9888;</span>
-                <p>Alertas</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#128506;</span>
-                <p>Mapa</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
-            </a>
-
+            <a href="{% url 'index' %}" class="menu-item"><span>⌂</span><p>Painel inicial</p></a>
+            <a href="{% url 'lista_usuarios' %}" class="menu-item"><span>♙</span><p>Usuários</p></a>
+            <a href="{% url 'lista_cisternas' %}" class="menu-item"><span>▣</span><p>Cisternas</p></a>
+            <a href="{% url 'monitoramento' %}" class="menu-item"><span>◉</span><p>Monitoramento</p></a>
+            <a href="{% url 'lista_alertas' %}" class="menu-item"><span>⚑</span><p>Alertas</p></a>
+            <a href="{% url 'mapa' %}" class="menu-item"><span>⌖</span><p>Mapa</p></a>
+            <a href="{% url 'lista_municipios' %}" class="menu-item active"><span>⌖</span><p>Municípios</p></a>
         </nav>
 
-
-        <div class="user-box">
-
-            <div class="user-avatar">
-                {{ request.user.username|first|upper }}
+        <div class="sidebar-bottom">
+            <div class="user-box">
+                <div class="user-avatar">{{ request.user.username|first|upper }}</div>
+                <div class="user-info">
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                    <small>Usuário conectado</small>
+                </div>
             </div>
-
-            <div class="user-info">
-
-                <strong>
-                    {{ request.user.username }}
-                </strong>
-
-                <small>
-                    Usuário do sistema
-                </small>
-
-            </div>
-
+            <a href="{% url 'logout' %}" class="logout-link">↪ <span class="logout-text">Sair</span></a>
         </div>
-
     </aside>
 
-
     <main class="content">
-
-        <header class="topbar">
-
-            <div>
-
-                <span class="page-label">
-                    Sistema / Municípios
-                </span>
-
-                <h1>
-                    {{ titulo }}
-                </h1>
-
-            </div>
-
+        <header class="page-header">
+            <h1>{{ titulo|default:"Cadastrar município" }}</h1>
+            <p>Preencha as informações para salvar o município no sistema.</p>
         </header>
 
-
         <section class="panel">
+            <h2>Dados do município</h2>
+            <p class="panel-description">Informe o nome e a sigla do estado.</p>
 
-            <div class="panel-header">
-
-                <div>
-
-                    <h2>
-                        Dados do município
-                    </h2>
-
-                    <p
-                        style="
-                            margin-top: 5px;
-                            color: #64748b;
-                            font-size: 12px;
-                        "
-                    >
-                        Informe o município e o estado.
-                    </p>
-
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message">{{ message }}</div>
+                    {% endfor %}
                 </div>
+            {% endif %}
 
-            </div>
-
-
-            <form method="post">
-
+            <form method="POST">
                 {% csrf_token %}
 
-
-                {% if form.errors %}
-
-                    <div class="js-form-error">
-
-                        Verifique os dados preenchidos.
-
-                    </div>
-
+                {% if form.non_field_errors %}
+                    <div class="messages">{{ form.non_field_errors }}</div>
                 {% endif %}
 
+                {% for field in form %}
+                    <div class="field">
+                        {{ field.label_tag }}
+                        {{ field }}
 
-                <div class="figma-form-grid">
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
 
-
-                    <div class="figma-field">
-
-                        <label
-                            for="{{ form.nome.id_for_label }}"
-                        >
-                            Nome do município
-                        </label>
-
-                        {{ form.nome }}
-
-                        {% for error in form.nome.errors %}
-
-                            <small>
-                                {{ error }}
-                            </small>
-
-                        {% endfor %}
-
+                        {{ field.errors }}
                     </div>
+                {% endfor %}
 
-
-                    <div class="figma-field">
-
-                        <label
-                            for="{{ form.estado.id_for_label }}"
-                        >
-                            Estado
-                        </label>
-
-                        {{ form.estado }}
-
-                        {% for error in form.estado.errors %}
-
-                            <small>
-                                {{ error }}
-                            </small>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-final-actions">
-
-                    <a
-                        href="{% url 'lista_municipios' %}"
-                        class="btn-cancel"
-                    >
+                <div class="form-actions">
+                    <a href="{% url 'lista_municipios' %}" class="btn btn-cancel">
                         Cancelar
                     </a>
-
-                    <button
-                        type="submit"
-                        class="btn-figma-save"
-                    >
+                    <button type="submit" class="btn btn-primary">
                         Salvar município
                     </button>
-
                 </div>
-
             </form>
-
         </section>
-
-
-        <footer>
-
-            Sistema de Monitoramento do Nível de Água em Cisternas
-
-        </footer>
-
     </main>
-
-</div>
-
 </body>
-
 </html>

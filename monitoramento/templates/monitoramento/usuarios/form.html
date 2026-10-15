@@ -6,62 +6,510 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ titulo }} - SMC</title>
+
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+
+    <style>
+        /* MENU LATERAL PADRONIZADO */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c 0%, #123f60 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar .logo-icon {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 10px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #ffffff20;
+            font-size: 25px;
+        }
+
+        .sidebar .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        .sidebar .logo-text span {
+            color: #dbeafe;
+            font-size: 13px;
+        }
+
+        .sidebar .logo-text strong {
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .sidebar .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            border-radius: 11px;
+            color: #e8f2fa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s;
+        }
+
+        .sidebar .menu-item span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+
+        .sidebar .menu-item p {
+            margin: 0;
+        }
+
+        .sidebar .menu-item:hover,
+        .sidebar .menu-item.active {
+            background: #ffffff20;
+            color: #fff;
+        }
+
+        .sidebar .menu-item.active {
+            font-weight: 600;
+        }
+
+        .sidebar .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+            padding: 15px;
+            border-radius: 14px;
+            background: #ffffff15;
+        }
+
+        .sidebar .user-avatar {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #123f60;
+            font-weight: bold;
+        }
+
+        .sidebar .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .sidebar .user-info strong {
+            color: #fff;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .sidebar .user-info small {
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .sidebar .logout-form {
+            width: 100%;
+            margin: 12px 0 0 !important;
+        }
+
+        .sidebar .logout-button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ffffff30;
+            border-radius: 10px;
+            background: transparent;
+            color: #e8f2fa;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .sidebar .logout-button:hover {
+            background: #ffffff20;
+        }
+
+        /* CONTEÚDO */
+
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+        }
+
+        .page-top {
+            margin-bottom: 25px;
+        }
+
+        /* FORMULÁRIO DE USUÁRIOS */
+
+        .usuario-form-card {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 28px;
+            background: #fff;
+            border: 1px solid #e2eaf1;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(21, 55, 80, 0.06);
+        }
+
+        .usuario-form-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e8eef3;
+        }
+
+        .usuario-form-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #e7f3fb;
+            color: #16496c;
+            font-size: 24px;
+        }
+
+        .usuario-form-header div:last-child {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .usuario-form-header strong {
+            color: #183247;
+            font-size: 18px;
+        }
+
+        .usuario-form-header span {
+            color: #718395;
+            font-size: 13px;
+        }
+
+        .usuario-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .usuario-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .usuario-field label {
+            color: #30495d;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .usuario-field label span:not(.campo-opcional) {
+            color: #d9534f;
+        }
+
+        .campo-opcional {
+            color: #8292a0;
+            font-size: 11px;
+            font-weight: 400;
+        }
+
+        .usuario-field input:not([type="checkbox"]),
+        .usuario-field select,
+        .usuario-field textarea {
+            width: 100%;
+            min-height: 44px;
+            padding: 11px 12px;
+            border: 1px solid #d5e0e9;
+            border-radius: 8px;
+            background: #fff;
+            color: #243b4d;
+            font: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .usuario-field input:focus,
+        .usuario-field select:focus,
+        .usuario-field textarea:focus {
+            border-color: #3686b5;
+            box-shadow: 0 0 0 3px rgba(54, 134, 181, .12);
+        }
+
+        .usuario-field input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #16496c;
+        }
+
+        .usuario-field > small:not(.field-error) {
+            color: #7b8b99;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .field-error {
+            color: #c0392b;
+            font-size: 12px;
+        }
+
+        .usuario-form-error {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 1050px;
+            margin: 0 auto 20px;
+            padding: 16px;
+            border: 1px solid #f0c6c3;
+            border-radius: 10px;
+            background: #fff1f0;
+            color: #a93226;
+        }
+
+        .usuario-form-error span,
+        .usuario-form-error small {
+            font-size: 13px;
+        }
+
+        .usuario-info-box {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding: 16px;
+            border: 1px solid #d9eaf5;
+            border-radius: 10px;
+            background: #f0f8fd;
+            color: #31556e;
+        }
+
+        .usuario-info-box > span {
+            font-size: 20px;
+        }
+
+        .usuario-info-box strong {
+            font-size: 13px;
+        }
+
+        .usuario-info-box p {
+            margin: 6px 0 0;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .usuario-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #e8eef3;
+        }
+
+        .btn-cancel,
+        .btn-usuario-save {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            border: 1px solid #d5e0e9;
+            background: #fff;
+            color: #40596c;
+        }
+
+        .btn-cancel:hover {
+            background: #f4f7fa;
+        }
+
+        .btn-usuario-save {
+            border: none;
+            background: #16496c;
+            color: #fff;
+        }
+
+        .btn-usuario-save:hover {
+            background: #103753;
+        }
+
+        footer {
+            padding: 24px 0 4px;
+            color: #8493a0;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVIDADE DO MENU E DO FORMULÁRIO */
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .sidebar .logo-text {
+                display: none;
+            }
+
+            .sidebar .logo {
+                margin-bottom: 35px;
+            }
+
+            .sidebar .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .sidebar .menu-item p,
+            .sidebar .user-info,
+            .sidebar .logout-text {
+                display: none;
+            }
+
+            .sidebar .user-box {
+                justify-content: center;
+                padding: 8px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 22px 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .usuario-form-card {
+                padding: 20px 16px;
+            }
+
+            .usuario-form-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .usuario-form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn-cancel,
+            .btn-usuario-save {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 <div class="layout">
 
+    <!-- MENU LATERAL IGUAL AO DE CISTERNAS -->
+
     <aside class="sidebar">
+
         <div class="logo">
             <div class="logo-icon">&#128167;</div>
+
             <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DE CISTERNAS</strong>
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
         </div>
 
         <nav class="menu">
+
             <a href="{% url 'index' %}" class="menu-item">
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
+                <span>⌂</span>
+                <p>Painel inicial</p>
             </a>
 
             <a href="{% url 'lista_usuarios' %}" class="menu-item active">
-                <span>&#128100;</span>
+                <span>♙</span>
                 <p>Usuários</p>
             </a>
 
             <a href="{% url 'lista_cisternas' %}" class="menu-item">
-                <span>&#128688;</span>
+                <span>▣</span>
                 <p>Cisternas</p>
             </a>
 
             <a href="{% url 'monitoramento' %}" class="menu-item">
-                <span>&#9687;</span>
+                <span>◉</span>
                 <p>Monitoramento</p>
             </a>
 
             <a href="{% url 'lista_alertas' %}" class="menu-item">
-                <span>&#9888;</span>
+                <span>⚑</span>
                 <p>Alertas</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#128506;</span>
+            <a href="{% url 'mapa' %}" class="menu-item">
+                <span>⌖</span>
                 <p>Mapa</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
+            <a href="{% url 'lista_localidades' %}" class="menu-item">
+                <span>⌖</span>
+                <p>Localidades</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
+            <a href="{% url 'lista_municipios' %}" class="menu-item">
+                <span>▤</span>
+                <p>Municípios</p>
             </a>
+
         </nav>
+
+        <!-- USUÁRIO CONECTADO -->
 
         <div class="user-box">
             <div class="user-avatar">
@@ -69,20 +517,30 @@
             </div>
 
             <div class="user-info">
-                <strong>{{ request.user.username }}</strong>
-                <small>Usuário do sistema</small>
+                <strong>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </strong>
+                <small>Usuário conectado</small>
             </div>
         </div>
 
-        <form action="{% url 'logout' %}" method="post"
-              style="margin:12px 16px 16px;">
+        <!-- SAIR DO SISTEMA -->
+
+        <form action="{% url 'logout' %}"
+              method="post"
+              class="logout-form">
+
             {% csrf_token %}
-            <button type="submit"
-                    style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">
-                Sair do sistema
+
+            <button type="submit" class="logout-button">
+                ↪ <span class="logout-text">Sair do sistema</span>
             </button>
+
         </form>
+
     </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
 
     <main class="content usuarios-page">
 
@@ -133,7 +591,9 @@
                         <label for="{{ form.first_name.id_for_label }}">
                             Nome <span>*</span>
                         </label>
+
                         {{ form.first_name }}
+
                         {% for error in form.first_name.errors %}
                             <small class="field-error">{{ error }}</small>
                         {% endfor %}
@@ -143,7 +603,9 @@
                         <label for="{{ form.last_name.id_for_label }}">
                             Sobrenome
                         </label>
+
                         {{ form.last_name }}
+
                         {% for error in form.last_name.errors %}
                             <small class="field-error">{{ error }}</small>
                         {% endfor %}
@@ -153,7 +615,9 @@
                         <label for="{{ form.username.id_for_label }}">
                             Nome de usuário <span>*</span>
                         </label>
+
                         {{ form.username }}
+
                         {% for error in form.username.errors %}
                             <small class="field-error">{{ error }}</small>
                         {% endfor %}
@@ -163,7 +627,9 @@
                         <label for="{{ form.email.id_for_label }}">
                             E-mail <span>*</span>
                         </label>
+
                         {{ form.email }}
+
                         {% for error in form.email.errors %}
                             <small class="field-error">{{ error }}</small>
                         {% endfor %}
@@ -173,13 +639,14 @@
                         <label for="{{ form.perfil.id_for_label }}">
                             Perfil <span>*</span>
                         </label>
+
                         {{ form.perfil }}
+
                         {% for error in form.perfil.errors %}
                             <small class="field-error">{{ error }}</small>
                         {% endfor %}
                     </div>
 
-                    <!-- Campo que estava faltando no formulário -->
                     <div class="usuario-field">
                         <label for="{{ form.municipio.id_for_label }}">
                             Município vinculado
@@ -203,7 +670,9 @@
                             <label for="{{ form.senha.id_for_label }}">
                                 Senha <span>*</span>
                             </label>
+
                             {{ form.senha }}
+
                             {% for error in form.senha.errors %}
                                 <small class="field-error">{{ error }}</small>
                             {% endfor %}
@@ -215,7 +684,9 @@
                             <label for="{{ form.nova_senha.id_for_label }}">
                                 Nova senha
                             </label>
+
                             {{ form.nova_senha }}
+
                             {% for error in form.nova_senha.errors %}
                                 <small class="field-error">{{ error }}</small>
                             {% endfor %}
@@ -245,7 +716,9 @@
                             <label for="{{ form.is_active.id_for_label }}">
                                 {{ form.is_active.label }}
                             </label>
+
                             {{ form.is_active }}
+
                             {% for error in form.is_active.errors %}
                                 <small class="field-error">{{ error }}</small>
                             {% endfor %}
@@ -256,8 +729,10 @@
 
                 <div class="usuario-info-box">
                     <span>&#8505;</span>
+
                     <div>
                         <strong>Perfis de acesso</strong>
+
                         <p>
                             O perfil define as permissões do usuário.
                             Para perfis vinculados a um município, selecione
@@ -267,6 +742,7 @@
                 </div>
 
                 <div class="usuario-form-actions">
+
                     <a href="{% url 'lista_usuarios' %}" class="btn-cancel">
                         Cancelar
                     </a>
@@ -278,6 +754,7 @@
                             Cadastrar usuário
                         {% endif %}
                     </button>
+
                 </div>
             </form>
         </section>

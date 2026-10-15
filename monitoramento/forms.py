@@ -281,13 +281,20 @@ class UsuarioForm(forms.ModelForm):
             ),
         }
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
 
-        if User.objects.filter(username=username).exists():
+    def clean_username(self):
+        username = self.cleaned_data['username'].strip()
+
+        existentes = User.objects.filter(username=username)
+
+        if existentes.exists():
             raise forms.ValidationError(
-                'Este nome de usuário já está sendo utilizado.'
+                'Este nome de usuário já está cadastrado. '
+                'Escolha outro nome de usuário.'
             )
+
+        return username
+
 
         return username
 
