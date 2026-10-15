@@ -1,4 +1,4 @@
-```html
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -11,6 +11,292 @@
     <title>Localidades - SMC</title>
 
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+
+    <style>
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c 0%, #123f60 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar .logo-icon {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 10px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #ffffff20;
+            font-size: 25px;
+        }
+
+        .sidebar .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        .sidebar .logo-text span {
+            color: #dbeafe;
+            font-size: 13px;
+        }
+
+        .sidebar .logo-text strong {
+            color: white;
+            font-size: 20px;
+        }
+
+        .sidebar .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            border-radius: 11px;
+            color: #e8f2fa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background .2s;
+        }
+
+        .sidebar .menu-item span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+
+        .sidebar .menu-item p {
+            margin: 0;
+        }
+
+        .sidebar .menu-item:hover,
+        .sidebar .menu-item.active {
+            background: #ffffff20;
+            color: white;
+        }
+
+        .sidebar .menu-item.active {
+            font-weight: 600;
+        }
+
+        .sidebar .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+            padding: 15px;
+            border-radius: 14px;
+            background: #ffffff15;
+        }
+
+        .sidebar .user-avatar {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #123f60;
+            font-weight: bold;
+        }
+
+        .sidebar .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .sidebar .user-info strong {
+            color: white;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .sidebar .user-info small {
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .sidebar .logout-form {
+            margin: 12px 0 0 !important;
+        }
+
+        .sidebar .logout-button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ffffff30;
+            border-radius: 10px;
+            background: transparent;
+            color: #e8f2fa;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar .logout-button:hover {
+            background: #ffffff20;
+        }
+
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+        }
+
+        .localidade-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            transition: box-shadow .2s, transform .2s;
+        }
+
+        .localidade-card:hover {
+            box-shadow: 0 5px 18px #0f172a0a;
+            transform: translateY(-1px);
+        }
+
+        .localidade-info {
+            min-width: 0;
+        }
+
+        .localidade-info > strong {
+            color: #123f60;
+            font-size: 16px;
+        }
+
+        .localidade-info p {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .localidade-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 13px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .btn-delete {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .btn-edit:hover {
+            background: #dbeafe;
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        .empty {
+            padding: 35px 20px;
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .sidebar .logo-text {
+                display: none;
+            }
+
+            .sidebar .logo {
+                margin-bottom: 35px;
+            }
+
+            .sidebar .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .sidebar .menu-item p,
+            .sidebar .user-info,
+            .sidebar .logout-text {
+                display: none;
+            }
+
+            .sidebar .user-box {
+                justify-content: center;
+                padding: 8px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 22px 15px;
+            }
+
+            .localidade-card {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .localidade-actions {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -23,52 +309,51 @@
             <div class="logo-icon">&#128167;</div>
 
             <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DE CISTERNAS</strong>
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
         </div>
 
         <nav class="menu">
 
             <a href="{% url 'index' %}" class="menu-item">
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
+                <span>⌂</span>
+                <p>Painel inicial</p>
             </a>
 
             <a href="{% url 'lista_usuarios' %}" class="menu-item">
-                <span>&#128100;</span>
+                <span>♙</span>
                 <p>Usuários</p>
             </a>
 
             <a href="{% url 'lista_cisternas' %}" class="menu-item">
-                <span>&#128688;</span>
+                <span>▣</span>
                 <p>Cisternas</p>
             </a>
 
-
             <a href="{% url 'monitoramento' %}" class="menu-item">
-                <span>&#9687;</span>
+                <span>◉</span>
                 <p>Monitoramento</p>
             </a>
 
             <a href="{% url 'lista_alertas' %}" class="menu-item">
-                <span>&#9888;</span>
+                <span>⚑</span>
                 <p>Alertas</p>
             </a>
 
             <a href="{% url 'mapa' %}" class="menu-item">
-                <span>&#128506;</span>
+                <span>⌖</span>
                 <p>Mapa</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
+            <a href="{% url 'lista_localidades' %}" class="menu-item active">
+                <span>⌖</span>
+                <p>Localidades</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
+            <a href="{% url 'lista_municipios' %}" class="menu-item">
+                <span>▤</span>
+                <p>Municípios</p>
             </a>
 
         </nav>
@@ -79,15 +364,18 @@
             </div>
 
             <div class="user-info">
-                <strong>{{ request.user.username }}</strong>
-                <small>Usuário do sistema</small>
+                <strong>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </strong>
+                <small>Usuário conectado</small>
             </div>
         </div>
 
-        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
+        <form action="{% url 'logout' %}" method="post" class="logout-form">
             {% csrf_token %}
-            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">
-                Sair do sistema
+
+            <button type="submit" class="logout-button">
+                ↪ <span class="logout-text">Sair do sistema</span>
             </button>
         </form>
 
@@ -121,41 +409,37 @@
 
             {% for localidade in localidades %}
 
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px;margin-bottom:10px;border:1px solid #edf1f5;border-radius:8px;background:#ffffff;">
+                <div class="localidade-card">
 
-                    <div style="min-width:0;">
+                    <div class="localidade-info">
 
                         <strong>{{ localidade.nome }}</strong>
 
-                        <p style="margin-top:4px;color:#64748b;font-size:12px;">
+                        <p>
                             <strong>Município:</strong>
                             {{ localidade.municipio|default:"Não informado" }}
                         </p>
 
-                        <p style="margin-top:4px;color:#64748b;font-size:12px;">
+                        <p>
                             <strong>Endereço:</strong>
                             {{ localidade.endereco|default:"Não informado" }}
                         </p>
 
                         {% if localidade.descricao %}
-                            <p style="margin-top:6px;color:#64748b;font-size:12px;">
-                                {{ localidade.descricao }}
-                            </p>
+                            <p>{{ localidade.descricao }}</p>
                         {% endif %}
 
                     </div>
 
-                    <div style="display:flex;gap:8px;flex-shrink:0;">
+                    <div class="localidade-actions">
 
                         <a href="{% url 'editar_localidade' localidade.id %}"
-                           class="btn-cancel"
-                           style="text-decoration:none;">
+                           class="btn-edit">
                             Editar
                         </a>
 
                         <a href="{% url 'excluir_localidade' localidade.id %}"
-                           class="btn-cancel"
-                           style="text-decoration:none;color:#b91c1c;">
+                           class="btn-delete">
                             Excluir
                         </a>
 
@@ -166,8 +450,10 @@
             {% empty %}
 
                 <div class="empty">
-                    Nenhuma localidade cadastrada.
-                    Clique em “Cadastrar localidade” para adicionar a primeira.
+                    <strong>Nenhuma localidade cadastrada.</strong>
+                    <p>
+                        Clique em “Cadastrar localidade” para adicionar a primeira.
+                    </p>
                 </div>
 
             {% endfor %}
@@ -184,4 +470,3 @@
 
 </body>
 </html>
-```

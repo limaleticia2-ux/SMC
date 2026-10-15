@@ -1,258 +1,501 @@
+
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municípios | SMC</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <title>Municípios - SMC</title>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
 
-    <link
-        rel="stylesheet"
-        href="{% static 'monitoramento/css/style.css' %}"
-    >
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c, #123f60);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 1000;
+        }
 
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 10px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #ffffff20;
+            font-size: 25px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        .logo-text span {
+            color: #dbeafe;
+            font-size: 13px;
+        }
+
+        .logo-text strong {
+            font-size: 20px;
+        }
+
+        .menu-title {
+            margin-bottom: 12px;
+            color: #bfdbfe;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            color: #e8f2fa;
+            text-decoration: none;
+            border-radius: 11px;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .menu-item span {
+            width: 24px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: #ffffff20;
+            color: white;
+        }
+
+        .menu-item.active {
+            font-weight: 600;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 14px;
+            background: #ffffff15;
+        }
+
+        .user-avatar {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #123f60;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .user-info strong {
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .user-info small {
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .logout-link {
+            display: block;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid #ffffff30;
+            border-radius: 10px;
+            color: #e8f2fa;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .logout-link:hover {
+            background: #ffffff20;
+        }
+
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #123f60;
+        }
+
+        .page-header p {
+            margin-top: 7px;
+            color: #64748b;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #146c94;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-primary:hover {
+            background: #0d526f;
+            transform: translateY(-1px);
+        }
+
+        .panel {
+            padding: 25px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px #0f172a08;
+        }
+
+        .panel h2 {
+            margin-bottom: 8px;
+            font-size: 19px;
+        }
+
+        .panel-description {
+            margin-bottom: 22px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 8px;
+            padding: 12px 15px;
+            border-radius: 9px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 15px 12px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge-estado {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #e0f2fe;
+            color: #075985;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .btn-delete {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .empty {
+            padding: 35px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .logo-text,
+            .menu-title,
+            .menu-item p,
+            .user-info,
+            .logout-text {
+                display: none;
+            }
+
+            .logo {
+                margin-bottom: 35px;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .user-box {
+                justify-content: center;
+                padding: 8px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 22px 15px;
+            }
+
+            .panel {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-<div class="layout">
-
     <aside class="sidebar">
-
         <div class="logo">
-
-            <div class="logo-icon">
-                &#128167;
-            </div>
-
+            <div class="logo-icon">💧</div>
             <div class="logo-text">
-
-                <span>
-                    SISTEMA DE MONITORAMENTO
-                </span>
-
-                <strong>
-                    DE CISTERNAS
-                </strong>
-
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
-
         </div>
 
+        <div class="menu-title">Menu principal</div>
 
         <nav class="menu">
-
-            <a
-                href="{% url 'index' %}"
-                class="menu-item"
-            >
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
+            <a href="{% url 'index' %}" class="menu-item">
+                <span>⌂</span><p>Painel inicial</p>
             </a>
 
-            <a
-                href="{% url 'lista_usuarios' %}"
-                class="menu-item"
-            >
-                <span>&#128100;</span>
-                <p>Usuários</p>
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>♙</span><p>Usuários</p>
             </a>
 
-            <a
-                href="{% url 'lista_cisternas' %}"
-                class="menu-item"
-            >
-                <span>&#128688;</span>
-                <p>Cisternas</p>
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>▣</span><p>Cisternas</p>
             </a>
 
-            <a
-                href="{% url 'monitoramento' %}"
-                class="menu-item"
-            >
-                <span>&#9687;</span>
-                <p>Monitoramento</p>
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>◉</span><p>Monitoramento</p>
             </a>
 
-            <a
-                href="{% url 'lista_alertas' %}"
-                class="menu-item"
-            >
-                <span>&#9888;</span>
-                <p>Alertas</p>
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>⚑</span><p>Alertas</p>
             </a>
 
             <a href="{% url 'mapa' %}" class="menu-item">
-                <span>&#128506;</span>
-                <p>Mapa</p>
+                <span>⌖</span><p>Mapa</p>
             </a>
 
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
+            <a href="{% url 'lista_municipios' %}"
+               class="menu-item active">
+                <span>⌖</span><p>Municípios</p>
             </a>
-
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
-            </a>
-
         </nav>
 
+        <div class="sidebar-bottom">
+            <div class="user-box">
+                <div class="user-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
 
-        <div class="user-box">
-
-            <div class="user-avatar">
-                {{ request.user.username|first|upper }}
+                <div class="user-info">
+                    <strong>
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </strong>
+                    <small>Usuário conectado</small>
+                </div>
             </div>
 
-            <div class="user-info">
-
-                <strong>
-                    {{ request.user.username }}
-                </strong>
-
-                <small>
-                    Usuário do sistema
-                </small>
-
-            </div>
-
+            <a href="{% url 'logout' %}" class="logout-link">
+                ↪ <span class="logout-text">Sair</span>
+            </a>
         </div>
-
-    
-        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
-            {% csrf_token %}
-            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
-        </form>
-
-</aside>
-
+    </aside>
 
     <main class="content">
-
-        <header class="topbar">
-
+        <header class="page-header">
             <div>
-
-                <span class="page-label">
-                    Sistema / Municípios
-                </span>
-
-                <h1>
-                    Municípios
-                </h1>
-
-                <p>
-                    Gerencie os municípios cadastrados no sistema.
-                </p>
-
+                <h1>Municípios</h1>
+                <p>Gerencie os municípios cadastrados no sistema.</p>
             </div>
 
-            <div>
-
-                <a
-                    href="{% url 'criar_municipio' %}"
-                    class="btn-figma-save"
-                    style="text-decoration: none; display: inline-flex; align-items: center;"
-                >
-                    + Cadastrar município
-                </a>
-
-            </div>
-
+            <a href="{% url 'criar_municipio' %}" class="btn-primary">
+                + Novo município
+            </a>
         </header>
 
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <section class="panel">
+            <h2>Municípios cadastrados</h2>
+            <p class="panel-description">
+                Consulte, edite ou exclua os registros.
+            </p>
 
-            <div class="panel-header">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Município</th>
+                            <th>Estado</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
 
-                <h2>
-                    Municípios cadastrados
-                </h2>
+                    <tbody>
+                        {% for municipio in municipios %}
+                            <tr>
+                                <td><strong>{{ municipio.nome }}</strong></td>
+                                <td>
+                                    <span class="badge-estado">
+                                        {{ municipio.estado }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a
+                                            href="{% url 'editar_municipio' municipio.id %}"
+                                            class="btn-edit">
+                                            Editar
+                                        </a>
 
+                                        <form
+                                            method="POST"
+                                            action="{% url 'excluir_municipio' municipio.id %}"
+                                            onsubmit="return confirm('Deseja realmente excluir este município?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-delete">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty">
+                                    Nenhum município cadastrado ainda.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-
-
-            {% for municipio in municipios %}
-
-                <div
-                    style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 20px;
-                        padding: 16px;
-                        margin-bottom: 10px;
-                        border: 1px solid #edf1f5;
-                        border-radius: 8px;
-                        background: #ffffff;
-                    "
-                >
-
-                    <div>
-
-                        <strong>
-                            {{ municipio.nome }}
-                        </strong>
-
-                        <p
-                            style="
-                                margin-top: 4px;
-                                color: #64748b;
-                                font-size: 12px;
-                            "
-                        >
-                            Estado:
-                            {{ municipio.estado }}
-                        </p>
-
-                    </div>
-
-
-                    <a
-                        href="{% url 'editar_municipio' municipio.id %}"
-                        class="btn-cancel"
-                        style="text-decoration: none;"
-                    >
-                        Editar
-                    </a>
-                    <a href="{% url 'excluir_municipio' municipio.id %}" class="btn-cancel" style="text-decoration:none;color:#b91c1c;">Excluir</a>
-
-                </div>
-
-            {% empty %}
-
-                <div class="empty">
-
-                    Nenhum município cadastrado.
-
-                </div>
-
-            {% endfor %}
-
         </section>
-
-
-        <footer>
-
-            Sistema de Monitoramento do Nível de Água em Cisternas
-
-        </footer>
-
     </main>
-
-</div>
-
 </body>
-
 </html>

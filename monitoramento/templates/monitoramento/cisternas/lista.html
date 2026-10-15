@@ -1,412 +1,922 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Cisternas - SMC</title>
-
-    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
+    <title>Cisternas | SMC</title>
 
     <style>
-        /* Organização inferior da barra lateral */
-        .sidebar-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-            margin-top: auto;
-            padding-top: 20px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-bottom .user-box {
-            position: static;
-            width: 100%;
+        * {
             margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        .sidebar-logout {
-            width: 100%;
-            margin: 0 !important;
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+            overflow-x: hidden;
         }
 
-        .sidebar-logout button {
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL — PADRÃO DO PAINEL INICIAL */
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c 0%, #123f60 100%);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
             width: 100%;
-            min-height: 44px;
-            padding: 10px;
-            border: 1px solid #dbe3ec;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 25px;
+            background: rgba(255,255,255,.10);
             border-radius: 10px;
-            background: #ffffff;
-            color: #183247;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .logo-text span {
+            font-size: 13px;
+            color: #dbeafe;
+        }
+
+        .logo-text strong {
+            margin-top: 3px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .menu-title {
+            margin-bottom: 12px;
+            color: #bfdbfe;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            color: #e8f2fa;
+            text-decoration: none;
+            border-radius: 11px;
+            font-size: 15px;
+            transition: .2s ease;
+        }
+
+        .menu-item span {
+            width: 24px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .menu-item p {
+            margin: 0;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,.10);
+            transform: translateX(2px);
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,.17);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255,255,255,.10);
+            border-radius: 14px;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #dbeafe;
+            color: #123f60;
+            border-radius: 50%;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-info strong {
+            display: block;
+            color: white;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .user-info small {
+            display: block;
+            margin-top: 4px;
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .logout-link {
+            display: block;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 10px;
+            color: #e8f2fa;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout-link:hover {
+            background: rgba(255,255,255,.10);
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            color: #2585a5;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .topbar h1 {
+            margin-top: 7px;
+            color: #102a43;
+            font-size: 30px;
+        }
+
+        .topbar p {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .page-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 15px;
+            background: white;
+            border: 1px solid #e8edf3;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(15,42,67,.05);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        /* BUSCA E AÇÕES */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 220px;
+            max-width: 440px;
+            padding: 0 15px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: .2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: #2585a5;
+            box-shadow: 0 0 0 3px rgba(37,133,165,.10);
+        }
+
+        .search-box span {
+            color: #64748b;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #1e293b;
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            text-decoration: none;
+            font: inherit;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: .2s ease;
         }
 
-        .sidebar-logout button:hover {
-            background: #eaf3fb;
+        .btn-primary {
+            background: #123f60;
+            color: white;
+            box-shadow: 0 4px 12px rgba(18,63,96,.13);
         }
 
-        .sidebar .menu {
-            flex-shrink: 0;
+        .btn-primary:hover {
+            background: #0d304c;
+            transform: translateY(-1px);
         }
 
-        /* Menu Gerenciar Endereços */
-        .enderecos-dropdown > div a:hover {
+        .btn-secondary {
+            background: white;
+            border-color: #dbe3ec;
+            color: #183247;
+        }
+
+        .btn-secondary:hover {
             background: #f1f6fa;
         }
 
-        .enderecos-dropdown button {
-            font: inherit;
+        /* MENU GERENCIAR ENDEREÇOS */
+        .enderecos-dropdown {
+            position: relative;
         }
 
-        @media (max-height: 650px) {
-            .sidebar-bottom {
-                margin-top: 24px;
+        .enderecos-menu {
+            position: absolute;
+            top: calc(100% + 7px);
+            left: 0;
+            min-width: 190px;
+            display: none;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(15,42,67,.12);
+            z-index: 1100;
+            overflow: hidden;
+        }
+
+        .enderecos-menu.open {
+            display: block;
+        }
+
+        .enderecos-menu a {
+            display: block;
+            padding: 13px 16px;
+            color: #334155;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .enderecos-menu a + a {
+            border-top: 1px solid #edf1f5;
+        }
+
+        .enderecos-menu a:hover {
+            background: #f1f6fa;
+            color: #123f60;
+        }
+
+        /* TABELA */
+        .panel {
+            min-width: 0;
+            padding: 25px;
+            background: white;
+            border: 1px solid #edf1f5;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(15,42,67,.06);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h2 {
+            color: #102a43;
+            font-size: 18px;
+        }
+
+        .panel-header p {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .panel-count {
+            padding: 8px 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .cisterna-table {
+            min-width: 690px;
+            width: 100%;
+        }
+
+        .table-head,
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.15fr 1.2fr 1.2fr 1.65fr;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .table-head {
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 10px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .table-row {
+            min-height: 78px;
+            padding: 15px 16px;
+            border-bottom: 1px solid #edf2f7;
+            transition: background .2s ease;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background: #f8fbfd;
+        }
+
+        .table-row strong {
+            color: #203b52;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .table-row > span {
+            color: #64748b;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .row-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 10px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .action-history {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .action-edit {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .action-delete {
+            background: #fff1f2;
+            color: #dc2626;
+        }
+
+        .action-history:hover {
+            background: #dbeafe;
+        }
+
+        .action-edit:hover {
+            background: #dcfce7;
+        }
+
+        .action-delete:hover {
+            background: #ffe4e6;
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            background: #eff6ff;
+            border-radius: 16px;
+            font-size: 26px;
+        }
+
+        .empty-state h3 {
+            color: #203b52;
+            font-size: 16px;
+        }
+
+        .empty-state p {
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .empty-state .btn {
+            margin-top: 18px;
+        }
+
+        .no-results {
+            display: none;
+            padding: 25px 15px;
+            color: #64748b;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 25px;
+            padding: 20px 10px;
+            border-top: 1px solid #e5edf4;
+            color: #94a3b8;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        @media (max-width: 1200px) {
+            .content {
+                padding: 28px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 20px;
+            }
+
+            .logo-text,
+            .menu-item p,
+            .user-info,
+            .menu-title {
+                display: none;
+            }
+
+            .logo-icon {
+                margin-bottom: 20px;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .user-box {
+                justify-content: center;
+                padding: 10px 5px;
+            }
+
+            .logout-link {
+                font-size: 0;
+            }
+
+            .logout-link::after {
+                content: "↪";
+                font-size: 18px;
             }
         }
 
         @media (max-width: 600px) {
-            .cisterna-toolbar {
-                flex-wrap: wrap;
+            .content {
+                padding: 15px;
             }
 
-            .cisterna-actions {
-                flex-wrap: wrap;
+            .topbar h1 {
+                font-size: 25px;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: none;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .actions > *,
+            .enderecos-dropdown {
+                flex: 1;
+            }
+
+            .actions .btn {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .enderecos-menu {
+                min-width: 180px;
             }
         }
     </style>
 </head>
 
 <body>
-
 <div class="layout">
 
-    <!-- BARRA LATERAL -->
     <aside class="sidebar">
-
         <div class="logo">
-
-            <div class="logo-icon">
-                &#128167;
-            </div>
-
+            <div class="logo-icon">💧</div>
             <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DE CISTERNAS</strong>
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
-
         </div>
 
-        <nav class="menu">
+        <div class="menu-title">Menu principal</div>
 
+        <nav class="menu">
             <a href="{% url 'index' %}" class="menu-item">
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
+                <span>⌂</span>
+                <p>Painel inicial</p>
             </a>
 
             <a href="{% url 'lista_usuarios' %}" class="menu-item">
-                <span>&#128100;</span>
+                <span>♙</span>
                 <p>Usuários</p>
             </a>
 
             <a href="{% url 'lista_cisternas' %}" class="menu-item active">
-                <span>&#128688;</span>
+                <span>▣</span>
                 <p>Cisternas</p>
             </a>
 
             <a href="{% url 'monitoramento' %}" class="menu-item">
-                <span>&#9687;</span>
+                <span>◉</span>
                 <p>Monitoramento</p>
             </a>
 
             <a href="{% url 'lista_alertas' %}" class="menu-item">
-                <span>&#9888;</span>
+                <span>⚑</span>
                 <p>Alertas</p>
             </a>
 
             <a href="{% url 'mapa' %}" class="menu-item">
-                <span>&#128506;</span>
+                <span>⌖</span>
                 <p>Mapa</p>
             </a>
-
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
-            </a>
-
         </nav>
 
-        <!-- PERFIL E SAÍDA -->
         <div class="sidebar-bottom">
-
             <div class="user-box">
-
                 <div class="user-avatar">
                     {{ request.user.username|first|upper }}
                 </div>
 
                 <div class="user-info">
-                    <strong>{{ request.user.username }}</strong>
-                    <small>Usuário do sistema</small>
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                    <small>Usuário conectado</small>
                 </div>
-
             </div>
 
-            <form
-                action="{% url 'logout' %}"
-                method="post"
-                class="sidebar-logout"
-            >
-                {% csrf_token %}
-
-                <button type="submit">
-                    Sair do sistema
-                </button>
-            </form>
-
+            <a href="{% url 'logout' %}" class="logout-link">
+                ↪ &nbsp; Sair
+            </a>
         </div>
-
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="content cisternas-page">
+    <main class="content">
 
-        <div class="page-top">
-
+        <header class="topbar">
             <div>
-                <span class="page-label">
-                    Tela de Cisternas
-                </span>
-
+                <span class="eyebrow">Gerenciamento de dados</span>
                 <h1>Cisternas</h1>
+                <p>Consulte, pesquise e gerencie as cisternas cadastradas no sistema.</p>
             </div>
 
-        </div>
+            <div class="page-status">
+                <span class="status-dot"></span>
+                Gestão de cisternas
+            </div>
+        </header>
 
-        <!-- BUSCA E BOTÕES -->
-        <div class="cisterna-toolbar">
-
-            <div class="cisterna-search">
-
-                <span>&#128269;</span>
-
+        <section class="toolbar">
+            <label class="search-box" for="buscarCisterna">
+                <span>⌕</span>
                 <input
-                    type="text"
+                    type="search"
                     id="buscarCisterna"
-                    placeholder="Buscar cisternas"
+                    placeholder="Buscar por identificação, participante ou localidade..."
+                    autocomplete="off"
                 >
+            </label>
 
-            </div>
-
-            <div
-                class="cisterna-actions"
-                style="display:flex;align-items:center;gap:8px;"
-            >
-
-                <!-- MENU GERENCIAR ENDEREÇOS -->
-                <div
-                    class="enderecos-dropdown"
-                    style="position:relative;"
-                >
-
+            <div class="actions">
+                <div class="enderecos-dropdown">
                     <button
                         type="button"
-                        class="btn-cancel"
-                        onclick="alternarEnderecos()"
+                        class="btn btn-secondary"
+                        id="botaoEnderecos"
                         aria-expanded="false"
                         aria-controls="menuEnderecos"
-                        style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"
                     >
-                        Gerenciar Endereços ▾
+                        Gerenciar endereços <span>▾</span>
                     </button>
 
-                    <div
-                        id="menuEnderecos"
-                        style="display:none;position:absolute;top:calc(100% + 6px);left:0;min-width:180px;background:#fff;border:1px solid #dbe3ec;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.10);z-index:100;overflow:hidden;"
-                    >
-
-                        <a
-                            href="{% url 'lista_municipios' %}"
-                            style="display:block;padding:12px 16px;color:#183247;text-decoration:none;"
-                        >
-                            Municípios
-                        </a>
-
-                        <a
-                            href="{% url 'lista_localidades' %}"
-                            style="display:block;padding:12px 16px;color:#183247;text-decoration:none;border-top:1px solid #edf1f5;"
-                        >
-                            Localidades
-                        </a>
-
+                    <div class="enderecos-menu" id="menuEnderecos">
+                        <a href="{% url 'lista_municipios' %}">Municípios</a>
+                        <a href="{% url 'lista_localidades' %}">Localidades</a>
                     </div>
-
                 </div>
 
-                <!-- CADASTRAR CISTERNA -->
-                <a
-                    href="{% url 'criar_cisterna' %}"
-                    class="btn-cadastrar"
-                >
-                    + Cadastrar Cisterna
+                <a href="{% url 'criar_cisterna' %}" class="btn btn-primary">
+                    <span>＋</span> Cadastrar cisterna
                 </a>
-
             </div>
+        </section>
 
-        </div>
-
-        <!-- TABELA DE CISTERNAS -->
-        <section class="cisterna-box">
-
-            <div class="box-title">
-
-                <span class="box-icon">
-                    &#128167;
-                </span>
-
-                <strong>Cisternas cadastradas</strong>
-
-            </div>
-
-            <div class="cisterna-table">
-
-                <div class="cisterna-table-head">
-
-                    <span>Identificação</span>
-                    <span>Participante</span>
-                    <span>Localidade</span>
-                    <span>Ações</span>
-
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Cisternas cadastradas</h2>
+                    <p>Lista de cisternas e suas informações de identificação.</p>
                 </div>
 
-                {% for cisterna in cisternas %}
+                <span class="panel-count">
+                    {{ cisternas|length }} registro(s)
+                </span>
+            </div>
 
-                <div
-                    class="cisterna-table-row"
-                    data-search="{{ cisterna.identificacao }} {{ cisterna.participante }} {{ cisterna.localidade }}"
-                >
+            <div class="table-wrap">
+                <div class="cisterna-table">
 
-                    <strong>
-                        {{ cisterna.identificacao }}
-                    </strong>
+                    <div class="table-head">
+                        <span>Identificação</span>
+                        <span>Participante</span>
+                        <span>Localidade</span>
+                        <span>Ações</span>
+                    </div>
 
-                    <span>
-                        {{ cisterna.participante }}
-                    </span>
-
-                    <span>
-                        {{ cisterna.localidade }}
-                    </span>
-
-                    <div class="row-actions">
-
-                        <a
-                            href="{% url 'historico_leituras' cisterna.id %}"
-                            class="action-edit"
+                    {% for cisterna in cisternas %}
+                        <div
+                            class="table-row cisterna-row"
+                            data-search="{{ cisterna.identificacao|default:'' }} {{ cisterna.participante|default:'' }} {{ cisterna.localidade|default:'' }}"
                         >
-                            Histórico
-                        </a>
+                            <strong>{{ cisterna.identificacao }}</strong>
 
-                        <a
-                            href="{% url 'editar_cisterna' cisterna.id %}"
-                            class="action-edit"
-                        >
-                            Editar
-                        </a>
+                            <span>{{ cisterna.participante|default:"Não informado" }}</span>
 
-                        <a
-                            href="{% url 'excluir_cisterna' cisterna.id %}"
-                            class="action-delete"
-                        >
-                            Excluir
-                        </a>
+                            <span>{{ cisterna.localidade|default:"Não informada" }}</span>
 
+                            <div class="row-actions">
+                                <a
+                                    href="{% url 'historico_leituras' cisterna.id %}"
+                                    class="action action-history"
+                                >
+                                    Histórico
+                                </a>
+
+                                <a
+                                    href="{% url 'editar_cisterna' cisterna.id %}"
+                                    class="action action-edit"
+                                >
+                                    Editar
+                                </a>
+
+                                <a
+                                    href="{% url 'excluir_cisterna' cisterna.id %}"
+                                    class="action action-delete"
+                                >
+                                    Excluir
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-state">
+                            <div class="empty-icon">💧</div>
+                            <h3>Nenhuma cisterna cadastrada</h3>
+                            <p>Cadastre a primeira cisterna para começar a organizar os registros.</p>
+
+                            <a href="{% url 'criar_cisterna' %}" class="btn btn-primary">
+                                ＋ Cadastrar cisterna
+                            </a>
+                        </div>
+                    {% endfor %}
+
+                    <div class="no-results" id="semResultados">
+                        Nenhuma cisterna corresponde à sua pesquisa.
                     </div>
 
                 </div>
-
-                {% empty %}
-
-                <div class="no-cisternas">
-                    Nenhuma cisterna cadastrada.
-                </div>
-
-                {% endfor %}
-
             </div>
-
         </section>
 
         <footer>
-            Sistema de Monitoramento do Nível de Água em Cisternas
+            SMC — Sistema de Monitoramento do Nível de Água em Cisternas
         </footer>
 
     </main>
-
 </div>
 
 <script>
     // Busca de cisternas
-    const busca = document.getElementById("buscarCisterna");
-    const cisternas = document.querySelectorAll(".cisterna-table-row");
+    const campoBusca = document.getElementById("buscarCisterna");
+    const linhasCisternas = document.querySelectorAll(".cisterna-row");
+    const mensagemSemResultados = document.getElementById("semResultados");
 
-    busca.addEventListener("input", function () {
-        const textoBusca = this.value.toLowerCase();
+    campoBusca.addEventListener("input", function () {
+        const termo = this.value
+            .toLocaleLowerCase("pt-BR")
+            .trim();
 
-        cisternas.forEach(function (cisterna) {
-            const texto = cisterna.getAttribute("data-search").toLowerCase();
+        let encontradas = 0;
 
-            if (texto.includes(textoBusca)) {
-                cisterna.style.display = "grid";
-            } else {
-                cisterna.style.display = "none";
+        linhasCisternas.forEach(function (linha) {
+            const conteudo = (linha.dataset.search || "")
+                .toLocaleLowerCase("pt-BR");
+
+            const corresponde = conteudo.includes(termo);
+
+            linha.style.display = corresponde ? "grid" : "none";
+
+            if (corresponde) {
+                encontradas++;
             }
         });
+
+        mensagemSemResultados.style.display =
+            linhasCisternas.length > 0 && encontradas === 0
+                ? "block"
+                : "none";
     });
 
-    // Abre e fecha Gerenciar Endereços
-    function alternarEnderecos() {
-        const menu = document.getElementById("menuEnderecos");
-        const botao = document.querySelector(".enderecos-dropdown button");
+    // Abrir e fechar Gerenciar Endereços
+    const botaoEnderecos = document.getElementById("botaoEnderecos");
+    const menuEnderecos = document.getElementById("menuEnderecos");
 
-        const aberto = menu.style.display === "block";
+    botaoEnderecos.addEventListener("click", function (evento) {
+        evento.stopPropagation();
 
-        menu.style.display = aberto ? "none" : "block";
-        botao.setAttribute("aria-expanded", String(!aberto));
-    }
+        const aberto = menuEnderecos.classList.toggle("open");
 
-    // Fecha o menu ao clicar fora
+        botaoEnderecos.setAttribute("aria-expanded", String(aberto));
+    });
+
+    // Fechar ao clicar fora do menu
     document.addEventListener("click", function (evento) {
-        const area = document.querySelector(".enderecos-dropdown");
-        const menu = document.getElementById("menuEnderecos");
-        const botao = area.querySelector("button");
-
-        if (!area.contains(evento.target)) {
-            menu.style.display = "none";
-            botao.setAttribute("aria-expanded", "false");
+        if (!menuEnderecos.contains(evento.target)) {
+            menuEnderecos.classList.remove("open");
+            botaoEnderecos.setAttribute("aria-expanded", "false");
         }
     });
 
-    // Fecha o menu com Escape
+    // Fechar com Escape
     document.addEventListener("keydown", function (evento) {
         if (evento.key === "Escape") {
-            const menu = document.getElementById("menuEnderecos");
-            const botao = document.querySelector(".enderecos-dropdown button");
-
-            menu.style.display = "none";
-            botao.setAttribute("aria-expanded", "false");
+            menuEnderecos.classList.remove("open");
+            botaoEnderecos.setAttribute("aria-expanded", "false");
+            botaoEnderecos.focus();
         }
     });
 </script>
