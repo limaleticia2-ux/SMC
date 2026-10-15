@@ -1,232 +1,92 @@
+
 document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".monitor-card");
 
-    const campoBusca =
-        document.getElementById("buscarMonitoramento");
+    cards.forEach(function (card) {
+        const barra = card.querySelector(".level-fill");
+        const status = card.querySelector(".status-badge");
 
-    const cards =
-        document.querySelectorAll(".monitor-card");
+        if (!barra) return;
 
-    const botaoTodas =
-        document.getElementById("mostrarTodas");
+        const textoNivel = barra.getAttribute("data-nivel");
 
-    const semResultado =
-        document.getElementById("semResultado");
+        if (
+            textoNivel === null ||
+            textoNivel.trim() === "" ||
+            !Number.isFinite(Number(textoNivel.replace(",", ".")))
+        ) {
+            barra.style.width = "0%";
 
-    const horaAtual =
-        document.getElementById("horaAtual");
+            if (status) {
+                status.textContent = "Sem leitura";
+                status.className = "status-badge sem-dados";
+            }
 
-
-    /* =========================
-       RELÓGIO
-    ========================== */
-
-    function atualizarHora() {
-
-        const agora = new Date();
-
-
-        const horas =
-            String(
-                agora.getHours()
-            ).padStart(2, "0");
-
-
-        const minutos =
-            String(
-                agora.getMinutes()
-            ).padStart(2, "0");
-
-
-        const segundos =
-            String(
-                agora.getSeconds()
-            ).padStart(2, "0");
-
-
-        if (horaAtual) {
-
-            horaAtual.textContent =
-                horas + ":" +
-                minutos + ":" +
-                segundos;
-
-        }
-
-    }
-
-
-    atualizarHora();
-
-    setInterval(
-        atualizarHora,
-        1000
-    );
-
-
-
-    /* =========================
-       BUSCA
-    ========================== */
-
-    function filtrarCisternas() {
-
-        if (!campoBusca) {
             return;
         }
 
-
-        const texto =
-            campoBusca.value
-                .toLowerCase()
-                .trim();
-
-
-        let encontrou = false;
-
-
-        cards.forEach(function (card) {
-
-            const dados =
-                card
-                    .getAttribute("data-search")
-                    .toLowerCase();
-
-
-            if (dados.includes(texto)) {
-
-                card.style.display = "block";
-
-                encontrou = true;
-
-            } else {
-
-                card.style.display = "none";
-
-            }
-
-        });
-
-
-        if (semResultado) {
-
-            if (texto === "" || encontrou) {
-
-                semResultado.style.display =
-                    "none";
-
-            } else {
-
-                semResultado.style.display =
-                    "flex";
-
-            }
-
-        }
-
-    }
-
-
-    if (campoBusca) {
-
-        campoBusca.addEventListener(
-            "input",
-            filtrarCisternas
-        );
-
-    }
-
-
-
-    /* =========================
-       MOSTRAR TODAS
-    ========================== */
-
-    if (botaoTodas) {
-
-        botaoTodas.addEventListener(
-            "click",
-            function () {
-
-                if (campoBusca) {
-
-                    campoBusca.value = "";
-
-                }
-
-
-                cards.forEach(function (card) {
-
-                    card.style.display =
-                        "block";
-
-                });
-
-
-                if (semResultado) {
-
-                    semResultado.style.display =
-                        "none";
-
-                }
-
-
-                if (campoBusca) {
-
-                    campoBusca.focus();
-
-                }
-
-            }
-        );
-
-    }
-
-
-
-    /* =========================
-       BARRAS DE NÍVEL
-    ========================== */
-
-    const barras =
-        document.querySelectorAll(
-            ".monitor-level-fill"
-        );
-
-
-    barras.forEach(function (barra) {
-
-        let nivel =
-            parseFloat(
-                barra.getAttribute("data-nivel")
-            );
-
-
-        if (Number.isNaN(nivel)) {
-
-            nivel = 0;
-
-        }
-
-
-        nivel = Math.max(
+        const nivel = Math.max(
             0,
-            Math.min(100, nivel)
+            Math.min(100, Number(textoNivel.replace(",", ".")))
         );
 
+        barra.style.width = nivel + "%";
 
-        barra.style.width = "0%";
+        const trilha = barra.closest(".level-bar");
 
+        if (trilha) {
+            trilha.setAttribute("aria-valuenow", nivel);
+        }
 
-        setTimeout(
-            function () {
+        if (nivel >= 70) {
+            barra.style.backgroundColor = "#22c55e";
 
-                barra.style.width =
-                    nivel + "%";
+            if (status) {
+                status.textContent = "Normal";
+                status.className = "status-badge normal";
+            }
+        } else if (nivel >= 30) {
+            barra.style.backgroundColor = "#f59e0b";
 
-            },
-            150
-        );
+            if (status) {
+                status.textContent = "Atenção";
+                status.className = "status-badge atencao";
+            }
+        } else {
+            barra.style.backgroundColor = "#ef4444";
 
+            if (status) {
+                status.textContent = "Crítico";
+                status.className = "status-badge critico";
+            }
+        }
     });
 
+    const busca = document.getElementById("buscarMonitoramento");
+    const semResultados = document.getElementById("semResultados");
+
+    if (busca) {
+        busca.addEventListener("input", function () {
+            const termo = busca.value.toLocaleLowerCase("pt-BR").trim();
+            let encontrados = 0;
+
+            cards.forEach(function (card) {
+                const texto = (
+                    (card.dataset.busca || "") + " " + card.textContent
+                ).toLocaleLowerCase("pt-BR");
+
+                const corresponde = texto.includes(termo);
+
+                card.style.display = corresponde ? "" : "none";
+
+                if (corresponde) encontrados++;
+            });
+
+            if (semResultados) {
+                semResultados.style.display =
+                    encontrados === 0 && cards.length > 0 ? "block" : "none";
+            }
+        });
+    }
 });
+

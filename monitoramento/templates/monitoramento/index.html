@@ -1,569 +1,857 @@
+
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Painel inicial | SMC</title>
 
-    <title>
-        Cisternas | SMC
-    </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link
-        rel="stylesheet"
-        href="{% static 'monitoramento/css/style.css' %}"
-    >
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c 0%, #123f60 100%);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 25px;
+            background: rgba(255,255,255,.10);
+            border-radius: 10px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .logo-text span {
+            font-size: 13px;
+            color: #dbeafe;
+        }
+
+        .logo-text strong {
+            margin-top: 3px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .menu-title {
+            margin-bottom: 12px;
+            color: #bfdbfe;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            color: #e8f2fa;
+            text-decoration: none;
+            border-radius: 11px;
+            font-size: 15px;
+            transition: .2s ease;
+        }
+
+        .menu-item span {
+            width: 24px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,.10);
+            transform: translateX(2px);
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,.17);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255,255,255,.10);
+            border-radius: 14px;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #dbeafe;
+            color: #123f60;
+            border-radius: 50%;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-info strong {
+            display: block;
+            color: white;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .user-info small {
+            display: block;
+            margin-top: 4px;
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .logout-link {
+            display: block;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 10px;
+            color: #e8f2fa;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout-link:hover {
+            background: rgba(255,255,255,.10);
+        }
+
+        /* CONTEÚDO */
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .topbar small {
+            color: #2585a5;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .topbar h1 {
+            margin-top: 7px;
+            color: #102a43;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .topbar p {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 15px;
+            background: white;
+            border: 1px solid #e8edf3;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(15,42,67,.05);
+            color: #334155;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #16a34a;
+        }
+
+        .section-title {
+            margin-bottom: 18px;
+            color: #102a43;
+            font-size: 19px;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            min-width: 0;
+            min-height: 145px;
+            padding: 23px;
+            background: white;
+            border: 1px solid #edf1f5;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(15,42,67,.06);
+            overflow: hidden;
+            transition: .2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(15,42,67,.10);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #2563eb;
+        }
+
+        .card.green::before {
+            background: #16a34a;
+        }
+
+        .card.yellow::before {
+            background: #eab308;
+        }
+
+        .card.purple::before {
+            background: #7c3aed;
+        }
+
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            border-radius: 12px;
+            font-size: 21px;
+        }
+
+        .card.green .card-icon {
+            background: #ecfdf5;
+        }
+
+        .card.yellow .card-icon {
+            background: #fffbeb;
+        }
+
+        .card.purple .card-icon {
+            background: #faf5ff;
+        }
+
+        .card-info {
+            min-width: 0;
+        }
+
+        .card-info span {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .card-info h2 {
+            margin-top: 9px;
+            color: #102a43;
+            font-size: 30px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .card-info small {
+            display: block;
+            margin-top: 5px;
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* PAINÉIS */
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            min-width: 0;
+            padding: 25px;
+            background: white;
+            border: 1px solid #edf1f5;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(15,42,67,.06);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .panel-header h2 {
+            color: #102a43;
+            font-size: 18px;
+        }
+
+        .panel-header p {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .panel-tag {
+            padding: 7px 10px;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        /* GRÁFICO */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 270px;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.critical {
+            background: #ef4444;
+        }
+
+        .legend-dot.attention {
+            background: #eab308;
+        }
+
+        /* ALERTAS RECENTES */
+        .alert-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-details {
+            min-width: 0;
+        }
+
+        .alert-details strong {
+            display: block;
+            color: #203b52;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .alert-details small {
+            display: block;
+            margin-top: 5px;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .badge {
+            padding: 7px 10px;
+            border-radius: 20px;
+            background: #fff1d6;
+            color: #bd7a0b;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .badge.critico {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .empty {
+            padding: 35px 10px;
+            color: #94a3b8;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        footer {
+            margin-top: 25px;
+            padding: 20px 10px;
+            border-top: 1px solid #e5edf4;
+            color: #94a3b8;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 28px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 20px;
+            }
+
+            .logo-text,
+            .menu-item p,
+            .user-info,
+            .menu-title {
+                display: none;
+            }
+
+            .logo-icon {
+                margin-bottom: 20px;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .user-box {
+                justify-content: center;
+                padding: 10px 5px;
+            }
+
+            .logout-link {
+                font-size: 0;
+            }
+
+            .logout-link::after {
+                content: "↪";
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 15px;
+            }
+
+            .topbar h1 {
+                font-size: 25px;
+            }
+
+            .cards {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .chart-container {
+                height: 230px;
+            }
+
+            .alert-item {
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
-
 <body>
-
 <div class="layout">
-
-
-    <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar">
 
-
         <div class="logo">
-
-            <div class="logo-icon">
-                &#128167;
-            </div>
-
+            <div class="logo-icon">💧</div>
 
             <div class="logo-text">
-
-                <span>
-                    SISTEMA DE MONITORAMENTO
-                </span>
-
-                <strong>
-                    DE CISTERNAS
-                </strong>
-
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
-
         </div>
 
-
-        <!-- ================= MENU ================= -->
+        <div class="menu-title">Menu principal</div>
 
         <nav class="menu">
-
-    <a href="{% url 'index' %}" class="menu-item active">
-        <span>&#127968;</span>
-        <p>Tela Inicial</p>
-    </a>
-
-    <a href="{% url 'lista_usuarios' %}" class="menu-item">
-        <span>&#128100;</span>
-        <p>Usuários</p>
-    </a>
-
-    <a href="{% url 'lista_cisternas' %}" class="menu-item">
-        <span>&#128688;</span>
-        <p>Cisternas</p>
-    </a>
-
-    <a href="{% url 'monitoramento' %}" class="menu-item">
-        <span>&#9687;</span>
-        <p>Monitoramento</p>
-    </a>
-
-    <a href="{% url 'lista_alertas' %}" class="menu-item">
-        <span>&#9888;</span>
-        <p>Alertas</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#128506;</span>
-        <p>Mapa</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#128202;</span>
-        <p>Relatórios</p>
-    </a>
-
-    <a href="#" class="menu-item">
-        <span>&#9881;</span>
-        <p>Configurações</p>
-    </a>
-
-</nav>
-
-
-        <!-- ================= USUÁRIO ================= -->
-
-        <div class="user-box">
-
-
-            <div class="user-avatar">
-
-                {{ request.user.username|first|upper }}
-
-            </div>
-
-
-            <div class="user-info">
-
-                <strong>
-
-                    {{ request.user.username }}
-
-                </strong>
-
-
-                <small>
-
-                    Usuário do sistema
-
-                </small>
-
-            </div>
-
-
-        </div>
-
-
-    
-        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
-            {% csrf_token %}
-            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
-        </form>
-
-</aside>
-
-
-    <!-- ================= CONTEÚDO ================= -->
-
-    <main class="content cisternas-page">
-
-
-        <!-- ================= CABEÇALHO ================= -->
-
-        <header class="topbar">
-
-
-            <div>
-
-                <span class="page-label">
-
-                    Tela de Cisternas
-
-                </span>
-
-
-                <h1>
-
-                    Cisternas
-
-                </h1>
-
-            </div>
-
-
-        </header>
-
-
-        <!-- ================= BARRA ================= -->
-
-        <div class="cisterna-toolbar">
-
-
-            <div class="cisterna-search">
-
-                <span>
-                    🔎
-                </span>
-
-
-                <input
-                    type="text"
-                    id="buscarCisterna"
-                    placeholder="Buscar cisternas..."
-                >
-
-            </div>
-
-
-            <a
-                href="{% url 'criar_cisterna' %}"
-                class="figma-toolbar-button"
-            >
-
-                + Cadastrar Cisterna
-
+            <a href="{% url 'index' %}" class="menu-item active">
+                <span>⌂</span>
+                <p>Painel inicial</p>
             </a>
 
+            <a href="{% url 'lista_usuarios' %}" class="menu-item">
+                <span>♙</span>
+                <p>Usuários</p>
+            </a>
 
+            <a href="{% url 'lista_cisternas' %}" class="menu-item">
+                <span>▣</span>
+                <p>Cisternas</p>
+            </a>
+
+            <a href="{% url 'monitoramento' %}" class="menu-item">
+                <span>◉</span>
+                <p>Monitoramento</p>
+            </a>
+
+            <a href="{% url 'lista_alertas' %}" class="menu-item">
+                <span>⚑</span>
+                <p>Alertas</p>
+            </a>
+
+            <a href="{% url 'mapa' %}" class="menu-item">
+                <span>⌖</span>
+                <p>Mapa</p>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="user-box">
+                <div class="user-avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <div class="user-info">
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                    <small>Usuário conectado</small>
+                </div>
+            </div>
+
+            <a href="{% url 'logout' %}" class="logout-link">
+                ↪ &nbsp; Sair
+            </a>
         </div>
 
+    </aside>
 
-        <!-- ================= LISTA ================= -->
+    <main class="content">
 
-        <section class="figma-form-card">
+        <header class="topbar">
+            <div>
+                <small>Painel geral</small>
+                <h1>Visão geral</h1>
+                <p>Acompanhe os indicadores do sistema de monitoramento de cisternas.</p>
+            </div>
 
+            <div class="system-status">
+                <span class="status-dot"></span>
+                Painel de monitoramento
+            </div>
+        </header>
 
-            <div class="figma-form-title">
+        <h2 class="section-title">Resumo do sistema</h2>
 
+        <section class="cards">
 
-                <div class="figma-form-title-icon">
-
-                    ▣
-
+            <article class="card">
+                <div class="card-icon">♙</div>
+                <div class="card-info">
+                    <span>Usuários cadastrados</span>
+                    <h2>{{ total_usuarios|default:0 }}</h2>
+                    <small>Contas registradas no sistema</small>
                 </div>
+            </article>
 
-
-                <div>
-
-                    <h2>
-
-                        Cisternas cadastradas
-
-                    </h2>
-
-
-                    <p>
-
-                        Consulte e gerencie as cisternas do sistema.
-
-                    </p>
-
+            <article class="card green">
+                <div class="card-icon">▣</div>
+                <div class="card-info">
+                    <span>Cisternas</span>
+                    <h2>{{ total_cisternas|default:0 }}</h2>
+                    <small>Cisternas registradas</small>
                 </div>
-
-
-            </div>
-
-
-            {% if cisternas %}
-
-
-            <div class="cisternas-lista">
-
-
-                {% for cisterna in cisternas %}
-
-
-                <div
-                    class="cisterna-list-item"
-                    data-search="{{ cisterna.identificacao }} {{ cisterna.localidade }} {{ cisterna.municipio }}"
-                >
-
-
-                    <div class="cisterna-list-main">
-
-
-                        <div class="cisterna-list-icon">
-
-                            &#128167;
-
-                        </div>
-
-
-                        <div class="cisterna-list-info">
-
-
-                            <span class="cisterna-list-label">
-
-                                IDENTIFICAÇÃO
-
-                            </span>
-
-
-                            <h3>
-
-                                {{ cisterna.identificacao }}
-
-                            </h3>
-
-
-                            <p>
-
-                                Localização:
-                                {{ cisterna.localidade }}
-
-                            </p>
-
-
-                            {% if cisterna.municipio %}
-
-                            <small>
-
-                                Município:
-                                {{ cisterna.municipio.nome }} -
-                                {{ cisterna.municipio.estado }}
-
-                            </small>
-
-                            {% else %}
-
-                            <small>
-
-                                Município não informado
-
-                            </small>
-
-                            {% endif %}
-
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="cisterna-list-status">
-
-
-                        <span class="cisterna-status
-                            {{ cisterna.situacao }}"
-                        >
-
-                            {{ cisterna.get_situacao_display }}
-
-                        </span>
-
-
-                    </div>
-
-
-                    <div class="cisterna-list-capacidade">
-
-
-                        <span>
-
-                            Capacidade
-
-                        </span>
-
-
-                        <strong>
-
-                            {% if cisterna.capacidade_total %}
-
-                                {{ cisterna.capacidade_total }} L
-
-                            {% else %}
-
-                                Não informado
-
-                            {% endif %}
-
-                        </strong>
-
-
-                    </div>
-
-
-                    <div class="cisterna-list-actions">
-
-
-                        <a
-                            href="{% url 'editar_cisterna' cisterna.id %}"
-                            class="btn-list-edit"
-                        >
-
-                            Editar
-
-                        </a>
-
-
-                        <a
-                            href="{% url 'excluir_cisterna' cisterna.id %}"
-                            class="btn-list-delete"
-                        >
-
-                            Excluir
-
-                        </a>
-
-
-                    </div>
-
-
+            </article>
+
+            <article class="card purple">
+                <div class="card-icon">♧</div>
+                <div class="card-info">
+                    <span>Participantes</span>
+                    <h2>{{ total_participantes|default:0 }}</h2>
+                    <small>Participantes cadastrados</small>
                 </div>
+            </article>
 
+            <article class="card yellow">
+                <div class="card-icon">⚑</div>
+                <div class="card-info">
+                    <span>Alertas</span>
+                    <h2>{{ total_alertas|default:0 }}</h2>
+                    <small>Alertas registrados</small>
+                </div>
+            </article>
 
-                {% endfor %}
+            <article class="card green">
+                <div class="card-icon">⌖</div>
+                <div class="card-info">
+                    <span>Localidades</span>
+                    <h2>{{ total_localidades|default:0 }}</h2>
+                    <small>Localidades cadastradas</small>
+                </div>
+            </article>
 
-
-            </div>
-
-
-            <div
-                id="semCisternaBusca"
-                class="empty"
-                style="display: none;"
-            >
-
-                Nenhuma cisterna encontrada.
-
-            </div>
-
-
-            {% else %}
-
-
-            <div class="empty">
-
-
-                <strong>
-
-                    Nenhuma cisterna cadastrada.
-
-                </strong>
-
-
-                <p>
-
-                    Cadastre uma cisterna para começar.
-
-                </p>
-
-
-                <a
-                    href="{% url 'criar_cisterna' %}"
-                    class="monitor-empty-button"
-                >
-
-                    Cadastrar cisterna
-
-                </a>
-
-
-            </div>
-
-
-            {% endif %}
-
+            <article class="card">
+                <div class="card-icon">◷</div>
+                <div class="card-info">
+                    <span>Leituras realizadas</span>
+                    <h2>{{ total_leituras|default:0 }}</h2>
+                    <small>Leituras de telemetria</small>
+                </div>
+            </article>
 
         </section>
 
+        <section class="grid">
 
-        <!-- ================= RODAPÉ ================= -->
+            <!-- GRÁFICO -->
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Visão geral dos alertas</h2>
+                        <p>Distribuição dos alertas por gravidade.</p>
+                    </div>
+
+                    <span class="panel-tag">Indicadores</span>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="graficoAlertas"></canvas>
+                </div>
+
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot critical"></span>
+                        Críticos: {{ total_criticos|default:0 }}
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="legend-dot attention"></span>
+                        Atenção: {{ total_atencao|default:0 }}
+                    </div>
+                </div>
+            </article>
+
+            <!-- ALERTAS RECENTES -->
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Alertas recentes</h2>
+                        <p>Últimos alertas registrados no sistema.</p>
+                    </div>
+
+                    <a href="{% url 'lista_alertas' %}" class="panel-tag"
+                       style="text-decoration:none">
+                        Ver todos
+                    </a>
+                </div>
+
+                {% for alerta in alertas_recentes %}
+                    <div class="alert-item">
+                        <div class="alert-details">
+                            <strong>{{ alerta.cisterna }}</strong>
+
+                            <small>
+                                {{ alerta.data_hora|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+
+                        <span class="badge {% if alerta.tipo == 'critico' %}critico{% endif %}">
+                            {{ alerta.get_tipo_display|default:alerta.tipo }}
+                        </span>
+                    </div>
+                {% empty %}
+                    <p class="empty">
+                        Nenhum alerta registrado até o momento.
+                    </p>
+                {% endfor %}
+            </article>
+
+        </section>
 
         <footer>
-
-            © 2026 Sistema de Monitoramento do Nível de Água em Cisternas
-
+            SMC — Sistema de Monitoramento do Nível de Água em Cisternas
         </footer>
 
-
     </main>
-
-
 </div>
 
-
 <script>
+    const elementoGrafico = document.getElementById("graficoAlertas");
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
+    if (elementoGrafico && typeof Chart !== "undefined") {
+        const totalCriticos = Number("{{ total_criticos|default:0 }}");
+        const totalAtencao = Number("{{ total_atencao|default:0 }}");
 
-            const campoBusca =
-                document.getElementById(
-                    "buscarCisterna"
-                );
+        new Chart(elementoGrafico, {
+            type: "doughnut",
 
-            const cisternas =
-                document.querySelectorAll(
-                    ".cisterna-list-item"
-                );
+            data: {
+                labels: ["Críticos", "Atenção"],
 
-            const semResultado =
-                document.getElementById(
-                    "semCisternaBusca"
-                );
+                datasets: [{
+                    data: [totalCriticos, totalAtencao],
+                    backgroundColor: ["#ef4444", "#eab308"],
+                    borderColor: "#ffffff",
+                    borderWidth: 5,
+                    hoverOffset: 7
+                }]
+            },
 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "70%",
 
-            if (!campoBusca) {
-                return;
-            }
+                plugins: {
+                    legend: {
+                        display: false
+                    },
 
-
-            campoBusca.addEventListener(
-                "input",
-                function () {
-
-                    const texto =
-                        campoBusca.value
-                            .toLowerCase()
-                            .trim();
-
-                    let encontrou = false;
-
-
-                    cisternas.forEach(
-                        function (cisterna) {
-
-                            const dados =
-                                cisterna
-                                    .getAttribute(
-                                        "data-search"
-                                    )
-                                    .toLowerCase();
-
-
-                            if (
-                                dados.includes(texto)
-                            ) {
-
-                                cisterna.style.display =
-                                    "grid";
-
-                                encontrou = true;
-
-                            } else {
-
-                                cisterna.style.display =
-                                    "none";
-
-                            }
-
-                        }
-                    );
-
-
-                    if (semResultado) {
-
-                        if (
-                            texto === "" ||
-                            encontrou
-                        ) {
-
-                            semResultado.style.display =
-                                "none";
-
-                        } else {
-
-                            semResultado.style.display =
-                                "block";
-
-                        }
-
+                    tooltip: {
+                        enabled: true
                     }
-
                 }
-            );
-
-        }
-    );
-
+            }
+        });
+    }
 </script>
 
-
 </body>
-
 </html>
