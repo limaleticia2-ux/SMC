@@ -1,6 +1,6 @@
-﻿
+﻿from .models import Cisterna, LeituraTelemetria
 from functools import wraps
-
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
@@ -55,27 +55,34 @@ def somente_perfis(*perfis):
 
 @login_required
 def index(request):
-    contexto = {
-        'total_cisternas': Cisterna.objects.count(),
-        'total_participantes': Participante.objects.count(),
-        'total_leituras': LeituraTelemetria.objects.count(),
-        'total_alertas': Alerta.objects.count(),
-        'total_localidades': Localidade.objects.count(),
-        'ultimas_leituras': LeituraTelemetria.objects.select_related(
-            'cisterna',
-            'cisterna__localidade',
-        ).order_by('-data_hora')[:5],
-        'alertas_recentes': Alerta.objects.select_related(
-            'cisterna',
-        ).order_by('-data_hora')[:5],
-    }
+    total_usuarios = get_user_model().objects.count()
+    total_cisternas = Cisterna.objects.count()
+    total_participantes = Participante.objects.count()
+    total_leituras = LeituraTelemetria.objects.count()
+    total_alertas = Alerta.objects.count()
+    total_localidades = Localidade.objects.count()
 
-    return render(
-        request,
-        'monitoramento/index.html',
-        contexto,
+    total_atencao = Alerta.objects.filter(tipo='atencao').count()
+    total_criticos = Alerta.objects.filter(tipo='critico').count()
+
+    alertas_recentes = (
+        Alerta.objects.select_related('cisterna')
+        .order_by('-data_hora')[:5]
     )
 
+    contexto = {
+        'total_usuarios': total_usuarios,
+        'total_cisternas': total_cisternas,
+        'total_participantes': total_participantes,
+        'total_leituras': total_leituras,
+        'total_alertas': total_alertas,
+        'total_localidades': total_localidades,
+        'total_atencao': total_atencao,
+        'total_criticos': total_criticos,
+        'alertas_recentes': alertas_recentes,
+    }
+
+    return render(request, 'monitoramento/index.html', contexto)
 
 @login_required
 def lista_cisternas(request):
@@ -309,18 +316,20 @@ def excluir_usuario(request, id):
     )
 
 
+
 @login_required
 def monitoramento(request):
-    cisternas = Cisterna.objects.select_related(
-        'participante',
-        'localidade',
-        'municipio',
-    ).all()
+    cisternas = list(
+        Cisterna.objects.select_related(
+            "participante",
+            "localidade",
+            "municipio",
+        ).all()
+    )
 
     ultimas_leituras = (
         LeituraTelemetria.objects
-        .select_related('cisterna', 'cisterna__localidade')
-        .order_by('-data_hora')
+        .order_by("-data_hora", "-pk")
     )
 
     leituras_por_cisterna = {}
@@ -336,26 +345,30 @@ def monitoramento(request):
             nivel = cisterna.ultima_leitura.nivel
 
             if nivel >= 70:
-                cisterna.status_monitoramento = 'Normal'
-                cisterna.status_classe = 'normal'
+                cisterna.status_monitoramento = "Normal"
+                cisterna.status_classe = "normal"
             elif nivel >= 30:
-                cisterna.status_monitoramento = 'Aten├º├úo'
-                cisterna.status_classe = 'atencao'
+                cisterna.status_monitoramento = "Atenção"
+                cisterna.status_classe = "atencao"
             else:
-                cisterna.status_monitoramento = 'Cr├¡tico'
-                cisterna.status_classe = 'critico'
+                cisterna.status_monitoramento = "Crítico"
+                cisterna.status_classe = "critico"
         else:
-            cisterna.status_monitoramento = 'Sem dados'
-            cisterna.status_classe = 'sem-dados'
+            cisterna.status_monitoramento = "Sem leitura"
+            cisterna.status_classe = "sem-dados"
+
+    total_leituras = LeituraTelemetria.objects.count()
+
+    contexto = {
+        "cisternas": cisternas,
+        "total_monitoradas": len(cisternas),
+        "total_leituras": total_leituras,
+    }
 
     return render(
         request,
-        'monitoramento/monitoramento.html',
-        {
-            'cisternas': cisternas,
-            'total_monitoradas': cisternas.count(),
-            'total_leituras': ultimas_leituras.count(),
-        },
+        "monitoramento/monitoramento.html",
+        contexto,
     )
 
 

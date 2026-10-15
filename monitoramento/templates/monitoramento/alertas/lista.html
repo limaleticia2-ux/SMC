@@ -1,6 +1,5 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,9 +7,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alertas | SMC</title>
 
-    <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
-
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL — PADRÃO DO SMC */
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 280px;
+            height: 100vh;
+            padding: 30px 18px;
+            background: linear-gradient(180deg, #0d304c 0%, #123f60 100%);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 25px;
+            background: rgba(255,255,255,.10);
+            border-radius: 10px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .logo-text span {
+            font-size: 13px;
+            color: #dbeafe;
+        }
+
+        .logo-text strong {
+            margin-top: 3px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .menu-title {
+            margin-bottom: 12px;
+            color: #bfdbfe;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            gap: 12px;
+            color: #e8f2fa;
+            text-decoration: none;
+            border-radius: 11px;
+            font-size: 15px;
+            transition: .2s ease;
+        }
+
+        .menu-item span {
+            width: 24px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .menu-item p {
+            margin: 0;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,.10);
+            transform: translateX(2px);
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,.17);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255,255,255,.10);
+            border-radius: 14px;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #dbeafe;
+            color: #123f60;
+            border-radius: 50%;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-info strong {
+            display: block;
+            color: white;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .user-info small {
+            display: block;
+            margin-top: 4px;
+            color: #dbeafe;
+            font-size: 11px;
+        }
+
+        .sidebar-logout button {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 10px;
+            background: transparent;
+            color: #e8f2fa;
+            text-align: center;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .sidebar-logout button:hover {
+            background: rgba(255,255,255,.10);
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .content {
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            margin-left: 280px;
+            padding: 35px;
+            min-width: 0;
+        }
+
         .alertas-page {
             width: 100%;
             max-width: 1200px;
@@ -18,82 +209,185 @@
         }
 
         .alertas-header {
-            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: #2585a5;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .alertas-header h1 {
-            margin: 8px 0;
-            color: #17365d;
-            font-size: 27px;
+            margin-top: 7px;
+            color: #102a43;
+            font-size: 30px;
         }
 
         .alertas-header p {
-            margin: 0;
+            margin-top: 7px;
             color: #64748b;
             font-size: 14px;
+            line-height: 1.6;
         }
 
+        .page-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 15px;
+            background: white;
+            border: 1px solid #e8edf3;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(15,42,67,.05);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        /* BUSCA */
         .alertas-search {
             display: flex;
-            gap: 9px;
-            margin-bottom: 18px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
         }
 
         .alertas-search input {
             flex: 1;
             min-width: 0;
-            padding: 10px 13px;
-            border: 1px solid #dbe3ec;
-            border-radius: 8px;
+            height: 46px;
+            padding: 0 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
             background: white;
+            color: #1e293b;
+            font: inherit;
             font-size: 13px;
         }
 
-        .alertas-search button,
-        .alerta-resolver button {
-            padding: 9px 13px;
-            border: none;
-            border-radius: 7px;
-            background: #176b87;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
+        .alertas-search input:focus {
+            border-color: #2585a5;
+            box-shadow: 0 0 0 3px rgba(37,133,165,.10);
         }
 
-        .alertas-search button:hover,
-        .alerta-resolver button:hover {
-            background: #12556c;
+        .btn {
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .btn-primary {
+            background: #123f60;
+            color: white;
+            box-shadow: 0 4px 12px rgba(18,63,96,.13);
+        }
+
+        .btn-primary:hover {
+            background: #0d304c;
+            transform: translateY(-1px);
         }
 
         .alertas-limpar {
-            align-self: center;
-            color: #176b87;
+            padding: 10px 12px;
+            color: #2585a5;
             font-size: 13px;
             text-decoration: none;
+        }
+
+        .alertas-limpar:hover {
+            text-decoration: underline;
+        }
+
+        /* PAINEL DE ALERTAS */
+        .panel {
+            min-width: 0;
+            padding: 25px;
+            background: white;
+            border: 1px solid #edf1f5;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(15,42,67,.06);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h2 {
+            color: #102a43;
+            font-size: 18px;
+        }
+
+        .panel-header p {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .panel-count {
+            padding: 8px 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .alertas-lista {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .alerta-card {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-start;
+            gap: 15px;
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px 15px;
+            padding: 20px;
             border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 13px;
             background: #fff;
-            box-shadow: 0 2px 6px rgba(15, 42, 67, 0.04);
+            transition: .2s ease;
+        }
+
+        .alerta-card:hover {
+            border-color: #cbdce9;
+            box-shadow: 0 5px 16px rgba(15,42,67,.04);
         }
 
         .alerta-card.resolvido {
-            background: #f0fdf4;
+            background: #f8fdf9;
             border-color: #bbf7d0;
         }
 
@@ -102,12 +396,12 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
             background: #fef3c7;
             color: #b45309;
-            font-size: 18px;
+            font-size: 21px;
         }
 
         .alerta-icone.critico {
@@ -126,30 +420,34 @@
         }
 
         .alerta-conteudo h2 {
-            margin: 0 0 8px;
-            color: #17365d;
+            margin: 2px 0 15px;
+            color: #102a43;
             font-size: 15px;
-            line-height: 1.3;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
         }
 
         .alerta-detalhes {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 8px 14px;
+            gap: 15px 18px;
         }
 
         .alerta-detalhe strong {
             display: block;
-            margin-bottom: 2px;
-            color: #334155;
+            margin-bottom: 5px;
+            color: #64748b;
             font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
         .alerta-detalhe span {
             display: block;
             overflow-wrap: anywhere;
-            color: #64748b;
-            font-size: 11px;
+            color: #334155;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .alerta-status {
@@ -168,25 +466,134 @@
             flex-shrink: 0;
         }
 
+        .alerta-resolver button {
+            max-width: 190px;
+            padding: 10px 13px;
+            border: 1px solid #bbf7d0;
+            border-radius: 9px;
+            background: #f0fdf4;
+            color: #15803d;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .alerta-resolver button:hover {
+            background: #dcfce7;
+        }
+
         .alertas-vazio {
-            padding: 25px 16px;
+            padding: 45px 20px;
             border: 1px dashed #cbd5e1;
-            border-radius: 10px;
-            background: white;
+            border-radius: 12px;
+            background: #f8fafc;
             color: #64748b;
             text-align: center;
             font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .alertas-vazio-icon {
+            margin-bottom: 12px;
+            font-size: 30px;
         }
 
         .alertas-voltar {
-            display: inline-block;
-            margin-top: 18px;
-            color: #176b87;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 20px;
+            color: #2585a5;
             font-size: 13px;
             text-decoration: none;
         }
 
-        @media (max-width: 700px) {
+        .alertas-voltar:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 25px;
+            padding: 20px 10px;
+            border-top: 1px solid #e5edf4;
+            color: #94a3b8;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 28px;
+            }
+
+            .alerta-detalhes {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .alerta-card {
+                flex-wrap: wrap;
+            }
+
+            .alerta-resolver {
+                margin-left: 59px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+                padding: 25px 10px;
+            }
+
+            .content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+                padding: 20px;
+            }
+
+            .logo-text,
+            .menu-item p,
+            .user-info,
+            .menu-title {
+                display: none;
+            }
+
+            .logo-icon {
+                margin-bottom: 20px;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .user-box {
+                justify-content: center;
+                padding: 10px 5px;
+            }
+
+            .sidebar-logout button {
+                font-size: 0;
+            }
+
+            .sidebar-logout button::after {
+                content: "↪";
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 15px;
+            }
+
+            .alertas-header h1 {
+                font-size: 25px;
+            }
+
             .alertas-search {
                 flex-wrap: wrap;
             }
@@ -195,27 +602,41 @@
                 flex-basis: 100%;
             }
 
+            .alertas-search .btn {
+                flex: 1;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
             .alerta-card {
-                flex-wrap: wrap;
-                padding: 12px;
+                gap: 11px;
+                padding: 14px;
+            }
+
+            .alerta-icone {
+                width: 38px;
+                height: 38px;
             }
 
             .alerta-conteudo {
-                flex: 1;
-                min-width: 180px;
+                flex-basis: calc(100% - 55px);
             }
 
             .alerta-detalhes {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 13px;
             }
 
             .alerta-resolver {
                 width: 100%;
-                margin-left: 48px;
+                margin-left: 0;
             }
 
             .alerta-resolver button {
                 width: 100%;
+                max-width: none;
             }
         }
     </style>
@@ -224,56 +645,47 @@
 <body>
 <div class="layout">
 
+    <!-- MENU LATERAL PADRÃO -->
     <aside class="sidebar">
-
         <div class="logo">
-            <div class="logo-icon">&#128167;</div>
-
+            <div class="logo-icon">💧</div>
             <div class="logo-text">
-                <span>SISTEMA DE MONITORAMENTO</span>
-                <strong>DE CISTERNAS</strong>
+                <span>Sistema de Monitoramento</span>
+                <strong>SMC</strong>
             </div>
         </div>
 
+        <div class="menu-title">Menu principal</div>
+
         <nav class="menu">
             <a href="{% url 'index' %}" class="menu-item">
-                <span>&#127968;</span>
-                <p>Tela Inicial</p>
+                <span>⌂</span>
+                <p>Painel inicial</p>
             </a>
 
             <a href="{% url 'lista_usuarios' %}" class="menu-item">
-                <span>&#128100;</span>
+                <span>♙</span>
                 <p>Usuários</p>
             </a>
 
             <a href="{% url 'lista_cisternas' %}" class="menu-item">
-                <span>&#128688;</span>
+                <span>▣</span>
                 <p>Cisternas</p>
             </a>
 
             <a href="{% url 'monitoramento' %}" class="menu-item">
-                <span>&#9687;</span>
+                <span>◉</span>
                 <p>Monitoramento</p>
             </a>
 
             <a href="{% url 'lista_alertas' %}" class="menu-item active">
-                <span>&#9888;</span>
+                <span>⚑</span>
                 <p>Alertas</p>
             </a>
 
             <a href="{% url 'mapa' %}" class="menu-item">
-                <span>&#128506;</span>
+                <span>⌖</span>
                 <p>Mapa</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#128202;</span>
-                <p>Relatórios</p>
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>&#9881;</span>
-                <p>Configurações</p>
             </a>
         </nav>
 
@@ -284,25 +696,33 @@
                 </div>
 
                 <div class="user-info">
-                    <strong>{{ request.user.username }}</strong>
-                    <small>Usuário do sistema</small>
+                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                    <small>Usuário conectado</small>
                 </div>
             </div>
 
             <form action="{% url 'logout' %}" method="post" class="sidebar-logout">
                 {% csrf_token %}
-                <button type="submit">Sair do sistema</button>
+                <button type="submit">↪ &nbsp; Sair</button>
             </form>
         </div>
-
     </aside>
 
+    <!-- CONTEÚDO -->
     <main class="content">
         <div class="alertas-page">
 
             <header class="alertas-header">
-                <h1>Alertas</h1>
-                <p>Acompanhe os alertas registrados no sistema de monitoramento.</p>
+                <div>
+                    <span class="eyebrow">Sistema / Notificações</span>
+                    <h1>Alertas</h1>
+                    <p>Acompanhe e gerencie os alertas registrados no monitoramento.</p>
+                </div>
+
+                <div class="page-status">
+                    <span class="status-dot"></span>
+                    Central de alertas
+                </div>
             </header>
 
             <form
@@ -315,111 +735,139 @@
                     name="q"
                     placeholder="Buscar alerta, cisterna ou município..."
                     value="{{ busca|default:'' }}"
+                    aria-label="Buscar alertas"
                 >
 
-                <button type="submit">Buscar</button>
+                <button type="submit" class="btn btn-primary">
+                    ⌕ Buscar
+                </button>
 
                 {% if busca %}
                     <a class="alertas-limpar" href="{% url 'lista_alertas' %}">
-                        Limpar
+                        Limpar busca
                     </a>
                 {% endif %}
             </form>
 
-            <div class="alertas-lista">
-                {% for alerta in alertas %}
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Alertas registrados</h2>
+                        <p>Consulte a situação e os detalhes de cada alerta.</p>
+                    </div>
 
-                    <article class="alerta-card {% if alerta.resolvido %}resolvido{% endif %}">
+                    <span class="panel-count">
+                        {{ alertas|length }} registro(s)
+                    </span>
+                </div>
 
-                        <div class="alerta-icone {% if alerta.resolvido %}resolvido-icone{% elif alerta.tipo == 'critico' %}critico{% endif %}">
-                            &#9888;
-                        </div>
+                <div class="alertas-lista">
+                    {% for alerta in alertas %}
 
-                        <div class="alerta-conteudo">
-                            <h2>{{ alerta.mensagem }}</h2>
+                        <article class="alerta-card {% if alerta.resolvido %}resolvido{% endif %}">
 
-                            <div class="alerta-detalhes">
-                                <div class="alerta-detalhe">
-                                    <strong>Cisterna</strong>
-                                    <span>
-                                        {% if alerta.cisterna %}
-                                            {{ alerta.cisterna.identificacao }}
-                                        {% else %}
-                                            Não informada
-                                        {% endif %}
-                                    </span>
-                                </div>
+                            <div class="alerta-icone {% if alerta.resolvido %}resolvido-icone{% elif alerta.tipo == 'critico' %}critico{% endif %}">
+                                {% if alerta.resolvido %}
+                                    ✓
+                                {% else %}
+                                    ⚠
+                                {% endif %}
+                            </div>
 
-                                <div class="alerta-detalhe">
-                                    <strong>Município</strong>
-                                    <span>
-                                        {% if alerta.cisterna and alerta.cisterna.municipio %}
-                                            {{ alerta.cisterna.municipio.nome }}
-                                        {% else %}
-                                            Não informado
-                                        {% endif %}
-                                    </span>
-                                </div>
+                            <div class="alerta-conteudo">
+                                <h2>{{ alerta.mensagem }}</h2>
 
-                                <div class="alerta-detalhe">
-                                    <strong>Localidade</strong>
-                                    <span>
-                                        {% if alerta.cisterna and alerta.cisterna.localidade %}
-                                            {{ alerta.cisterna.localidade.nome }}
-                                        {% else %}
-                                            Não informada
-                                        {% endif %}
-                                    </span>
-                                </div>
-
-                                <div class="alerta-detalhe">
-                                    <strong>Data do alerta</strong>
-                                    <span>{{ alerta.data_hora|date:"d/m/Y H:i" }}</span>
-                                </div>
-
-                                <div class="alerta-detalhe">
-                                    <strong>Status</strong>
-
-                                    {% if alerta.resolvido %}
-                                        <span class="alerta-status status-resolvido">
-                                            Resolvido
+                                <div class="alerta-detalhes">
+                                    <div class="alerta-detalhe">
+                                        <strong>Cisterna</strong>
+                                        <span>
+                                            {% if alerta.cisterna %}
+                                                {{ alerta.cisterna.identificacao }}
+                                            {% else %}
+                                                Não informada
+                                            {% endif %}
                                         </span>
-                                    {% else %}
-                                        <span class="alerta-status status-pendente">
-                                            Pendente
+                                    </div>
+
+                                    <div class="alerta-detalhe">
+                                        <strong>Município</strong>
+                                        <span>
+                                            {% if alerta.cisterna and alerta.cisterna.municipio %}
+                                                {{ alerta.cisterna.municipio.nome }}
+                                            {% else %}
+                                                Não informado
+                                            {% endif %}
                                         </span>
-                                    {% endif %}
+                                    </div>
+
+                                    <div class="alerta-detalhe">
+                                        <strong>Localidade</strong>
+                                        <span>
+                                            {% if alerta.cisterna and alerta.cisterna.localidade %}
+                                                {{ alerta.cisterna.localidade.nome }}
+                                            {% else %}
+                                                Não informada
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                    <div class="alerta-detalhe">
+                                        <strong>Data do alerta</strong>
+                                        <span>{{ alerta.data_hora|date:"d/m/Y H:i" }}</span>
+                                    </div>
+
+                                    <div class="alerta-detalhe">
+                                        <strong>Status</strong>
+
+                                        {% if alerta.resolvido %}
+                                            <span class="alerta-status status-resolvido">
+                                                Resolvido
+                                            </span>
+                                        {% else %}
+                                            <span class="alerta-status status-pendente">
+                                                Pendente
+                                            </span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
+
+                            {% if not alerta.resolvido %}
+                                <form
+                                    method="post"
+                                    action="{% url 'resolver_alerta' alerta.id %}"
+                                    class="alerta-resolver"
+                                >
+                                    {% csrf_token %}
+                                    <button type="submit">
+                                        ✓ Marcar como resolvido
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        </article>
+
+                    {% empty %}
+                        <div class="alertas-vazio">
+                            <div class="alertas-vazio-icon">🔔</div>
+
+                            {% if busca %}
+                                Nenhum alerta encontrado para "{{ busca }}".
+                            {% else %}
+                                Nenhum alerta registrado no momento.
+                            {% endif %}
                         </div>
+                    {% endfor %}
+                </div>
+            </section>
 
-                        {% if not alerta.resolvido %}
-                            <form
-                                method="post"
-                                action="{% url 'resolver_alerta' alerta.id %}"
-                                class="alerta-resolver"
-                            >
-                                {% csrf_token %}
-                                <button type="submit">Marcar como resolvido</button>
-                            </form>
-                        {% endif %}
-
-                    </article>
-
-                {% empty %}
-                    <div class="alertas-vazio">
-                        {% if busca %}
-                            Nenhum alerta encontrado para "{{ busca }}".
-                        {% else %}
-                            Nenhum alerta registrado no momento.
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-
-            <a class="alertas-voltar" href="/">
-                &#8592; Voltar ao início
+            <a class="alertas-voltar" href="{% url 'index' %}">
+                ← Voltar ao painel inicial
             </a>
+
+            <footer>
+                SMC — Sistema de Monitoramento do Nível de Água em Cisternas
+            </footer>
 
         </div>
     </main>
