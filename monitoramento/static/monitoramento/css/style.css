@@ -1,6 +1,4 @@
-/* =========================
-   RESET
-========================= */
+
 
 * {
     margin: 0;
@@ -24,9 +22,6 @@ body {
 }
 
 
-/* =========================
-   ESTRUTURA
-========================= */
 
 .layout {
     display: flex;
@@ -37,9 +32,7 @@ body {
 }
 
 
-/* =========================
-   SIDEBAR
-========================= */
+
 
 .sidebar {
     position: fixed;
@@ -117,9 +110,7 @@ body {
 }
 
 
-/* =========================
-   MENU
-========================= */
+
 
 .menu {
     display: flex;
@@ -188,9 +179,7 @@ body {
 }
 
 
-/* =========================
-   USUÁRIO
-========================= */
+
 
 .user-box {
     position: absolute;
@@ -267,9 +256,7 @@ body {
 }
 
 
-/* =========================
-   CONTEÚDO
-========================= */
+
 
 .content {
     width: calc(100% - 280px);
@@ -284,9 +271,7 @@ body {
 }
 
 
-/* =========================
-   TOPO
-========================= */
+
 
 .topbar {
     display: flex;
@@ -414,9 +399,7 @@ body {
 }
 
 
-/* =========================
-   CARDS DO DASHBOARD
-========================= */
+
 
 .cards {
     display: grid;
@@ -563,9 +546,7 @@ body {
 }
 
 
-/* =========================
-   GRID
-========================= */
+
 
 .grid {
     display: grid;
@@ -643,9 +624,6 @@ body {
 }
 
 
-/* =========================
-   NÍVEIS
-========================= */
 
 .levels {
     display: flex;
@@ -792,9 +770,6 @@ body {
 }
 
 
-/* =========================
-   TABELAS GERAIS
-========================= */
 
 .table {
     width: 100%;
@@ -855,9 +830,6 @@ body {
 }
 
 
-/* =========================
-   ALERTAS
-========================= */
 
 .alert {
     display: flex;
@@ -934,9 +906,6 @@ body {
 }
 
 
-/* =========================
-   LOCALIDADES
-========================= */
 
 .location-box {
     display: flex;
@@ -1023,9 +992,7 @@ body {
 }
 
 
-/* =========================
-   RESUMO
-========================= */
+
 
 .summary-panel {
     display: flex;
@@ -1107,9 +1074,7 @@ body {
 }
 
 
-/* =========================
-   CISTERNAS
-========================= */
+
 
 .cisternas-page {
     min-height: 100vh;
@@ -1377,9 +1342,6 @@ body {
 }
 
 
-/* =========================
-   FORMULÁRIO DE CISTERNA
-========================= */
 
 .figma-cisterna-card {
     width: 100%;
@@ -1641,9 +1603,6 @@ body {
 }
 
 
-/* =========================
-   SITUAÇÃO
-========================= */
 
 .situacao-preview {
     display: flex;
@@ -1690,9 +1649,7 @@ body {
 }
 
 
-/* =========================
-   IMAGEM
-========================= */
+
 
 .visual-card {
     width: 100%;
@@ -1822,9 +1779,6 @@ body {
 }
 
 
-/* =========================
-   MAPA DO FORMULÁRIO
-========================= */
 
 .map-card {
     width: 100%;
@@ -2025,9 +1979,6 @@ body {
 }
 
 
-/* =========================
-   LEGENDA DO MAPA
-========================= */
 
 .map-legend {
     padding: 13px;
@@ -2097,9 +2048,7 @@ body {
 }
 
 
-/* =========================
-   IMAGEM ATUAL
-========================= */
+
 
 .current-image {
     display: flex;
@@ -2134,9 +2083,7 @@ body {
 }
 
 
-/* =========================
-   USUÁRIOS
-========================= */
+
 
 .usuarios-page {
     min-height: 100vh;
@@ -2541,7 +2488,6 @@ body {
 }
 
 
-/* FORMULÁRIO DE USUÁRIO */
 
 .usuario-form-error {
     display: flex;
@@ -3215,7 +3161,6 @@ footer {
     pointer-events: none;
 }
 
-/* CORREÇÃO DA SIDEBAR E DO MENU */
 
 .sidebar {
     position: fixed;
@@ -3263,7 +3208,6 @@ footer {
     bottom: 20px;
 }
 
-/* Organização inferior da barra lateral */
 .sidebar-bottom {
     display: flex;
     flex-direction: column;
@@ -3274,7 +3218,6 @@ footer {
     flex-shrink: 0;
 }
 
-/* Perfil do usuário */
 .sidebar-bottom .user-box {
     position: static;
     width: 100%;
@@ -3282,7 +3225,6 @@ footer {
     box-sizing: border-box;
 }
 
-/* Botão de sair */
 .sidebar-logout {
     width: 100%;
     margin: 0 !important;
@@ -3305,7 +3247,6 @@ footer {
     background: #eaf3fb;
 }
 
-/* Evita que o menu se misture com o perfil */
 .sidebar .menu {
     flex-shrink: 0;
 }

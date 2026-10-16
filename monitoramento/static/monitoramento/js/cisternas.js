@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================
-       CAMPOS
-    ========================= */
+   
 
     const campoImagem = document.getElementById("id_imagem");
     const campoSituacao = document.getElementById("id_situacao");
@@ -22,9 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const mensagemMapa = document.getElementById("mapMessage");
 
 
-    /* =========================
-       PRÉVIA DA IMAGEM
-    ========================= */
 
     if (campoImagem) {
 
@@ -67,9 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================
-       REMOVER IMAGEM
-    ========================= */
+   
 
     if (removerImagem) {
 
@@ -93,9 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================
-       SITUAÇÃO
-    ========================= */
+ 
 
     function atualizarSituacao() {
 
@@ -138,9 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================
-       MAPA
-    ========================= */
+
 
     function atualizarMapa() {
 
@@ -231,10 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
     atualizarMapa();
 
 
-    /* =========================
-       VALIDAÇÃO
-    ========================= */
-
+   
     if (formulario) {
 
         formulario.addEventListener(

@@ -26,7 +26,6 @@
             min-height: 100vh;
         }
 
-        /* MENU LATERAL — PADRÃO DO PAINEL INICIAL */
         .sidebar {
             position: fixed;
             inset: 0 auto 0 0;
@@ -190,7 +189,6 @@
             background: rgba(255,255,255,.10);
         }
 
-        /* CONTEÚDO PRINCIPAL */
         .content {
             width: calc(100% - 280px);
             min-height: 100vh;
@@ -248,7 +246,6 @@
             border-radius: 50%;
         }
 
-        /* BUSCA E AÇÕES */
         .toolbar {
             display: flex;
             align-items: center;
@@ -337,7 +334,6 @@
             background: #f1f6fa;
         }
 
-        /* MENU GERENCIAR ENDEREÇOS */
         .enderecos-dropdown {
             position: relative;
         }
@@ -377,7 +373,6 @@
             color: #123f60;
         }
 
-        /* TABELA */
         .panel {
             min-width: 0;
             padding: 25px;
@@ -860,7 +855,6 @@
 </div>
 
 <script>
-    // Busca de cisternas
     const campoBusca = document.getElementById("buscarCisterna");
     const linhasCisternas = document.querySelectorAll(".cisterna-row");
     const mensagemSemResultados = document.getElementById("semResultados");
@@ -891,7 +885,6 @@
                 : "none";
     });
 
-    // Abrir e fechar Gerenciar Endereços
     const botaoEnderecos = document.getElementById("botaoEnderecos");
     const menuEnderecos = document.getElementById("menuEnderecos");
 
@@ -903,7 +896,6 @@
         botaoEnderecos.setAttribute("aria-expanded", String(aberto));
     });
 
-    // Fechar ao clicar fora do menu
     document.addEventListener("click", function (evento) {
         if (!menuEnderecos.contains(evento.target)) {
             menuEnderecos.classList.remove("open");
@@ -911,7 +903,6 @@
         }
     });
 
-    // Fechar com Escape
     document.addEventListener("keydown", function (evento) {
         if (evento.key === "Escape") {
             menuEnderecos.classList.remove("open");

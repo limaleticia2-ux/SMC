@@ -26,7 +26,6 @@
             min-height: 100vh;
         }
 
-        /* MENU LATERAL */
         .sidebar {
             position: fixed;
             top: 0;
@@ -191,7 +190,6 @@
             background: rgba(255,255,255,.10);
         }
 
-        /* CONTEÚDO */
         .content {
             width: calc(100% - 280px);
             min-height: 100vh;
@@ -250,7 +248,6 @@
             border-radius: 50%;
         }
 
-        /* BARRA DE BUSCA */
         .toolbar {
             display: flex;
             align-items: center;
@@ -322,7 +319,6 @@
             transform: translateY(-1px);
         }
 
-        /* PAINEL DA TABELA */
         .panel {
             min-width: 0;
             padding: 25px;
@@ -576,7 +572,6 @@
             text-align: center;
         }
 
-        /* RESPONSIVIDADE */
         @media (max-width: 1200px) {
             .content {
                 padding: 28px;
@@ -657,7 +652,6 @@
 <body>
 <div class="layout">
 
-    <!-- MENU LATERAL -->
     <aside class="sidebar">
 
         <div class="logo">
@@ -722,7 +716,6 @@
 
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="content">
 
         <header class="topbar">
@@ -738,7 +731,6 @@
             </div>
         </header>
 
-        <!-- BUSCA E CADASTRO -->
         <section class="toolbar">
 
             <label class="search-box" for="buscarUsuario">
@@ -757,7 +749,6 @@
 
         </section>
 
-        <!-- LISTA DE USUÁRIOS -->
         <section class="panel">
 
             <div class="panel-header">
@@ -892,7 +883,6 @@
 </div>
 
 <script>
-    // Busca de usuários
     const campoBusca = document.getElementById("buscarUsuario");
     const linhasUsuarios = document.querySelectorAll(".usuario-row");
     const mensagemSemResultados = document.getElementById("semResultados");

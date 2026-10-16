@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="{% static 'monitoramento/css/style.css' %}">
 
     <style>
-        /* MENU PADRONIZADO */
 
         .sidebar {
             position: fixed;
@@ -167,7 +166,6 @@
             background: #ffffff20;
         }
 
-        /* CONTEÚDO */
 
         .content {
             width: calc(100% - 280px);
@@ -180,7 +178,6 @@
             margin-bottom: 25px;
         }
 
-        /* RESPONSIVIDADE */
 
         @media (max-width: 900px) {
             .sidebar {
@@ -225,7 +222,6 @@
 
 <div class="layout">
 
-    <!-- MENU LATERAL -->
 
     <aside class="sidebar">
 
@@ -282,7 +278,6 @@
 
         </nav>
 
-        <!-- USUÁRIO CONECTADO -->
 
         <div class="user-box">
             <div class="user-avatar">
@@ -297,7 +292,6 @@
             </div>
         </div>
 
-        <!-- SAIR -->
 
         <form action="{% url 'logout' %}"
               method="post"
@@ -313,11 +307,9 @@
 
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
 
     <main class="content cisternas-form-page">
 
-        <!-- CABEÇALHO -->
 
         <div class="page-top">
             <div>
@@ -326,7 +318,6 @@
             </div>
         </div>
 
-        <!-- MENSAGEM DE ERRO -->
 
         {% if form.errors %}
             <div class="js-form-error">
@@ -335,7 +326,6 @@
             </div>
         {% endif %}
 
-        <!-- FORMULÁRIO -->
 
         <form method="post"
               enctype="multipart/form-data"
@@ -343,7 +333,6 @@
 
             {% csrf_token %}
 
-            <!-- DADOS DA CISTERNA -->
 
             <section class="figma-cisterna-card">
 
@@ -475,7 +464,6 @@
 
             </section>
 
-            <!-- PRÉ-VISUALIZAÇÃO DA IMAGEM -->
 
             <section class="visual-card">
 
@@ -529,7 +517,6 @@
 
             </section>
 
-            <!-- VISUALIZAÇÃO DO MAPA -->
 
             <section class="map-card">
 
@@ -589,7 +576,6 @@
 
             </section>
 
-            <!-- BOTÕES -->
 
             <div class="form-final-actions">
 
@@ -605,7 +591,6 @@
 
         </form>
 
-        <!-- RODAPÉ -->
 
         <footer>
             Sistema de Monitoramento do Nível de Água em Cisternas
@@ -615,7 +600,6 @@
 
 </div>
 
-<!-- JAVASCRIPT ORIGINAL -->
 
 <script src="{% static 'monitoramento/js/cisternas.js' %}"></script>
 

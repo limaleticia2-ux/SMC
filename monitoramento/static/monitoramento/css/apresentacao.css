@@ -28,7 +28,6 @@ a {
     text-decoration: none;
 }
 
-/* CABEÇALHO */
 
 .header {
     min-height: 98px;
@@ -118,7 +117,6 @@ a {
     background: #0876c1;
 }
 
-/* BANNER PRINCIPAL */
 
 .hero {
     position: relative;
@@ -214,7 +212,6 @@ a {
     pointer-events: none;
 }
 
-/* BENEFÍCIOS */
 
 .benefits {
     display: grid;
@@ -266,7 +263,6 @@ a {
     line-height: 1.45;
 }
 
-/* SOBRE O PROJETO */
 
 .about-strip {
     display: flex;
@@ -316,7 +312,6 @@ a {
     background: #0a5a88;
 }
 
-/* RODAPÉ */
 
 .footer {
     min-height: 90px;
@@ -364,7 +359,6 @@ a {
     white-space: nowrap;
 }
 
-/* TABLETS */
 
 @media (max-width: 1100px) {
     .header-container {
@@ -413,7 +407,6 @@ a {
     }
 }
 
-/* CELULARES */
 
 @media (max-width: 700px) {
     .header-container {
@@ -574,7 +567,6 @@ a {
     text-decoration: none;
 }
 
-/* CABEÇALHO */
 
 .header {
     background: #eff8ff;
@@ -662,7 +654,6 @@ a {
     background: #0876c1;
 }
 
-/* BANNER */
 
 .hero {
     min-height: 590px;
@@ -800,7 +791,6 @@ a {
     pointer-events: none;
 }
 
-/* TÍTULOS DAS SEÇÕES */
 
 .section-heading {
     max-width: 850px;
@@ -833,7 +823,6 @@ a {
     line-height: 1.9;
 }
 
-/* SOBRE O PROJETO */
 
 .intro-section {
     padding: 100px 8%;
@@ -901,7 +890,6 @@ a {
     line-height: 1.9;
 }
 
-/* FUNCIONALIDADES */
 
 .features-section {
     padding: 100px 8%;
@@ -943,7 +931,7 @@ a {
     font-size: 28px;
 }
 
-/* ETAPAS DO FUNCIONAMENTO */
+ ETAPAS DO FUNCIONAMENTO */
 
 .process-section {
     padding: 100px 8%;
@@ -999,7 +987,6 @@ a {
     line-height: 1.8;
 }
 
-/* PÚBLICO-ALVO */
 
 .audience-section {
     display: grid;
@@ -1055,7 +1042,6 @@ a {
     line-height: 1.8;
 }
 
-/* BENEFÍCIOS */
 
 .benefits-section {
     padding: 100px 8%;
@@ -1091,7 +1077,6 @@ a {
     font-weight: 800;
 }
 
-/* CHAMADA FINAL */
 
 .final-cta {
     padding: 90px 8%;
@@ -1126,7 +1111,6 @@ a {
     line-height: 1.9;
 }
 
-/* RODAPÉ */
 
 .footer {
     display: flex;
@@ -1169,7 +1153,6 @@ a {
     font-size: 12px;
 }
 
-/* RESPONSIVIDADE */
 
 @media (max-width: 1150px) {
     .header-container {
