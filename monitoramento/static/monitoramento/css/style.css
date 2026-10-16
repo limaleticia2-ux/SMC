@@ -3888,3 +3888,25 @@ footer {
     background-color: #dcfce7 !important;
 }
 
+.logo {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.logo:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar a.logo,
+.sidebar a.logo:link,
+.sidebar a.logo:visited,
+.sidebar a.logo:hover,
+.sidebar a.logo:active,
+.sidebar a.logo:focus {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    color: inherit;
+}
