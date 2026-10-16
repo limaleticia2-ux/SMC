@@ -43,6 +43,9 @@ body {
     width: 280px;
     height: 100vh;
 
+    display:flex;
+    flex-direction: column;
+
     padding: 30px 18px;
 
     background: linear-gradient(
@@ -3909,4 +3912,39 @@ footer {
     border-bottom: none !important;
     box-shadow: none !important;
     color: inherit;
+}
+
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: transparent;
+    color: #e8f2fa;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.logout-link:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: white;
+    text-decoration: none;
+}
+
+
+.menu-title {
+    margin-bottom: 12px;
+    color: #bfdbfe;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

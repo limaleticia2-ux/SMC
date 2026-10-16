@@ -26,27 +26,68 @@
 <body>
 <div class="layout">
 
-<aside class="sidebar">
-<a href="{% url 'apresentacao' %}" class="logo">
-    <div class="logo-icon">&#128167;</div>
-    <div class="logo-text">
-        <span>SISTEMA DE MONITORAMENTO</span>
-        <strong>DE CISTERNAS</strong>
-    </div>
-</a><nav class="menu">
-<a href="{% url 'index' %}" class="menu-item"><span>&#127968;</span><p>Tela Inicial</p></a>
-<a href="{% url 'lista_usuarios' %}" class="menu-item"><span>&#128100;</span><p>Usuários</p></a>
-<a href="{% url 'lista_cisternas' %}" class="menu-item"><span>&#128688;</span><p>Cisternas</p></a>
-<a href="{% url 'monitoramento' %}" class="menu-item"><span>&#9687;</span><p>Monitoramento</p></a>
-<a href="{% url 'lista_alertas' %}" class="menu-item"><span>&#9888;</span><p>Alertas</p></a>
-<a href="{% url 'mapa' %}" class="menu-item active"><span>&#128506;</span><p>Mapa</p></a>
-</nav>
-<div class="user-box"><div class="user-avatar">{{ request.user.username|first|upper }}</div><div class="user-info"><strong>{{ request.user.username }}</strong><small>Usuário do sistema</small></div></div>
 
-        <form action="{% url 'logout' %}" method="post" style="margin:12px 16px 16px;">
-            {% csrf_token %}
-            <button type="submit" style="width:100%;padding:10px;border:1px solid #dbe3ec;border-radius:8px;background:#fff;color:#183247;cursor:pointer;font-weight:600;">Sair do sistema</button>
-        </form>
+<aside class="sidebar">
+
+    <a href="{% url 'apresentacao' %}" class="logo" style="text-decoration: none !important; color: inherit;">
+        <div class="logo-icon">💧</div>
+
+        <div class="logo-text">
+            <span>Sistema de Monitoramento</span>
+            <strong>SMC</strong>
+        </div>
+    </a>
+
+    <div class="menu-title">Menu principal</div>
+
+    <nav class="menu">
+        <a href="{% url 'index' %}" class="menu-item">
+            <span>⌂</span>
+            <p>Painel inicial</p>
+        </a>
+
+        <a href="{% url 'lista_usuarios' %}" class="menu-item">
+            <span>♙</span>
+            <p>Usuários</p>
+        </a>
+
+        <a href="{% url 'lista_cisternas' %}" class="menu-item">
+            <span>▣</span>
+            <p>Cisternas</p>
+        </a>
+
+        <a href="{% url 'monitoramento' %}" class="menu-item">
+            <span>◉</span>
+            <p>Monitoramento</p>
+        </a>
+
+        <a href="{% url 'lista_alertas' %}" class="menu-item">
+            <span>⚑</span>
+            <p>Alertas</p>
+        </a>
+
+        <a href="{% url 'mapa' %}" class="menu-item active">
+            <span>⌖</span>
+            <p>Mapa</p>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="user-box">
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+                <small>Usuário conectado</small>
+            </div>
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout-link">
+            ↪ &nbsp; Sair
+        </a>
+    </div>
 
 </aside>
 
